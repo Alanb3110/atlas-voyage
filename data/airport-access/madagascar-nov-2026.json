@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "tripId": "madagascar-nov-2026",
+  "status": "research",
+  "checkedAt": "2026-09-05",
+  "intro": "Comparaison porte-à-porte depuis Reims. Le benchmark Paris–Nosy Be 05/11–23/11/2026 à 1 172 € A/R/pers. donne une ancre tarifaire ; le circuit final nécessitera probablement un billet multi-destinations ou un vol intérieur via Antananarivo.",
+  "note": "Les alternatives BRU/LUX/AMS sont estimées et devront être recherchées précisément après sélection de Madagascar.",
+  "defaultWeights": {"cost": 30, "time": 25, "flight": 20, "fatigue": 25},
+  "options": [
+    {"id":"cdg","airport":{"code":"CDG","name":"Paris-Charles-de-Gaulle"},"access":{"mode":"Train/voiture selon horaire","durationMin":95,"costEUR":220},"flight":{"priceEUR":2344,"durationMin":900,"stops":1,"quality":3.5},"doorToDoorMin":1200,"fatigue":4,"advantages":["Benchmark tarifaire concret vers Nosy Be","Pré-acheminement court depuis Reims"],"compromises":["Correspondance et architecture open-jaw à optimiser","Arrivée finale probablement plus complexe qu’un simple A/R Nosy Be"],"recommendation":"CDG est la base de comparaison la plus logique à ce stade.","status":"verified_benchmark","checkedAt":"2026-09-05"},
+    {"id":"bru","airport":{"code":"BRU","name":"Brussels Airport"},"access":{"mode":"Voiture / rail","durationMin":155,"costEUR":240},"flight":{"priceEUR":2450,"durationMin":970,"stops":1,"quality":3},"doorToDoorMin":1330,"fatigue":4.5,"advantages":["À surveiller si tarifs plus bas qu’à Paris"],"compromises":["Accès plus long","Correspondances potentiellement moins pratiques"],"status":"estimated","checkedAt":"2026-09-05"},
+    {"id":"lux","airport":{"code":"LUX","name":"Luxembourg Airport"},"access":{"mode":"Voiture","durationMin":155,"costEUR":230},"flight":{"priceEUR":2550,"durationMin":1020,"stops":2,"quality":2.5},"doorToDoorMin":1410,"fatigue":5,"advantages":["Accès routier simple"],"compromises":["Deux correspondances possibles","Faible intérêt sauf très forte différence de prix"],"status":"estimated","checkedAt":"2026-09-05"},
+    {"id":"ams","airport":{"code":"AMS","name":"Amsterdam Schiphol"},"access":{"mode":"Voiture / rail","durationMin":250,"costEUR":300},"flight":{"priceEUR":2400,"durationMin":930,"stops":1,"quality":3.5},"doorToDoorMin":1370,"fatigue":4.5,"advantages":["Bon hub intercontinental"],"compromises":["Pré-acheminement très long depuis Reims"],"status":"estimated","checkedAt":"2026-09-05"}
+  ]
+}
