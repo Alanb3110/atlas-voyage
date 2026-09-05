@@ -4,23 +4,33 @@ Application web statique pour préparer, comparer et partager plusieurs voyages,
 
 ## Déploiement actuel
 
-La V1 est prévue pour **GitHub Pages** depuis la branche `main`, à la racine du dépôt.
+Le site est publié avec **GitHub Pages** depuis la branche `main`, à la racine du dépôt.
 
-URL cible : `https://alanb3110.github.io/atlas-voyage/`
+URL : `https://alanb3110.github.io/atlas-voyage/`
 
-> ⚠️ La V1 est publique. Ne pas stocker dans le dépôt de références de réservation, données de passeport, informations médicales, moyens de paiement, clés API ou autres données sensibles.
+> ⚠️ La version actuelle est publique. Ne pas stocker dans le dépôt de références de réservation, données de passeport, informations médicales, moyens de paiement, clés API ou autres données sensibles.
 
-### Activer GitHub Pages
+## Fonctionnalités V2
 
-Dans GitHub :
+Le renderer générique gère maintenant :
 
-1. `Settings` → `Pages` ;
-2. `Build and deployment` → `Deploy from a branch` ;
-3. branche `main` ;
-4. dossier `/(root)` ;
-5. enregistrer.
-
-Le site est ensuite republié après chaque modification de `main`.
+- plusieurs voyages ;
+- plusieurs variantes par voyage ;
+- Essentiel / Confort recommandé / Premium ;
+- partage d’une sélection précise via l’URL ;
+- comparateur de variantes avec scores relatifs ;
+- carte Leaflet, étapes cliquables et types de liaison ;
+- distinction tracé réel / schématique ;
+- fiches étapes avec hébergement dépendant du budget ;
+- faune ;
+- cuisine ;
+- météo ;
+- santé et sécurité ;
+- règles locales avec statut loi/réglementation/usage/à vérifier ;
+- budgets détaillés avec contrôle de cohérence ;
+- programme jour par jour ;
+- sources et traçabilité ;
+- PWA/cache pour usage mobile.
 
 ## Démarrage local
 
@@ -44,10 +54,27 @@ L’état est conservé dans l’URL, par exemple :
 
 ## Ajouter un voyage
 
-1. Copier un fichier dans `data/trips/`.
+1. Créer `data/trips/<id>.json` à partir du modèle V2.
 2. Lui donner un `id` unique.
 3. Ajouter l’entrée correspondante dans `data/catalog.json`.
-4. Définir au moins une `variant` et les trois budgets.
+4. Définir au moins une variante et les trois budgets.
+5. Exécuter la validation.
+
+```bash
+node scripts/validate-data.mjs
+```
+
+La même validation est lancée automatiquement par GitHub Actions à chaque push et pull request.
+
+## Modèle de données
+
+Voir :
+
+- `docs/data-model-v2.md` ;
+- `docs/architecture.md` ;
+- `instructions_projet_atlas_voyage.md`.
+
+Le modèle V2 sépare notamment : variantes, scores de comparaison, liaisons cartographiques, étapes, faune, cuisine, météo, santé/sécurité, règles, budgets et traçabilité.
 
 ## Démonstrations
 
@@ -55,14 +82,10 @@ Les deux voyages fournis ne sont pas des devis actuels. `bali-komodo-demo.json` 
 
 ## Évolution confidentialité
 
-L’architecture doit rester portable vers un hébergement protégé ultérieur, par exemple :
+L’architecture reste portable vers un hébergement protégé ultérieur, par exemple :
 
 `GitHub privé → Cloudflare Pages → Cloudflare Access`
 
 Aucune donnée ne doit être structurée de manière dépendante de GitHub Pages.
 
-Voir :
-
-- `docs/architecture.md`
-- `docs/security.md`
-- `instructions_projet_atlas_voyage.md`
+Voir également `docs/security.md`.
