@@ -1,5 +1,5 @@
-const CACHE='atlas-v4';
-const SHELL=['./','./index.html','./trip.html','./assets/css/styles.css','./assets/css/trip-v2.css','./assets/css/airport-access.css','./assets/css/destination-compare.css','./assets/js/store.js','./assets/js/home.js','./assets/js/trip.js','./assets/js/airport-access.js','./assets/js/destination-compare.js','./data/catalog.json','./data/destination-comparison.json'];
+const CACHE='atlas-v5';
+const SHELL=['./','./index.html','./trip.html','./assets/css/styles.css','./assets/css/trip-v2.css','./assets/css/airport-access.css','./assets/css/destination-compare.css','./assets/css/booking-readiness.css','./assets/js/store.js','./assets/js/home.js','./assets/js/trip.js','./assets/js/airport-access.js','./assets/js/destination-compare.js','./assets/js/booking-readiness.js','./data/catalog.json','./data/destination-comparison.json'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).catch(()=>{}))});
 self.addEventListener('activate',e=>{e.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))]))});
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request)))});
