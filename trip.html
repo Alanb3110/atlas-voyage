@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="./assets/css/styles.css">
   <link rel="stylesheet" href="./assets/css/trip-v2.css">
+  <link rel="stylesheet" href="./assets/css/airport-access.css">
 </head>
 <body data-page="trip">
   <header class="appbar trip-appbar">
@@ -45,6 +46,14 @@
     <section id="compareSection" class="panel-section">
       <div class="section-head"><div><p class="eyebrow">Arbitrage</p><h2>Comparer les options</h2></div><p class="muted">Même destination, rythme et priorités différents. Les scores servent à comparer les variantes entre elles, pas les destinations.</p></div>
       <div id="variantCompare" class="variant-grid"></div>
+    </section>
+
+    <section id="airportSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Porte-à-porte</p><h2>Quel aéroport depuis Reims ?</h2></div><p id="airportIntro" class="muted"></p></div>
+      <div id="airportWeights" class="airport-controls" aria-label="Pondérations du comparateur aéroports"></div>
+      <div id="airportRecommendation"></div>
+      <div id="airportCompare" class="airport-grid"></div>
+      <p id="airportTrace" class="airport-trace"></p>
     </section>
 
     <section id="mapSection" class="panel-section">
@@ -103,5 +112,6 @@
   <footer class="site-footer">Atlas Voyage · Reims comme origine porte-à-porte</footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script type="module" src="./assets/js/trip.js"></script>
+  <script type="module" src="./assets/js/airport-access.js"></script>
 </body>
 </html>
