@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "tripId": "madagascar-nov-2026",
+  "updatedAt": "2026-09-05",
+  "items": [
+    {"category":"Voyage","label":"Choisir la destination et figer les dates","status":"research"},
+    {"category":"Vols","label":"Comparer A/R Nosy Be vs billet multi-destinations avec Antananarivo","status":"shortlisted","checkedAt":"2026-09-05"},
+    {"category":"Forêt","label":"Sélectionner lodge et guide Andasibe-Mantadia","status":"research"},
+    {"category":"Mer","label":"Sélectionner opérateur responsable requins-baleines / raies à Nosy Be","status":"research"},
+    {"category":"Transport","label":"Sécuriser chauffeur Tana–Andasibe et vol intérieur","status":"research"},
+    {"category":"Formalités","label":"Visa 30 jours et recommandations sanitaires à revérifier avant réservation","status":"recheck","checkedAt":"2026-09-05"},
+    {"category":"Assurance","label":"Vérifier garanties carte Boursobank noire et lacunes éventuelles","status":"research"}
+  ]
+}
