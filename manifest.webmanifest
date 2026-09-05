@@ -1,0 +1,9 @@
+{
+  "name": "Atlas Voyage",
+  "short_name": "Atlas Voyage",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4eee2",
+  "theme_color": "#173b33",
+  "icons": []
+}
