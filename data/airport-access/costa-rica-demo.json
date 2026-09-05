@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "tripId": "costa-rica-demo",
+  "status": "demo",
+  "checkedAt": "2026-09-05",
+  "intro": "Comparateur de démonstration : valeurs fictives destinées uniquement à tester le classement porte-à-porte depuis Reims.",
+  "note": "Aucun tarif ou horaire n’a été recherché pour ce jeu de données.",
+  "defaultWeights": {"cost": 35, "time": 25, "flight": 20, "fatigue": 20},
+  "options": [
+    {
+      "id": "cdg",
+      "airport": {"code": "CDG", "name": "Paris-Charles-de-Gaulle"},
+      "access": {"mode": "Voiture / train selon horaire", "durationMin": 95, "costEUR": 180},
+      "flight": {"priceEUR": 1750, "durationMin": 880, "stops": 1, "quality": 4},
+      "doorToDoorMin": 1090,
+      "fatigue": 3,
+      "advantages": ["Accès court depuis Reims", "Bon choix fictif de vols transatlantiques"],
+      "compromises": ["Tarif fictif intermédiaire", "Correspondance possible"],
+      "recommendation": "Dans ce scénario de test, CDG conserve un bon compromis entre temps, prix et fatigue.",
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    },
+    {
+      "id": "ory",
+      "airport": {"code": "ORY", "name": "Paris-Orly"},
+      "access": {"mode": "Voiture", "durationMin": 145, "costEUR": 210},
+      "flight": {"priceEUR": 1600, "durationMin": 910, "stops": 1, "quality": 3},
+      "doorToDoorMin": 1180,
+      "fatigue": 4,
+      "advantages": ["Tarif fictif inférieur", "Peut être intéressant sur une liaison bien placée"],
+      "compromises": ["Accès plus long depuis Reims", "Qualité d’horaire fictivement moins bonne"],
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    },
+    {
+      "id": "bru",
+      "airport": {"code": "BRU", "name": "Brussels Airport"},
+      "access": {"mode": "Voiture", "durationMin": 155, "costEUR": 240},
+      "flight": {"priceEUR": 1520, "durationMin": 900, "stops": 1, "quality": 4},
+      "doorToDoorMin": 1210,
+      "fatigue": 4,
+      "advantages": ["Tarif fictif le plus bas", "Qualité de vol correcte dans le scénario"],
+      "compromises": ["Accès routier long", "Économie billet à mettre en regard du trajet depuis Reims"],
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    },
+    {
+      "id": "ams",
+      "airport": {"code": "AMS", "name": "Amsterdam Schiphol"},
+      "access": {"mode": "Voiture / rail", "durationMin": 250, "costEUR": 300},
+      "flight": {"priceEUR": 1480, "durationMin": 820, "stops": 0, "quality": 5},
+      "doorToDoorMin": 1200,
+      "fatigue": 4,
+      "advantages": ["Vol fictif direct", "Très bonne qualité de vol dans le scénario"],
+      "compromises": ["Accès très long depuis Reims", "Le gain aérien peut être annulé par le pré-acheminement"],
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    }
+  ]
+}
