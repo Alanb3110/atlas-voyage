@@ -8,6 +8,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="stylesheet" href="./assets/css/trip-v2.css">
 </head>
 <body data-page="trip">
   <header class="appbar trip-appbar">
@@ -41,14 +42,44 @@
       <div id="summaryCards" class="summary-grid"></div>
     </section>
 
+    <section id="compareSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Arbitrage</p><h2>Comparer les options</h2></div><p class="muted">Même destination, rythme et priorités différents. Les scores servent à comparer les variantes entre elles, pas les destinations.</p></div>
+      <div id="variantCompare" class="variant-grid"></div>
+    </section>
+
     <section id="mapSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Carte interactive</p><h2>Le circuit</h2></div><p class="muted">Les liaisons de démonstration sont schématiques.</p></div>
-      <div class="map-layout"><aside id="stops" class="stops"></aside><div id="map" class="map"></div></div>
+      <div class="section-head"><div><p class="eyebrow">Carte interactive</p><h2>Le circuit</h2></div><p id="mapNote" class="muted"></p></div>
+      <div class="map-layout"><aside id="stops" class="stops"></aside><div class="map-stack"><div id="map" class="map"></div><div id="mapLegend" class="map-legend"></div></div></div>
     </section>
 
     <section id="stepsSection" class="panel-section">
       <div class="section-head"><div><p class="eyebrow">Étapes</p><h2>Les temps forts</h2></div><p class="muted">L’hébergement affiché suit le budget sélectionné.</p></div>
       <div id="steps" class="steps-grid"></div>
+    </section>
+
+    <section id="wildlifeSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Nature</p><h2>Faune et milieux</h2></div><p class="muted">Les probabilités d’observation sont indicatives : aucune observation d’animal sauvage n’est garantie.</p></div>
+      <div id="wildlifeCards" class="info-grid"></div>
+    </section>
+
+    <section id="foodSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Cuisine</p><h2>À manger sur place</h2></div><p id="foodIntro" class="muted"></p></div>
+      <div id="foodCards" class="info-grid"></div>
+    </section>
+
+    <section id="weatherSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Saison</p><h2>Météo attendue</h2></div><p id="weatherIntro" class="muted"></p></div>
+      <div id="weatherCards" class="info-grid"></div>
+    </section>
+
+    <section id="practicalSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Pratique</p><h2>Santé et sécurité</h2></div><p id="practicalIntro" class="muted"></p></div>
+      <div id="practicalCards" class="info-grid"></div>
+    </section>
+
+    <section id="rulesSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Règles locales</p><h2>Interdictions, réglementation et usages</h2></div><p class="muted">Le statut distingue une règle juridique, une réglementation locale, un usage culturel ou un point restant à vérifier.</p></div>
+      <div id="rules" class="rules-grid"></div>
     </section>
 
     <section id="budgetSection" class="panel-section">
