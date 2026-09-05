@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "south-africa-nov-2026",
+  "defaultVariant": "balanced",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Afrique du Sud — Kruger + iSimangaliso + Cape Town",
+    "subtitle": "Big Five, tortues marines, récifs, plages sauvages et gastronomie du Cap.",
+    "travelers": "2 adultes",
+    "duration": "≈ 18–20 jours",
+    "dates": "Début novembre 2026",
+    "departure": "Départ réel : Reims",
+    "heroImage": "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80"
+  },
+  "traceability": {
+    "researchDate": "2026-09-05",
+    "priceDate": "2026-09-05",
+    "lastChecked": "2026-09-05",
+    "budgetConfidence": "moyenne — phase de comparaison"
+  },
+  "budgetIntro": "Estimation porte-à-porte pour deux adultes. Le prix Air France Paris–Johannesburg observé pour 05/11–26/11/2026 est de 747 € A/R par personne ; les vols intérieurs, lodges et transferts restent estimés à ce stade.",
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Safari + côte sauvage",
+      "subtitle": "Trois grandes bases : Cape Town, Greater Kruger, puis iSimangaliso/Sodwana pour une fin plus lente.",
+      "rhythm": "Modéré",
+      "tradeoff": "Excellent mix animaux/nature/repos, mais vigilance sécurité en ville et longues liaisons intérieures.",
+      "scores": {"wildlife":5,"relaxation":4.2,"culture":4.5,"beach":4,"logistics":3.8},
+      "overviewIntro": "Le meilleur compromis global identifié pour novembre 2026 : grosse faune terrestre, saison de ponte des tortues sur la côte de l’océan Indien et météo sud-africaine actuellement annoncée plus sèche et plus chaude que la normale.",
+      "summary": [
+        {"value":"3","text":"bases principales"},
+        {"value":"Très élevé","text":"potentiel faune"},
+        {"value":"Nov.–janv.","text":"ponte des tortues à iSimangaliso"},
+        {"value":"Faible en fin","text":"fatigue à iSimangaliso"}
+      ],
+      "mapNote": "Les liaisons longues sont schématiques ; elles représentent le mode de transport, pas la route exacte.",
+      "steps": [
+        {"name":"Cape Town","nights":"4 nuits","coords":[-33.9249,18.4241],"summary":"Table Mountain, péninsule du Cap, manchots, culture et excellente gastronomie.","transfer":"Vol international puis transfert organisé","fatigue":"Moyenne","wildlife":"Manchots, oiseaux marins ; baleines possibles mais fin de saison","beach":"Très belle côte, eau fraîche","culture":"Très forte","food":"Très forte","activity":"Modérée","crowding":"Moyenne","weather":"Printemps austral, généralement agréable","safety":"Vigilance renforcée ; transferts et quartiers à choisir soigneusement","signature":"Péninsule du Cap + manchots de Boulders Beach","tags":["Culture","Nature","Gastronomie"],"lodging":{"essential":"Hôtel simple dans un quartier sûr","comfort":"Boutique-hôtel 4★ bien situé","premium":"Hôtel 5★ / Waterfront"}},
+        {"name":"Greater Kruger","nights":"5 nuits","coords":[-24.9948,31.5969],"summary":"Safari Big Five et grands mammifères, avec plusieurs sorties matin/soir.","transfer":"Vol intérieur vers Hoedspruit/Skukuza ou route organisée","fatigue":"Moyenne","wildlife":"Big Five, lycaons, girafes, hippopotames, oiseaux","beach":"—","culture":"Faible à moyenne","food":"Lodge, souvent pension complète","activity":"Faible à modérée","crowding":"Variable selon réserve","weather":"Chaud ; saison des pluies normalement commencée, mais 2026 est actuellement prévue plus sèche que la normale","safety":"Zone paludéenne ; logistique lodge recommandée","signature":"Deux game drives par jour dans une réserve privée ou Kruger","tags":["Safari","Big Five","Faune"],"lodging":{"essential":"Rest camp SANParks + self-drive","comfort":"Lodge de réserve privée avec game drives","premium":"Lodge premium all-inclusive"}},
+        {"name":"iSimangaliso / Sodwana / Kosi","nights":"8 nuits","coords":[-28.3833,32.4167],"summary":"Océan Indien chaud, récifs, plages sauvages, hippopotames et ponte des tortues marines.","transfer":"Vol/route vers KwaZulu-Natal puis transfert lodge","fatigue":"Faible","wildlife":"Tortues caouannes et luths en ponte, dauphins, hippopotames, crocodiles ; baleines parfois encore début novembre","beach":"Excellente, sauvage","culture":"Culture zouloue possible","food":"Lodge / fruits de mer","activity":"Au choix : très faible à sportive","crowding":"Faible à moyenne hors week-ends","weather":"Chaud ; tendance 2026 plus sèche que la normale sur une grande partie de l’Afrique du Sud","safety":"Déplacements structurés recommandés, surtout de nuit","signature":"Turtle tracking nocturne encadré + journée plage/snorkeling","tags":["Tortues","Plage","Snorkeling","Repos"],"lodging":{"essential":"Guesthouse St Lucia / Sodwana","comfort":"Eco-lodge côtier","premium":"Lodge isolé haut de gamme"}}
+      ],
+      "routes": [
+        {"type":"air","label":"Cape Town → Greater Kruger","real":false,"points":[[-33.9249,18.4241],[-24.9948,31.5969]]},
+        {"type":"air","label":"Kruger → KwaZulu-Natal","real":false,"points":[[-24.9948,31.5969],[-29.6144,31.1197]]},
+        {"type":"road","label":"Durban/Richards Bay → iSimangaliso","real":false,"points":[[-29.6144,31.1197],[-28.3833,32.4167]]}
+      ],
+      "daysIntro": "Structure de 17 nuits environ, avec une fin clairement orientée détente.",
+      "days": [
+        {"day":"J1–J4","title":"Cape Town","detail":"Récupération, péninsule, Table Mountain, manchots et gastronomie."},
+        {"day":"J5–J9","title":"Greater Kruger","detail":"Safari matin et soir ; observations sauvages jamais garanties."},
+        {"day":"J10–J17","title":"iSimangaliso / Sodwana / Kosi","detail":"Plage, snorkeling, lagunes, repos et une ou deux sorties nocturnes de suivi des tortues avec opérateur autorisé."}
+      ]
+    }
+  ],
+  "budgets": [
+    {"id":"essential","label":"Essentiel","total":5700,"items":["Vols économiques","SANParks/self-drive ciblé","Hébergements simples bien situés"],"breakdown":[{"label":"Accès Reims–CDG A/R","status":"estimated","amount":180},{"label":"Vols internationaux","status":"estimated","amount":1600},{"label":"Vols intérieurs + voiture/transferts","status":"estimated","amount":650},{"label":"Hébergements","status":"estimated","amount":1800},{"label":"Parcs + activités","status":"estimated","amount":650},{"label":"Repas","status":"estimated","amount":500},{"label":"Marge imprévus","status":"estimated","amount":320}]},
+    {"id":"comfort","label":"Confort recommandé","recommended":true,"total":7900,"items":["Lodge safari avec game drives","Boutique-hôtels","Eco-lodge côtier"],"breakdown":[{"label":"Accès Reims–CDG A/R","status":"estimated","amount":220},{"label":"Vols internationaux","status":"estimated","amount":1800},{"label":"Vols intérieurs + transferts/voiture","status":"estimated","amount":900},{"label":"Hébergements","status":"estimated","amount":2900},{"label":"Parcs + activités","status":"estimated","amount":900},{"label":"Repas","status":"estimated","amount":700},{"label":"Marge imprévus","status":"estimated","amount":480}]},
+    {"id":"premium","label":"Premium","total":11800,"items":["Lodges privés premium","Transferts privés","Excursions privées ciblées"],"breakdown":[{"label":"Accès Reims–CDG A/R","status":"estimated","amount":260},{"label":"Vols internationaux","status":"estimated","amount":2300},{"label":"Vols intérieurs + transferts privés","status":"estimated","amount":1300},{"label":"Hébergements","status":"estimated","amount":5000},{"label":"Parcs + activités privées","status":"estimated","amount":1400},{"label":"Repas","status":"estimated","amount":900},{"label":"Marge imprévus","status":"estimated","amount":640}]}
+  ],
+  "wildlife": [
+    {"title":"Safari terrestre","note":"Kruger reste une destination majeure toute l’année ; la végétation estivale peut compliquer les observations.","items":[["Big Five","Potentiel très élevé"],["Lycaons / guépards","Possible, non garanti"],["Oiseaux","Très riche"]]},
+    {"title":"Côte iSimangaliso","note":"La ponte des tortues débute en novembre ; l’observation dépend des nuits, marées et animaux présents.","items":[["Tortues caouannes/luths","Saison de ponte"],["Dauphins","Présents toute l’année"],["Baleines","Fin de migration en novembre ; non garanti"]]}
+  ],
+  "food": {"intro":"Très bon potentiel gastronomique, surtout au Cap ; cuisine de lodge ensuite.","cards":[{"title":"À privilégier","items":[["Cape Town","Cuisine sud-africaine moderne, Cape Malay, fruits de mer"],["KwaZulu-Natal","Influences zouloues et indiennes"],["Budget repas","Variable ; plusieurs repas inclus en lodge"]]}]},
+  "weather": {"intro":"Le signal 2026 est atypique : SAWS prévoit octobre–décembre plus sec et plus chaud que la normale sur la majeure partie du pays, malgré la saison humide climatologique du Kruger.","cards":[{"title":"Kruger","items":[["Saison climatologique","Chaude et normalement pluvieuse"],["Prévision OND 2026","Sous la normale en pluie, au-dessus en température"],["Conséquence","Visibilité potentiellement meilleure, mais chaleur accrue"]]},{"title":"KwaZulu-Natal","items":[["Mer","Océan Indien chaud"],["Tortues","Ponte à partir de novembre"],["Risque","Orages/chaleur possibles ; prévision locale à revérifier avant départ"]]}]},
+  "practical": {"intro":"Sécurité urbaine à traiter sérieusement et prévention paludisme au Kruger.","cards":[{"title":"Entrée / santé","items":[["Visa français <90 j","Pas de visa préalable"],["Kruger","Zone paludéenne : avis médical recommandé"],["Passeport","2 pages vierges + validité 30 j après sortie"]]},{"title":"Sécurité","items":[["Pays","Vigilance renforcée"],["Johannesburg","Transfert organisé recommandé"],["Voiture","Éviter conduite nocturne et objets visibles"]]}],"rules":[{"label":"Conduite","value":"Conduite à gauche ; respecter strictement limitations et consignes locales.","level":"regulation"},{"label":"Faune","value":"Ne jamais sortir du véhicule hors zones autorisées et respecter les distances imposées.","level":"regulation"}]},
+  "sources": [
+    {"label":"SAWS / gouvernement sud-africain — El Niño et prévision OND 2026","url":"https://www.gov.za/news/media-statements/el-nino-weather-climate-02-sep-2026","note":"Signal actuel : conditions plus sèches et plus chaudes probables sur une grande partie du pays.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"SANParks — climat du Kruger","url":"https://www.sanparks.org/parks/kruger/explore/climate","note":"Saison chaude et pluvieuse d’octobre à mars ; végétation plus dense.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"iSimangaliso — turtle tracking","url":"https://www.isimangaliso.com/activities/turtle-tracking/","note":"Ponte des tortues marines pendant la saison estivale.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"South African Tourism — saison des tortues","url":"https://www.southafrica.net/au/en/travel/article/turtle-tracking-safaris-kwazulu-natal","note":"Ponte annoncée de novembre à janvier.","type":"officiel tourisme","checkedAt":"2026-09-05"},
+    {"label":"France Diplomatie — Afrique du Sud sécurité","url":"https://www.diplomatie.gouv.fr/fr/information-par-pays/afrique-du-sud/conseils-aux-voyageurs-securite","note":"Vigilance renforcée sur l’ensemble du pays.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"Air France — Paris Johannesburg","url":"https://wwws.airfrance.fr/fr-fr/vols-de-paris-a-johannesburg","note":"Tarif observé : 747 € A/R/pers. pour 05/11–26/11/2026 au moment de la recherche.","type":"tarif","checkedAt":"2026-09-05"}
+  ]
+}
