@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./assets/css/styles.css">
   <link rel="stylesheet" href="./assets/css/trip-v2.css">
   <link rel="stylesheet" href="./assets/css/airport-access.css">
+  <link rel="stylesheet" href="./assets/css/booking-readiness.css">
 </head>
 <body data-page="trip">
   <header class="appbar trip-appbar">
@@ -97,6 +98,13 @@
       <div id="budgetBreakdown" class="budget-breakdown"></div>
     </section>
 
+    <section id="bookingSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Préparation</p><h2>Recherche et réservation</h2></div><p id="bookingIntro" class="muted"></p></div>
+      <div id="bookingSummary"></div>
+      <div id="bookingGroups" class="booking-groups"></div>
+      <p id="bookingTrace" class="booking-trace"></p>
+    </section>
+
     <section id="daysSection" class="panel-section">
       <div class="section-head"><div><p class="eyebrow">Programme</p><h2>Jour par jour</h2></div><p id="daysIntro" class="muted"></p></div>
       <div id="days" class="days-grid"></div>
@@ -113,5 +121,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script type="module" src="./assets/js/trip.js"></script>
   <script type="module" src="./assets/js/airport-access.js"></script>
+  <script type="module" src="./assets/js/booking-readiness.js"></script>
 </body>
 </html>
