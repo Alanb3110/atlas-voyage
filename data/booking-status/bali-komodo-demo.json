@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "tripId": "bali-komodo-demo",
+  "status": "demo",
+  "checkedAt": "2026-09-05",
+  "intro": "Suivi de démonstration des recherches, vérifications et réservations. Aucun élément ci-dessous n’est réellement réservé.",
+  "publicNote": "Ne pas stocker de référence de réservation ou donnée personnelle tant que GitHub Pages reste public.",
+  "items": [
+    {"category":"Transport","label":"Accès Reims → aéroport","status":"research","note":"Comparer train, voiture, parking et éventuelle nuit d’hôtel."},
+    {"category":"Transport","label":"Vol international","status":"shortlisted","note":"Scénario fictif uniquement ; horaires et prix à rechercher."},
+    {"category":"Transport","label":"Vols intérieurs","status":"research","note":"Bali ↔ Flores / séquences à confirmer selon variante."},
+    {"category":"Hébergements","label":"Ubud","status":"research","note":"Choisir selon niveau de budget."},
+    {"category":"Hébergements","label":"Labuan Bajo / Komodo","status":"research","note":"Hôtel + éventuelle croisière à arbitrer."},
+    {"category":"Hébergements","label":"Fin de séjour balnéaire","status":"research","note":"Sanur ou alternative selon variante."},
+    {"category":"Activités","label":"Sorties Komodo","status":"research","note":"Prestataire, bateau, sécurité et conditions d’annulation à vérifier."},
+    {"category":"Activités","label":"Snorkeling / activités mer","status":"research","note":"Dépend de la variante et de la météo."},
+    {"category":"Formalités","label":"Entrée / visa / taxes","status":"recheck","note":"À vérifier sur sources officielles avant réservation et avant départ."},
+    {"category":"Formalités","label":"Santé / carte bancaire / assurance","status":"recheck","note":"Vérifier garanties Boursobank noire et éventuelles lacunes."}
+  ]
+}
