@@ -5,12 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#173b33">
   <title>Voyage — Atlas Voyage</title>
+  <script>
+    try {
+      const p = localStorage.getItem('atlas-theme') || 'auto';
+      const dark = p === 'dark' || (p === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.themePreference = p;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch {}
+  </script>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="./assets/css/styles.css">
   <link rel="stylesheet" href="./assets/css/trip-v2.css">
   <link rel="stylesheet" href="./assets/css/airport-access.css">
   <link rel="stylesheet" href="./assets/css/booking-readiness.css">
+  <link rel="stylesheet" href="./assets/css/theme.css">
 </head>
 <body data-page="trip">
   <header class="appbar trip-appbar">
@@ -22,6 +31,7 @@
       <label><span>Option</span><select id="variantSelector"></select></label>
       <label><span>Budget</span><select id="budgetSelector"></select></label>
     </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Changer de thème"><span aria-hidden="true">◐</span><span>Auto</span></button>
     <button id="shareBtn" class="icon-button" type="button">Partager</button>
   </header>
 
@@ -119,6 +129,7 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <footer class="site-footer">Atlas Voyage · Reims comme origine porte-à-porte</footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script type="module" src="./assets/js/theme.js"></script>
   <script type="module" src="./assets/js/trip.js"></script>
   <script type="module" src="./assets/js/airport-access.js"></script>
   <script type="module" src="./assets/js/booking-readiness.js"></script>
