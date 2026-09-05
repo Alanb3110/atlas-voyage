@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "tripId": "costa-rica-nov-2026",
+  "updatedAt": "2026-09-05",
+  "items": [
+    {"category":"Voyage","label":"Choisir la destination et figer les dates","status":"research"},
+    {"category":"Vols","label":"Comparer CDG début novembre vs BRU si départ décalé au 11/11","status":"shortlisted","checkedAt":"2026-09-05"},
+    {"category":"Transport","label":"Arbitrer SUV vs transferts + vols intérieurs pour Osa/Guanacaste","status":"research"},
+    {"category":"Osa","label":"Choisir lodge et réserver Corcovado avec guide","status":"research"},
+    {"category":"Plage","label":"Choisir base Guanacaste/Papagayo pour la fin du séjour","status":"research"},
+    {"category":"Météo","label":"Revérifier prévision novembre 2026 et état des routes avant réservation","status":"recheck","checkedAt":"2026-09-05"},
+    {"category":"Assurance","label":"Vérifier garanties carte Boursobank noire et lacunes éventuelles","status":"research"}
+  ]
+}
