@@ -1,54 +1,72 @@
 {
   "schemaVersion": 1,
-  "status": "demo",
+  "status": "researched",
   "checkedAt": "2026-09-05",
-  "note": "Valeurs fictives destinées uniquement à valider l’interface de comparaison. Elles ne constituent pas une recommandation de voyage.",
+  "note": "Phase 1 pour deux adultes au départ réel de Reims, 2–3 semaines début novembre 2026. Les budgets Confort sont des estimations porte-à-porte ; les tarifs précis seront consolidés après choix de la destination.",
   "weights": {
-    "wildlife": 20,
-    "season": 15,
+    "wildlife": 25,
+    "season": 20,
     "relaxation": 15,
     "beach": 10,
-    "culture": 10,
-    "food": 10,
+    "culture": 5,
+    "food": 5,
     "safety": 10,
     "logistics": 10
   },
   "destinations": [
     {
-      "tripId": "bali-komodo-demo",
-      "comfortBudgetEUR": 6500,
-      "doorToDoorMin": 1320,
-      "climate": "Démo : saison favorable supposée",
+      "tripId": "south-africa-nov-2026",
+      "comfortBudgetEUR": 7900,
+      "doorToDoorMin": 1000,
+      "climate": "Très bon signal 2026 : SAWS prévoit octobre–décembre plus sec et plus chaud que la normale sur la majeure partie du pays, malgré la saison humide climatologique du Kruger.",
       "scores": {
-        "wildlife": 5,
-        "season": 4,
-        "relaxation": 4,
-        "beach": 4,
-        "culture": 5,
-        "food": 5,
-        "safety": 4,
-        "logistics": 3
+        "wildlife": 5.0,
+        "season": 4.5,
+        "relaxation": 4.2,
+        "beach": 4.0,
+        "culture": 4.5,
+        "food": 4.5,
+        "safety": 3.0,
+        "logistics": 3.8
       },
-      "advantages": ["Très forte diversité nature + culture", "Fin de séjour facilement orientée détente"],
-      "tradeoff": "Plusieurs segments intérieurs et bateau : la richesse du circuit augmente la fatigue logistique."
+      "advantages": ["Big Five + tortues marines en ponte + faune côtière dans un seul pays", "Excellente gastronomie et vraie fin de séjour plage/nature à iSimangaliso"],
+      "tradeoff": "Kruger n’est pas à son optimum classique de visibilité et la sécurité urbaine impose une logistique plus structurée."
     },
     {
-      "tripId": "costa-rica-demo",
-      "comfortBudgetEUR": 5700,
-      "doorToDoorMin": 1090,
-      "climate": "Démo : saison favorable supposée",
+      "tripId": "madagascar-nov-2026",
+      "comfortBudgetEUR": 6700,
+      "doorToDoorMin": 1200,
+      "climate": "Début de saison chaude et humide, mais novembre correspond au pic documenté des observations de requins-baleines en surface autour de Nosy Be.",
       "scores": {
-        "wildlife": 5,
-        "season": 4,
-        "relaxation": 4,
-        "beach": 3,
-        "culture": 3,
-        "food": 3,
-        "safety": 4,
-        "logistics": 4
+        "wildlife": 5.0,
+        "season": 4.2,
+        "relaxation": 4.5,
+        "beach": 4.5,
+        "culture": 3.5,
+        "food": 3.5,
+        "safety": 2.8,
+        "logistics": 2.5
       },
-      "advantages": ["Faune très présente sur plusieurs étapes", "Circuit terrestre relativement lisible"],
-      "tradeoff": "Culture et gastronomie moins centrales dans ce scénario de démonstration."
+      "advantages": ["Combinaison rare lémuriens + requins-baleines + raies + récifs", "Deux bases principales seulement et longue fin balnéaire"],
+      "tradeoff": "Logistique intérieure plus fragile, vigilance renforcée et météo humide/orageuse plus probable qu’en Afrique du Sud."
+    },
+    {
+      "tripId": "costa-rica-nov-2026",
+      "comfortBudgetEUR": 6500,
+      "doorToDoorMin": 1020,
+      "climate": "Novembre est une transition saison verte → saison sèche ; amélioration surtout après la mi-novembre sur le Pacifique, avec forte variabilité régionale.",
+      "scores": {
+        "wildlife": 4.7,
+        "season": 3.6,
+        "relaxation": 4.0,
+        "beach": 4.0,
+        "culture": 3.0,
+        "food": 3.5,
+        "safety": 3.0,
+        "logistics": 4.0
+      },
+      "advantages": ["Biodiversité extrêmement accessible et beaucoup d’activités nature", "Le circuit le plus simple à organiser et à adapter selon la météo"],
+      "tradeoff": "Début novembre reste humide, surtout dans le sud Pacifique ; culture et gastronomie sont moins distinctives que sur les deux autres options."
     }
   ]
 }
