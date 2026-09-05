@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "tripId": "costa-rica-nov-2026",
+  "status": "research",
+  "checkedAt": "2026-09-05",
+  "intro": "Comparaison porte-à-porte depuis Reims. Paris est actuellement le plus cohérent pour un départ réellement début novembre ; Bruxelles devient très compétitif si les dates glissent vers le 11 novembre ou après.",
+  "note": "Benchmarks observés : Paris–San José 02/11–15/11/2026 à 787 € A/R/pers. ; Bruxelles–San José 11/11–27/11/2026 à 665 € A/R/pers. Les durées et autres prix restent indicatifs.",
+  "defaultWeights": {"cost": 35, "time": 25, "flight": 20, "fatigue": 20},
+  "options": [
+    {"id":"cdg","airport":{"code":"CDG","name":"Paris-Charles-de-Gaulle"},"access":{"mode":"Train/voiture selon horaire","durationMin":95,"costEUR":220},"flight":{"priceEUR":1574,"durationMin":690,"stops":0,"quality":5},"doorToDoorMin":1020,"fatigue":3,"advantages":["Départ compatible début novembre","Pré-acheminement court","Possibilité de vol direct selon programme"],"compromises":["Tarif benchmark supérieur à Bruxelles mi-novembre"],"recommendation":"Meilleur point de départ si la fenêtre reste la première semaine de novembre.","status":"verified_benchmark","checkedAt":"2026-09-05"},
+    {"id":"bru","airport":{"code":"BRU","name":"Brussels Airport"},"access":{"mode":"Voiture / rail","durationMin":155,"costEUR":240},"flight":{"priceEUR":1330,"durationMin":850,"stops":1,"quality":4},"doorToDoorMin":1190,"fatigue":4,"advantages":["Benchmark nettement moins cher : 665 € A/R/pers."],"compromises":["Benchmark disponible seulement à partir du 11/11","Accès plus long et correspondance probable"],"recommendation":"À reconsidérer si le départ peut être décalé vers le 11 novembre.","status":"verified_benchmark","checkedAt":"2026-09-05"},
+    {"id":"lux","airport":{"code":"LUX","name":"Luxembourg Airport"},"access":{"mode":"Voiture","durationMin":155,"costEUR":230},"flight":{"priceEUR":1650,"durationMin":900,"stops":1,"quality":3.5},"doorToDoorMin":1240,"fatigue":4,"advantages":["Pré-acheminement routier simple"],"compromises":["Pas d’avantage tarifaire démontré à ce stade"],"status":"estimated","checkedAt":"2026-09-05"},
+    {"id":"ams","airport":{"code":"AMS","name":"Amsterdam Schiphol"},"access":{"mode":"Voiture / rail","durationMin":250,"costEUR":300},"flight":{"priceEUR":1600,"durationMin":720,"stops":0,"quality":5},"doorToDoorMin":1160,"fatigue":4,"advantages":["Bon hub et vol direct possible"],"compromises":["Pré-acheminement très long depuis Reims"],"status":"estimated","checkedAt":"2026-09-05"}
+  ]
+}
