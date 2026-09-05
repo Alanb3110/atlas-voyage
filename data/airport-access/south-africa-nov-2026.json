@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "tripId": "south-africa-nov-2026",
+  "status": "research",
+  "checkedAt": "2026-09-05",
+  "intro": "Comparaison porte-à-porte depuis Reims pour la phase de choix. CDG bénéficie d’un tarif Air France observé et d’un vol sans escale vers Johannesburg ; les autres options sont des benchmarks à revérifier.",
+  "note": "Les durées incluent un ordre de grandeur du pré-acheminement, de la marge aéroport et du vol ; elles servent au classement initial, pas à une réservation.",
+  "defaultWeights": {"cost": 30, "time": 30, "flight": 25, "fatigue": 15},
+  "options": [
+    {"id":"cdg","airport":{"code":"CDG","name":"Paris-Charles-de-Gaulle"},"access":{"mode":"Train/voiture selon horaire","durationMin":95,"costEUR":220},"flight":{"priceEUR":1494,"durationMin":650,"stops":0,"quality":5},"doorToDoorMin":1000,"fatigue":3,"advantages":["Vol direct vers Johannesburg","Pré-acheminement le plus court depuis Reims","Tarif 747 € A/R/pers. observé 05/11–26/11"],"compromises":["Retour/open-jaw à optimiser avec Cape Town ou Durban"],"recommendation":"Référence actuelle : meilleur compromis temps, simplicité et tarif.","status":"verified_fare","checkedAt":"2026-09-05"},
+    {"id":"bru","airport":{"code":"BRU","name":"Brussels Airport"},"access":{"mode":"Voiture ou rail","durationMin":155,"costEUR":240},"flight":{"priceEUR":1550,"durationMin":800,"stops":1,"quality":3.5},"doorToDoorMin":1190,"fatigue":4,"advantages":["Alternative utile si une promotion apparaît"],"compromises":["Pré-acheminement plus long","Correspondance probable"],"status":"estimated","checkedAt":"2026-09-05"},
+    {"id":"lux","airport":{"code":"LUX","name":"Luxembourg Airport"},"access":{"mode":"Voiture","durationMin":155,"costEUR":230},"flight":{"priceEUR":1650,"durationMin":820,"stops":1,"quality":3.5},"doorToDoorMin":1210,"fatigue":4,"advantages":["Accès routier raisonnable"],"compromises":["Choix de vols plus limité","Correspondance probable"],"status":"estimated","checkedAt":"2026-09-05"},
+    {"id":"ams","airport":{"code":"AMS","name":"Amsterdam Schiphol"},"access":{"mode":"Voiture / rail","durationMin":250,"costEUR":300},"flight":{"priceEUR":1550,"durationMin":660,"stops":0,"quality":5},"doorToDoorMin":1120,"fatigue":4,"advantages":["Possibilité de vol direct vers Johannesburg","Bonne qualité aérienne"],"compromises":["Très long pré-acheminement depuis Reims"],"status":"estimated","checkedAt":"2026-09-05"}
+  ]
+}
