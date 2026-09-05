@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "tripId": "bali-komodo-demo",
+  "status": "demo",
+  "checkedAt": "2026-09-05",
+  "intro": "Comparateur de démonstration : valeurs fictives destinées uniquement à valider l’interface et le calcul de score. Elles ne doivent pas guider une réservation.",
+  "note": "Prix, horaires et temps de trajet non recherchés.",
+  "defaultWeights": {"cost": 35, "time": 25, "flight": 20, "fatigue": 20},
+  "options": [
+    {
+      "id": "cdg",
+      "airport": {"code": "CDG", "name": "Paris-Charles-de-Gaulle"},
+      "access": {"mode": "Voiture / train selon horaire", "durationMin": 95, "costEUR": 180},
+      "flight": {"priceEUR": 2250, "durationMin": 1110, "stops": 1, "quality": 4},
+      "doorToDoorMin": 1320,
+      "fatigue": 3,
+      "advantages": ["Accès relativement simple depuis Reims", "Choix de vols généralement large"],
+      "compromises": ["Prix pas nécessairement minimal", "Aéroport vaste et correspondances potentiellement fatigantes"],
+      "recommendation": "Bon compromis de démonstration entre accès depuis Reims et qualité de l’offre aérienne.",
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    },
+    {
+      "id": "ory",
+      "airport": {"code": "ORY", "name": "Paris-Orly"},
+      "access": {"mode": "Voiture", "durationMin": 145, "costEUR": 210},
+      "flight": {"priceEUR": 2100, "durationMin": 1180, "stops": 1, "quality": 3},
+      "doorToDoorMin": 1450,
+      "fatigue": 4,
+      "advantages": ["Tarif fictif légèrement inférieur", "Alternative utile si meilleur horaire"],
+      "compromises": ["Accès plus long depuis Reims", "Offre long-courrier fictivement moins favorable"],
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    },
+    {
+      "id": "bru",
+      "airport": {"code": "BRU", "name": "Brussels Airport"},
+      "access": {"mode": "Voiture", "durationMin": 155, "costEUR": 240},
+      "flight": {"priceEUR": 1980, "durationMin": 1160, "stops": 1, "quality": 4},
+      "doorToDoorMin": 1480,
+      "fatigue": 4,
+      "advantages": ["Tarif fictif compétitif", "Peut ouvrir d’autres compagnies ou horaires"],
+      "compromises": ["Trajet routier nettement plus long", "Gain billet à comparer au coût d’accès réel"],
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    },
+    {
+      "id": "lux",
+      "airport": {"code": "LUX", "name": "Luxembourg Airport"},
+      "access": {"mode": "Voiture", "durationMin": 140, "costEUR": 220},
+      "flight": {"priceEUR": 2050, "durationMin": 1240, "stops": 2, "quality": 2},
+      "doorToDoorMin": 1550,
+      "fatigue": 5,
+      "advantages": ["Accès routier direct", "Peut être pertinent sur certaines promotions"],
+      "compromises": ["Deux escales dans ce scénario fictif", "Temps total élevé"],
+      "status": "demo",
+      "checkedAt": "2026-09-05"
+    }
+  ]
+}
