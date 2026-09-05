@@ -1,0 +1,10 @@
+{
+  "name": "atlas-voyage",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate:data": "node scripts/validate-data.mjs",
+    "validate:js": "node --check assets/js/store.js && node --check assets/js/home.js && node --check assets/js/trip.js && node --check assets/js/airport-access.js",
+    "validate": "npm run validate:data && npm run validate:js"
+  }
+}
