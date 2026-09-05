@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "id": "madagascar-nov-2026",
+  "defaultVariant": "balanced",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Madagascar — Andasibe + Nosy Be",
+    "subtitle": "Lémuriens, caméléons, requins-baleines, raies et longue fin de séjour tropicale.",
+    "travelers": "2 adultes",
+    "duration": "≈ 18–20 jours",
+    "dates": "Début novembre 2026",
+    "departure": "Départ réel : Reims",
+    "heroImage": "https://images.unsplash.com/photo-1535338454770-8be927b5a00b?auto=format&fit=crop&w=1800&q=80"
+  },
+  "traceability": {
+    "researchDate": "2026-09-05",
+    "priceDate": "2026-09-05",
+    "lastChecked": "2026-09-05",
+    "budgetConfidence": "moyenne — phase de comparaison"
+  },
+  "budgetIntro": "Estimation porte-à-porte pour deux adultes. Un benchmark Paris–Nosy Be du 05/11 au 23/11/2026 ressort à environ 1 172 € A/R par personne ; vols intérieurs, transferts et hébergements restent estimés à ce stade.",
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Forêt + grand bleu",
+      "subtitle": "Une courte séquence forêt à Andasibe puis une longue base à Nosy Be pour maximiser la détente et les sorties marines.",
+      "rhythm": "Doux à modéré",
+      "tradeoff": "Faune exceptionnelle et très peu de changements d’hôtel, mais logistique intérieure moins fluide et saison humide qui démarre.",
+      "scores": {"wildlife":5,"relaxation":4.5,"culture":3.5,"beach":4.5,"logistics":2.8},
+      "overviewIntro": "Début novembre correspond au cœur de la saison connue d’agrégation des requins-baleines autour de Nosy Be, tout en permettant d’ajouter une vraie séquence lémuriens à Andasibe. Les observations restent aléatoires et la météo devient progressivement plus humide.",
+      "summary": [
+        {"value":"2","text":"bases principales"},
+        {"value":"Très élevé","text":"potentiel faune"},
+        {"value":"Pic saisonnier","text":"requins-baleines à Nosy Be"},
+        {"value":"Très faible","text":"fatigue en fin de séjour"}
+      ],
+      "mapNote": "Les liaisons aériennes sont schématiques ; la route Andasibe–Tana est représentée de façon simplifiée.",
+      "steps": [
+        {"name":"Andasibe-Mantadia","nights":"3 nuits","coords":[-18.9333,48.4167],"summary":"Forêt humide, indris, sifakas, caméléons et sorties de nuit.","transfer":"Arrivée Antananarivo puis route avec chauffeur","fatigue":"Moyenne","wildlife":"Indris, autres lémuriens, caméléons, grenouilles et oiseaux","beach":"—","culture":"Village et contexte malgache rural","food":"Cuisine malgache simple / lodge","activity":"Modérée","crowding":"Faible à moyenne","weather":"Chaud et humide, averses possibles","safety":"Chauffeur recommandé ; éviter conduite nocturne","signature":"Réveil au chant des indris puis marche en forêt primaire","tags":["Lémuriens","Forêt","Nature"],"lodging":{"essential":"Lodge simple près de la réserve","comfort":"Eco-lodge confortable","premium":"Lodge haut de gamme"}},
+        {"name":"Nosy Be / Nosy Komba","nights":"13 nuits","coords":[-13.3128,48.2573],"summary":"Longue fin de séjour insulaire : sorties requins-baleines, raies, dauphins, récifs, plages et journées libres.","transfer":"Retour vers Tana puis vol intérieur vers Nosy Be, ou connexion aérienne optimisée selon billet","fatigue":"Faible après installation","wildlife":"Requins-baleines saisonniers, raies mobula, dauphins, tortues ; lémuriens à Nosy Komba/Lokobe","beach":"Très bonne","culture":"Marchés et villages insulaires","food":"Poissons, fruits de mer, cuisine créole/malgache","activity":"Au choix : faible à modérée","crowding":"Moyenne","weather":"Début de saison humide ; chaleur et averses plus fréquentes","safety":"Excursions avec opérateurs reconnus et transferts organisés","signature":"Sortie responsable requins-baleines + plusieurs jours totalement libres","tags":["Requin-baleine","Snorkeling","Plage","Repos"],"lodging":{"essential":"Guesthouse / petit hôtel plage","comfort":"Boutique-hôtel ou eco-resort","premium":"Resort premium / villa"}}
+      ],
+      "routes": [
+        {"type":"road","label":"Antananarivo → Andasibe","real":false,"points":[[-18.8792,47.5079],[-18.9333,48.4167]]},
+        {"type":"air","label":"Antananarivo → Nosy Be","real":false,"points":[[-18.8792,47.5079],[-13.3128,48.2573]]}
+      ],
+      "daysIntro": "Une seule vraie transition après la forêt, puis une longue fin de séjour balnéaire.",
+      "days": [
+        {"day":"J1–J3","title":"Andasibe","detail":"Randonnées guidées de jour et une sortie nocturne ; observations sauvages jamais garanties."},
+        {"day":"J4–J16","title":"Nosy Be / Nosy Komba","detail":"2 à 4 sorties nature ciblées réparties sur le séjour, avec une majorité de journées libres ou demi-journées de plage."}
+      ]
+    }
+  ],
+  "budgets": [
+    {"id":"essential","label":"Essentiel","total":5750,"items":["Vols économiques","Eco-lodges simples","Excursions partagées"],"breakdown":[{"label":"Accès Reims–aéroport A/R","status":"estimated","amount":180},{"label":"Vols internationaux","status":"estimated","amount":2200},{"label":"Vols intérieurs","status":"estimated","amount":500},{"label":"Hébergements","status":"estimated","amount":1200},{"label":"Chauffeur et transferts","status":"estimated","amount":550},{"label":"Activités nature","status":"estimated","amount":350},{"label":"Repas","status":"estimated","amount":400},{"label":"Visa / formalités","status":"estimated","amount":70},{"label":"Marge imprévus","status":"estimated","amount":300}]},
+    {"id":"comfort","label":"Confort recommandé","recommended":true,"total":6700,"items":["Eco-lodges de charme","Chauffeur privé sur la partie terrestre","Sorties marines en petits groupes"],"breakdown":[{"label":"Accès Reims–aéroport A/R","status":"estimated","amount":220},{"label":"Vols internationaux","status":"estimated","amount":2300},{"label":"Vols intérieurs","status":"estimated","amount":600},{"label":"Hébergements","status":"estimated","amount":1700},{"label":"Chauffeur et transferts","status":"estimated","amount":700},{"label":"Activités nature","status":"estimated","amount":450},{"label":"Repas","status":"estimated","amount":400},{"label":"Visa / formalités","status":"estimated","amount":70},{"label":"Marge imprévus","status":"estimated","amount":260}]},
+    {"id":"premium","label":"Premium","total":9600,"items":["Resorts premium","Transferts privés","Sorties bateau privatisées ciblées"],"breakdown":[{"label":"Accès Reims–aéroport A/R","status":"estimated","amount":260},{"label":"Vols internationaux","status":"estimated","amount":2800},{"label":"Vols intérieurs","status":"estimated","amount":900},{"label":"Hébergements","status":"estimated","amount":3100},{"label":"Chauffeur et transferts","status":"estimated","amount":900},{"label":"Activités privées","status":"estimated","amount":700},{"label":"Repas","status":"estimated","amount":600},{"label":"Visa / formalités","status":"estimated","amount":70},{"label":"Marge imprévus","status":"estimated","amount":270}]}
+  ],
+  "wildlife": [
+    {"title":"Nosy Be — requins-baleines","note":"Les études publiées documentent une agrégation saisonnière de septembre à décembre, avec novembre comme période de forte occurrence. La variabilité interannuelle reste importante.","items":[["Requins-baleines","Très bon potentiel saisonnier, jamais garanti"],["Raies mobula","Bon potentiel en octobre–novembre"],["Dauphins / tortues","Possibles selon sortie"]]},
+    {"title":"Andasibe","note":"La forêt humide offre une forte biodiversité terrestre.","items":[["Indris","Espèce emblématique, observation probable avec guide mais non garantie"],["Caméléons","Bon potentiel"],["Sortie nocturne","Lémuriens nocturnes et herpétofaune possibles"]]}
+  ],
+  "food": {"intro":"Cuisine malgache et créole, poissons et fruits de mer à Nosy Be.","cards":[{"title":"À goûter","items":[["Romazava / ravitoto","Classiques malgaches"],["Nosy Be","Poissons, fruits de mer, vanille, fruits tropicaux"],["Eau","Eau en bouteille / filtrée recommandée"]]}]},
+  "weather": {"intro":"Novembre marque le début de la saison chaude et humide : c’est un compromis assumé pour viser la saison des requins-baleines.","cards":[{"title":"Nosy Be","items":[["Saison","Transition vers la saison humide"],["Température","Chaude"],["Conséquence","Averses et orages possibles, sorties bateau à garder flexibles"]]},{"title":"Andasibe","items":[["Milieu","Forêt humide"],["Pluie","Possible et fréquente"],["Équipement","Chaussures adhérentes + protection pluie"]]}]},
+  "practical": {"intro":"Logistique plus fragile qu’en Afrique du Sud ou au Costa Rica ; chauffeur et opérateurs reconnus recommandés.","cards":[{"title":"Entrée","items":[["Séjour >15 j","Visa payant requis"],["30 jours","35 € selon France Diplomatie"],["Passeport","Validité 6 mois après arrivée"]]},{"title":"Sécurité / transport","items":[["Pays","Vigilance renforcée"],["Routes","Éviter trajets nocturnes"],["Zones isolées","Ne pas voyager seul sans organisation"]]}],"rules":[{"label":"Faune marine","value":"Choisir des opérateurs appliquant des distances et pratiques d’approche responsables ; ne jamais poursuivre ou toucher les animaux.","level":"culture"}]},
+  "sources": [
+    {"label":"Aquatic Conservation — whale sharks Nosy Be","url":"https://onlinelibrary.wiley.com/doi/10.1002/aqc.3743","note":"Étude peer-reviewed : agrégation saisonnière septembre–décembre autour de Nosy Be.","type":"peer-reviewed DOI 10.1002/aqc.3743","checkedAt":"2026-09-05"},
+    {"label":"Diversity 2026 — whale shark occurrence","url":"https://www.mdpi.com/1424-2818/18/3/136","note":"Analyse récente de la saisonnalité et de la variabilité interannuelle ; novembre correspond à une forte occurrence saisonnière.","type":"peer-reviewed DOI 10.3390/d18030136","checkedAt":"2026-09-05"},
+    {"label":"France Diplomatie — Madagascar sécurité","url":"https://www.diplomatie.gouv.fr/fr/information-par-pays/madagascar/conseils-aux-voyageurs-securite","note":"Vigilance renforcée et précautions de déplacement.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"France Diplomatie — Madagascar entrée/séjour","url":"https://www.diplomatie.gouv.fr/fr/information-par-pays/madagascar/conseils-aux-voyageurs-entree-sejour","note":"Visa et validité du passeport.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"Benchmark vols Paris–Nosy Be novembre 2026","url":"https://www.ou-et-quand.net/vols/madagascar/nosy-be/mois/novembre/","note":"Benchmark observé pour 05/11–23/11/2026 : environ 1 172 € A/R par personne.","type":"tarif indicatif","checkedAt":"2026-09-05"}
+  ]
+}
