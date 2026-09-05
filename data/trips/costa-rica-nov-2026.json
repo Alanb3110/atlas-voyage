@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 2,
+  "id": "costa-rica-nov-2026",
+  "defaultVariant": "balanced",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Costa Rica — Arenal + Monteverde + Osa + Pacifique",
+    "subtitle": "Forêts tropicales, paresseux, singes, aras, tapirs et une fin de séjour sur le Pacifique.",
+    "travelers": "2 adultes",
+    "duration": "≈ 18–20 jours",
+    "dates": "Début novembre 2026",
+    "departure": "Départ réel : Reims",
+    "heroImage": "https://images.unsplash.com/photo-1518259102261-b40117eabbc9?auto=format&fit=crop&w=1800&q=80"
+  },
+  "traceability": {
+    "researchDate": "2026-09-05",
+    "priceDate": "2026-09-05",
+    "lastChecked": "2026-09-05",
+    "budgetConfidence": "moyenne — phase de comparaison"
+  },
+  "budgetIntro": "Estimation porte-à-porte pour deux adultes. Des benchmarks novembre 2026 montrent environ 787 € A/R par personne depuis Paris début novembre ; Bruxelles peut être moins cher si les dates glissent vers la mi-novembre.",
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Forêts + Pacifique",
+      "subtitle": "Commencer par volcans et forêts puis finir sur la côte Pacifique, qui tend à s’assécher au fil de novembre.",
+      "rhythm": "Modéré",
+      "tradeoff": "Biodiversité très accessible et logistique lisible, mais début novembre reste une période de transition avec pluie possible sur le Pacifique.",
+      "scores": {"wildlife":4.7,"relaxation":4,"culture":3,"beach":4,"logistics":4},
+      "overviewIntro": "Le Costa Rica est le choix le plus simple et polyvalent des trois, mais pas le plus sûr météorologiquement début novembre : la saison verte se termine progressivement, surtout après la mi-novembre sur le Pacifique.",
+      "summary": [
+        {"value":"4","text":"bases principales"},
+        {"value":"Très élevé","text":"potentiel biodiversité"},
+        {"value":"Transition","text":"saison verte → saison sèche"},
+        {"value":"Doux","text":"rythme en fin de séjour"}
+      ],
+      "mapNote": "Les routes sont schématiques ; les temps réels dépendront fortement de l’état des routes et du mode de transfert retenu.",
+      "steps": [
+        {"name":"La Fortuna / Arenal","nights":"4 nuits","coords":[10.4678,-84.6427],"summary":"Volcan, forêt tropicale, sources chaudes, paresseux et toucans.","transfer":"Arrivée SJO puis route / chauffeur","fatigue":"Moyenne","wildlife":"Paresseux, singes, toucans, amphibiens","beach":"—","culture":"Faible à moyenne","food":"Bonne offre locale/touristique","activity":"Modérée","crowding":"Moyenne","weather":"Pluie encore possible en novembre","safety":"Vigilance standard renforcée pour effets personnels","signature":"Randonnée forêt + sources chaudes en fin de journée","tags":["Volcan","Forêt","Paresseux"],"lodging":{"essential":"Hôtel simple nature","comfort":"Lodge avec sources chaudes / vue volcan","premium":"Eco-resort premium"}},
+        {"name":"Monteverde","nights":"3 nuits","coords":[10.3009,-84.825],"summary":"Forêt de nuages, oiseaux, ponts suspendus et biodiversité d’altitude.","transfer":"Route montagneuse","fatigue":"Moyenne","wildlife":"Quetzals possibles, oiseaux, petits mammifères, amphibiens","beach":"—","culture":"Faible","food":"Correcte","activity":"Modérée","crowding":"Moyenne","weather":"Humide et plus frais","safety":"Routes parfois lentes ; conduite de nuit à éviter","signature":"Sortie naturaliste tôt le matin dans la forêt de nuages","tags":["Oiseaux","Forêt de nuages"],"lodging":{"essential":"Hôtel local","comfort":"Lodge forêt","premium":"Lodge premium"}},
+        {"name":"Péninsule d’Osa / Drake Bay","nights":"5 nuits","coords":[8.6892,-83.6735],"summary":"Corcovado et l’une des zones de biodiversité les plus riches du pays.","transfer":"Vol intérieur ou route + bateau selon option","fatigue":"Moyenne","wildlife":"Tapirs, singes, aras rouges, coatis ; nombreux oiseaux","beach":"Sauvage","culture":"Faible","food":"Lodge, souvent pension partielle/complète","activity":"Modérée à soutenue selon excursion","crowding":"Faible à moyenne","weather":"Encore humide ; averses possibles","safety":"Excursions guidées et réservations parc nécessaires","signature":"Journée guidée à Corcovado","tags":["Tapir","Aras","Forêt tropicale"],"lodging":{"essential":"Cabinas / lodge simple","comfort":"Eco-lodge nature","premium":"Eco-lodge haut de gamme"}},
+        {"name":"Guanacaste / Papagayo","nights":"6 nuits","coords":[10.6401,-85.653],"summary":"Fin de séjour plus sèche, plages, snorkeling et journées libres.","transfer":"Vol intérieur ou longue route vers le nord-ouest","fatigue":"Faible après installation","wildlife":"Singes, oiseaux, faune marine variable","beach":"Très bonne","culture":"Faible à moyenne","food":"Bonne offre hôtelière","activity":"Au choix","crowding":"Moyenne","weather":"Le nord Pacifique est généralement la zone qui s’améliore le plus vite en novembre","safety":"Précautions habituelles contre vols sur plages/voiture","signature":"Plusieurs journées sans programme entre plage et sortie bateau","tags":["Plage","Repos","Snorkeling"],"lodging":{"essential":"Petit hôtel plage","comfort":"Boutique-resort","premium":"Resort haut de gamme"}}
+      ],
+      "routes": [
+        {"type":"road","label":"San José → La Fortuna","real":false,"points":[[9.9281,-84.0907],[10.4678,-84.6427]]},
+        {"type":"road","label":"La Fortuna → Monteverde","real":false,"points":[[10.4678,-84.6427],[10.3009,-84.825]]},
+        {"type":"air","label":"Centre → Osa","real":false,"points":[[10.3009,-84.825],[8.6892,-83.6735]]},
+        {"type":"air","label":"Osa → Guanacaste","real":false,"points":[[8.6892,-83.6735],[10.6401,-85.653]]}
+      ],
+      "daysIntro": "Circuit progressif vers la côte et une fin de séjour plus reposante.",
+      "days": [
+        {"day":"J1–J4","title":"Arenal","detail":"Nature, faune et récupération après le vol."},
+        {"day":"J5–J7","title":"Monteverde","detail":"Forêt de nuages et sorties naturalistes."},
+        {"day":"J8–J12","title":"Osa / Drake Bay","detail":"Corcovado et biodiversité ; observation sauvage jamais garantie."},
+        {"day":"J13–J18","title":"Guanacaste / Papagayo","detail":"Plage, sorties marines facultatives et journées libres."}
+      ]
+    }
+  ],
+  "budgets": [
+    {"id":"essential","label":"Essentiel","total":5200,"items":["Vols économiques","Hébergements simples","Voiture compacte / navettes"],"breakdown":[{"label":"Accès Reims–aéroport A/R","status":"estimated","amount":180},{"label":"Vols internationaux","status":"estimated","amount":1600},{"label":"Transport intérieur","status":"estimated","amount":900},{"label":"Hébergements","status":"estimated","amount":1200},{"label":"Parcs + activités","status":"estimated","amount":450},{"label":"Repas","status":"estimated","amount":500},{"label":"Marge imprévus","status":"estimated","amount":370}]},
+    {"id":"comfort","label":"Confort recommandé","recommended":true,"total":6500,"items":["Lodges nature confortables","SUV / vols intérieurs ciblés","Excursions naturalistes guidées"],"breakdown":[{"label":"Accès Reims–aéroport A/R","status":"estimated","amount":220},{"label":"Vols internationaux","status":"estimated","amount":1800},{"label":"Transport intérieur","status":"estimated","amount":1100},{"label":"Hébergements","status":"estimated","amount":1800},{"label":"Parcs + activités","status":"estimated","amount":650},{"label":"Repas","status":"estimated","amount":650},{"label":"Marge imprévus","status":"estimated","amount":280}]},
+    {"id":"premium","label":"Premium","total":9000,"items":["Eco-lodges premium","Vols intérieurs / transferts privés ciblés","Guides privés ponctuels"],"breakdown":[{"label":"Accès Reims–aéroport A/R","status":"estimated","amount":260},{"label":"Vols internationaux","status":"estimated","amount":2300},{"label":"Transport intérieur","status":"estimated","amount":1300},{"label":"Hébergements","status":"estimated","amount":3000},{"label":"Parcs + activités","status":"estimated","amount":950},{"label":"Repas","status":"estimated","amount":850},{"label":"Marge imprévus","status":"estimated","amount":340}]}
+  ],
+  "wildlife": [
+    {"title":"Forêts tropicales","note":"La faune est répartie sur plusieurs écosystèmes ; un guide naturaliste augmente nettement la probabilité de détection.","items":[["Singes / paresseux","Très bon potentiel"],["Tapir à Corcovado","Bon potentiel, non garanti"],["Aras rouges","Bon potentiel dans le Pacifique sud"]]},
+    {"title":"Oiseaux et herpétofaune","note":"Monteverde et Arenal sont particulièrement adaptés aux sorties guidées.","items":[["Toucans","Bon potentiel"],["Quetzal","Possible selon zone et conditions"],["Grenouilles / reptiles","Bon potentiel, surtout avec sortie nocturne"]]}
+  ],
+  "food": {"intro":"Cuisine correcte et fraîche, moins distinctive que Madagascar ou Cape Town, mais facile et variée.","cards":[{"title":"Repères","items":[["Gallo pinto","Classique petit-déjeuner"],["Casado","Repas local simple et économique"],["Eau","Généralement potable dans de nombreuses zones, prudence locale selon hébergement"]]}]},
+  "weather": {"intro":"Novembre est une période de transition. Le Pacifique tend à devenir plus sec au fil du mois ; la côte Caraïbe reste au contraire dans une période humide. Le signal El Niño 2026 favorise actuellement un déficit de pluie sur le Pacifique, mais une prévision officielle spécifique à novembre reste à confirmer.","cards":[{"title":"Pacifique","items":[["Début novembre","Encore variable et humide"],["Après mi-novembre","Amélioration saisonnière fréquente"],["2026","El Niño actuellement associé à un déficit de pluie sur le Pacifique"]]},{"title":"Caraïbes","items":[["Novembre–janvier","Période plus pluvieuse"],["Choix circuit","Non prioritaire pour cette fenêtre"]]}]},
+  "practical": {"intro":"Destination relativement facile mais la petite délinquance et les vols dans les zones touristiques imposent de vraies précautions.","cards":[{"title":"Entrée","items":[["Français","Pas de visa jusqu’à 180 jours"],["Justificatifs","Billet retour, hébergement et ressources peuvent être demandés"],["Passeport","En bon état"]]},{"title":"Sécurité","items":[["Pays","Vigilance renforcée"],["Vols","Fréquents dans zones touristiques"],["Voiture","Ne rien laisser visible"]]}],"rules":[{"label":"Parcs nationaux","value":"Réserver les parcs très demandés et respecter horaires, quotas et consignes des gardes.","level":"regulation"},{"label":"Faune","value":"Ne pas nourrir ni toucher les animaux sauvages.","level":"regulation"}]},
+  "sources": [
+    {"label":"Visit Costa Rica — novembre / FAQ","url":"https://www.visitcostarica.com/faq/html/costa-rica.html","note":"Novembre est une transition saison verte → saison sèche, avec amélioration progressive sur le Pacifique.","type":"officiel tourisme","checkedAt":"2026-09-05"},
+    {"label":"Visit Costa Rica — climat","url":"https://fr.visitcostarica.com/planning-your-trip/climate","note":"La côte Caraïbe n’a pas de vraie saison sèche et connaît une période plus humide de novembre à janvier.","type":"officiel tourisme","checkedAt":"2026-09-05"},
+    {"label":"IMN Costa Rica — prévision sub-saisonnière 2026","url":"https://imn.ac.cr/en/web/imn/pronostico-subestacional","note":"El Niño 2026 produit actuellement des déficits de pluie sur plusieurs régions Pacifique/Central Valley ; novembre reste à revérifier plus près du départ.","type":"officiel météo","checkedAt":"2026-09-05"},
+    {"label":"France Diplomatie — Costa Rica sécurité","url":"https://www.diplomatie.gouv.fr/fr/information-par-pays/costa-rica/conseils-aux-voyageurs-securite","note":"Vigilance renforcée et hausse de la délinquance/vols dans les zones touristiques.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"France Diplomatie — Costa Rica entrée/séjour","url":"https://www.diplomatie.gouv.fr/fr/information-par-pays/costa-rica/conseils-aux-voyageurs-entree-sejour","note":"Formalités pour voyageurs français.","type":"officiel","checkedAt":"2026-09-05"},
+    {"label":"Benchmark vols novembre 2026 vers San José","url":"https://www.ou-et-quand.net/vols/costa-rica/san-jose/mois/novembre/","note":"Benchmarks observés : Paris début novembre autour de 787 € A/R/pers., Bruxelles mi-novembre autour de 665 € selon dates.","type":"tarif indicatif","checkedAt":"2026-09-05"}
+  ]
+}
