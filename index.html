@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173b33">
+  <title>Atlas Voyage</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body data-page="home">
+  <header class="appbar">
+    <a class="brand" href="./index.html" aria-label="Atlas Voyage — accueil">
+      <span class="brand-mark">AV</span>
+      <span><strong>Atlas Voyage</strong><small>Circuits personnels</small></span>
+    </a>
+    <span class="privacy-chip" title="Cette version GitHub Pages est publiquement accessible">GitHub Pages · public</span>
+  </header>
+
+  <main class="shell">
+    <section class="home-hero">
+      <div>
+        <p class="eyebrow">Bibliothèque de voyages</p>
+        <h1>Choisir, comparer, affiner.</h1>
+        <p class="lede">Chaque voyage peut contenir plusieurs variantes d’itinéraire et trois niveaux de budget. Les données restent séparées de l’interface pour faciliter les mises à jour.</p>
+      </div>
+      <aside class="hero-note">
+        <strong id="tripCount">—</strong>
+        <span>voyages disponibles</span>
+      </aside>
+    </section>
+
+    <section class="toolbar" aria-label="Filtres">
+      <label class="searchbox">
+        <span>Rechercher</span>
+        <input id="searchInput" type="search" placeholder="Destination, saison, thème…" autocomplete="off">
+      </label>
+      <label class="selectbox">
+        <span>Statut</span>
+        <select id="statusFilter">
+          <option value="all">Tous</option>
+          <option value="research">À l’étude</option>
+          <option value="selected">Sélectionné</option>
+          <option value="bookable">Réservable</option>
+          <option value="archived">Archivé</option>
+        </select>
+      </label>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div><p class="eyebrow">Voyages</p><h2>Mes itinéraires</h2></div>
+        <p id="catalogUpdated" class="muted"></p>
+      </div>
+      <div id="tripGrid" class="trip-grid" aria-live="polite"></div>
+      <div id="emptyState" class="empty" hidden>Aucun voyage ne correspond à ce filtre.</div>
+    </section>
+  </main>
+
+  <footer class="site-footer">Atlas Voyage · données datées et sourcées · observation de faune jamais garantie</footer>
+  <script type="module" src="./assets/js/home.js"></script>
+</body>
+</html>
