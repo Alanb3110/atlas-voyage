@@ -7,6 +7,7 @@
   <title>Atlas Voyage</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./assets/css/styles.css">
+  <link rel="stylesheet" href="./assets/css/destination-compare.css">
 </head>
 <body data-page="home">
   <header class="appbar">
@@ -47,6 +48,16 @@
       </label>
     </section>
 
+    <section id="destinationCompareSection" class="destination-compare-section">
+      <div class="section-head">
+        <div><p class="eyebrow">Décision</p><h2>Comparer les destinations</h2></div>
+        <p class="muted">Les scores servent à prioriser les destinations selon les critères du projet. Le budget et le temps porte-à-porte restent affichés séparément.</p>
+      </div>
+      <div id="destinationWeights" class="destination-weight-list" aria-label="Pondérations du comparateur destinations"></div>
+      <div id="destinationCompareGrid" class="destination-compare-grid"></div>
+      <p id="destinationCompareTrace" class="destination-compare-trace"></p>
+    </section>
+
     <section>
       <div class="section-head">
         <div><p class="eyebrow">Voyages</p><h2>Mes itinéraires</h2></div>
@@ -59,5 +70,6 @@
 
   <footer class="site-footer">Atlas Voyage · données datées et sourcées · observation de faune jamais garantie</footer>
   <script type="module" src="./assets/js/home.js"></script>
+  <script type="module" src="./assets/js/destination-compare.js"></script>
 </body>
 </html>
