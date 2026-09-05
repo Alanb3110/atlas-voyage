@@ -1,4 +1,4 @@
-name: Validate trip data
+name: Validate Atlas Voyage
 
 on:
   push:
@@ -16,5 +16,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate Atlas Voyage JSON
-        run: node scripts/validate-data.mjs
+      - name: Validate trip data and JavaScript
+        run: npm run validate
