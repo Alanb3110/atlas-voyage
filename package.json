@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "validate:data": "node scripts/validate-data.mjs",
-    "validate:js": "node --check assets/js/store.js && node --check assets/js/home.js && node --check assets/js/trip.js && node --check assets/js/airport-access.js && node --check assets/js/destination-compare.js",
+    "validate:js": "node --check assets/js/store.js && node --check assets/js/home.js && node --check assets/js/trip.js && node --check assets/js/airport-access.js && node --check assets/js/destination-compare.js && node --check assets/js/booking-readiness.js",
     "validate": "npm run validate:data && npm run validate:js"
   }
 }
