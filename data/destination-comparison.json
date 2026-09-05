@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "status": "demo",
+  "checkedAt": "2026-09-05",
+  "note": "Valeurs fictives destinées uniquement à valider l’interface de comparaison. Elles ne constituent pas une recommandation de voyage.",
+  "weights": {
+    "wildlife": 20,
+    "season": 15,
+    "relaxation": 15,
+    "beach": 10,
+    "culture": 10,
+    "food": 10,
+    "safety": 10,
+    "logistics": 10
+  },
+  "destinations": [
+    {
+      "tripId": "bali-komodo-demo",
+      "comfortBudgetEUR": 6500,
+      "doorToDoorMin": 1320,
+      "climate": "Démo : saison favorable supposée",
+      "scores": {
+        "wildlife": 5,
+        "season": 4,
+        "relaxation": 4,
+        "beach": 4,
+        "culture": 5,
+        "food": 5,
+        "safety": 4,
+        "logistics": 3
+      },
+      "advantages": ["Très forte diversité nature + culture", "Fin de séjour facilement orientée détente"],
+      "tradeoff": "Plusieurs segments intérieurs et bateau : la richesse du circuit augmente la fatigue logistique."
+    },
+    {
+      "tripId": "costa-rica-demo",
+      "comfortBudgetEUR": 5700,
+      "doorToDoorMin": 1090,
+      "climate": "Démo : saison favorable supposée",
+      "scores": {
+        "wildlife": 5,
+        "season": 4,
+        "relaxation": 4,
+        "beach": 3,
+        "culture": 3,
+        "food": 3,
+        "safety": 4,
+        "logistics": 4
+      },
+      "advantages": ["Faune très présente sur plusieurs étapes", "Circuit terrestre relativement lisible"],
+      "tradeoff": "Culture et gastronomie moins centrales dans ce scénario de démonstration."
+    }
+  ]
+}
