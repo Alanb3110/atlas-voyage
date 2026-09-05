@@ -92,6 +92,34 @@ for (const entry of catalog.trips ?? []) {
   if (!(airportData.options ?? []).length) warn(airportFile, 'aucun aéroport comparé');
 }
 
+const destinationFile = 'data/destination-comparison.json';
+try {
+  const comparison = await readJson(destinationFile);
+  const criteria = ['wildlife','season','relaxation','beach','culture','food','safety','logistics'];
+  const weights = comparison.weights ?? {};
+  for (const key of criteria) if (!finiteNonNegative(weights[key])) fail(destinationFile, `pondération ${key} invalide`);
+  const totalWeight = criteria.reduce((a, key) => a + (Number(weights[key]) || 0), 0);
+  if (Math.abs(totalWeight - 100) > 0.01) warn(destinationFile, `somme des pondérations=${totalWeight}, attendu 100`);
+
+  const seenTrips = new Set();
+  for (const [i, row] of (comparison.destinations ?? []).entries()) {
+    const label = row.tripId || `destination ${i + 1}`;
+    if (!row.tripId) fail(destinationFile, `destination ${i + 1}: tripId manquant`);
+    if (seenTrips.has(row.tripId)) fail(destinationFile, `tripId dupliqué: ${row.tripId}`);
+    seenTrips.add(row.tripId);
+    if (!ids.has(row.tripId)) fail(destinationFile, `${label}: tripId absent du catalogue`);
+    if (!finiteNonNegative(row.comfortBudgetEUR)) fail(destinationFile, `${label}: comfortBudgetEUR invalide`);
+    if (!finiteNonNegative(row.doorToDoorMin)) fail(destinationFile, `${label}: doorToDoorMin invalide`);
+    for (const key of criteria) {
+      const score = Number(row.scores?.[key]);
+      if (!Number.isFinite(score) || score < 0 || score > 5) fail(destinationFile, `${label}: score ${key} doit être entre 0 et 5`);
+    }
+  }
+  if (!(comparison.destinations ?? []).length) warn(destinationFile, 'aucune destination comparée');
+} catch (e) {
+  fail(destinationFile, `fichier absent ou illisible: ${e.message}`);
+}
+
 if (warnings.length) {
   console.log(`\nAvertissements (${warnings.length})`);
   warnings.forEach(x => console.log(`- ${x}`));
