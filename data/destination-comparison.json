@@ -2,71 +2,20 @@
   "schemaVersion": 1,
   "status": "researched",
   "checkedAt": "2026-09-05",
-  "note": "Phase 1 pour deux adultes au départ réel de Reims, 2–3 semaines début novembre 2026. Les budgets Confort sont des estimations porte-à-porte ; les tarifs précis seront consolidés après choix de la destination.",
-  "weights": {
-    "wildlife": 25,
-    "season": 20,
-    "relaxation": 15,
-    "beach": 10,
-    "culture": 5,
-    "food": 5,
-    "safety": 10,
-    "logistics": 10
-  },
+  "note": "Second tour : 12 destinations pour deux adultes au départ réel de Reims, environ 18–20 jours début novembre 2026. Pondération orientée animaux/nature + détente. Budgets Confort et temps porte-à-porte sont des estimations comparables, pas encore des devis réservables.",
+  "weights": {"wildlife":25,"season":20,"relaxation":15,"beach":10,"culture":5,"food":5,"safety":10,"logistics":10},
   "destinations": [
-    {
-      "tripId": "south-africa-nov-2026",
-      "comfortBudgetEUR": 7900,
-      "doorToDoorMin": 1000,
-      "climate": "Très bon signal 2026 : SAWS prévoit octobre–décembre plus sec et plus chaud que la normale sur la majeure partie du pays, malgré la saison humide climatologique du Kruger.",
-      "scores": {
-        "wildlife": 5.0,
-        "season": 4.5,
-        "relaxation": 4.2,
-        "beach": 4.0,
-        "culture": 4.5,
-        "food": 4.5,
-        "safety": 3.0,
-        "logistics": 3.8
-      },
-      "advantages": ["Big Five + tortues marines en ponte + faune côtière dans un seul pays", "Excellente gastronomie et vraie fin de séjour plage/nature à iSimangaliso"],
-      "tradeoff": "Kruger n’est pas à son optimum classique de visibilité et la sécurité urbaine impose une logistique plus structurée."
-    },
-    {
-      "tripId": "madagascar-nov-2026",
-      "comfortBudgetEUR": 6700,
-      "doorToDoorMin": 1200,
-      "climate": "Début de saison chaude et humide, mais novembre correspond au pic documenté des observations de requins-baleines en surface autour de Nosy Be.",
-      "scores": {
-        "wildlife": 5.0,
-        "season": 4.2,
-        "relaxation": 4.5,
-        "beach": 4.5,
-        "culture": 3.5,
-        "food": 3.5,
-        "safety": 2.8,
-        "logistics": 2.5
-      },
-      "advantages": ["Combinaison rare lémuriens + requins-baleines + raies + récifs", "Deux bases principales seulement et longue fin balnéaire"],
-      "tradeoff": "Logistique intérieure plus fragile, vigilance renforcée et météo humide/orageuse plus probable qu’en Afrique du Sud."
-    },
-    {
-      "tripId": "costa-rica-nov-2026",
-      "comfortBudgetEUR": 6500,
-      "doorToDoorMin": 1020,
-      "climate": "Novembre est une transition saison verte → saison sèche ; amélioration surtout après la mi-novembre sur le Pacifique, avec forte variabilité régionale.",
-      "scores": {
-        "wildlife": 4.7,
-        "season": 3.6,
-        "relaxation": 4.0,
-        "beach": 4.0,
-        "culture": 3.0,
-        "food": 3.5,
-        "safety": 3.0,
-        "logistics": 4.0
-      },
-      "advantages": ["Biodiversité extrêmement accessible et beaucoup d’activités nature", "Le circuit le plus simple à organiser et à adapter selon la météo"],
-      "tradeoff": "Début novembre reste humide, surtout dans le sud Pacifique ; culture et gastronomie sont moins distinctives que sur les deux autres options."
-    }
+    {"tripId":"south-africa-nov-2026","comfortBudgetEUR":7900,"doorToDoorMin":1000,"climate":"Très bon signal 2026 : El Niño rend des conditions plus sèches et plus chaudes que la normale probables sur une grande partie du pays.","scores":{"wildlife":5,"season":4.7,"relaxation":4.2,"beach":4,"culture":4.5,"food":4.5,"safety":3,"logistics":3.8},"advantages":["Big Five + tortues marines + faune côtière","Très bon équilibre faune, gastronomie et fin de séjour reposante"],"tradeoff":"Sécurité urbaine à gérer sérieusement et Kruger moins lisible qu’en saison sèche classique."},
+    {"tripId":"komodo-flores-nov-2026","comfortBudgetEUR":7200,"doorToDoorMin":1320,"climate":"Septembre à novembre est une excellente fenêtre Komodo selon Indonesia Travel, avec mantas et conditions encore favorables.","scores":{"wildlife":4.8,"season":4.6,"relaxation":4.2,"beach":4.3,"culture":4.5,"food":4.4,"safety":3.8,"logistics":3.3},"advantages":["Dragons + mantas + culture balinaise","Très bon rapport variété/budget"],"tradeoff":"Vols intérieurs et bateau ajoutent de la fatigue ; pluie de transition possible."},
+    {"tripId":"india-tiger-goa-nov-2026","comfortBudgetEUR":5900,"doorToDoorMin":930,"climate":"Novembre est très favorable à Ranthambore et marque le début de la bonne saison balnéaire à Goa.","scores":{"wildlife":4.3,"season":4.8,"relaxation":3.7,"beach":4.3,"culture":5,"food":5,"safety":3.2,"logistics":3.5},"advantages":["Tigres + patrimoine + gastronomie + plage","Excellent rapport qualité/prix et trajet relativement court"],"tradeoff":"Voyage plus intense culturellement ; observation du tigre jamais garantie."},
+    {"tripId":"raja-ampat-nov-2026","comfortBudgetEUR":9000,"doorToDoorMin":1860,"climate":"Novembre est au cœur de la fenêtre octobre–avril, avec mers plus calmes et excellente visibilité sous-marine.","scores":{"wildlife":5,"season":4.8,"relaxation":4.6,"beach":4.5,"culture":3.5,"food":3,"safety":3.4,"logistics":2.2},"advantages":["Probablement la meilleure biodiversité marine du comparatif","Très reposant une fois au resort"],"tradeoff":"Accès extrêmement long ; vigilance à revérifier précisément pour la Papouasie indonésienne."},
+    {"tripId":"seychelles-nov-2026","comfortBudgetEUR":7600,"doorToDoorMin":1110,"climate":"Novembre est chaud, les pluies augmentent mais les vents faiblissent et la mer est généralement agréable.","scores":{"wildlife":3.8,"season":4.2,"relaxation":5,"beach":5,"culture":2.5,"food":3.8,"safety":4.5,"logistics":4.2},"advantages":["Meilleure détente/plage du comparatif","Tortues géantes, tortues marines et snorkeling sans grosse fatigue"],"tradeoff":"Faune moins spectaculaire qu’un safari ou les Galápagos."},
+    {"tripId":"galapagos-nov-2026","comfortBudgetEUR":10500,"doorToDoorMin":1680,"climate":"Fin de saison fraîche, forte activité marine et pic de reproduction des otaries en octobre–novembre.","scores":{"wildlife":5,"season":4.7,"relaxation":3.8,"beach":3.7,"culture":3,"food":3,"safety":4.2,"logistics":3},"advantages":["Faune exceptionnellement proche et endémique","Très forte densité d’expériences animalières"],"tradeoff":"Cher et moins orienté resort/plage pure."},
+    {"tripId":"australia-queensland-nov-2026","comfortBudgetEUR":9800,"doorToDoorMin":1800,"climate":"Début de saison humide mais excellente visibilité sous-marine ; ponte des tortues en novembre-décembre.","scores":{"wildlife":4.6,"season":3.8,"relaxation":4.3,"beach":4.5,"culture":3,"food":4,"safety":4.8,"logistics":2.4},"advantages":["Grande Barrière + Daintree + tortues","Très haut niveau de sécurité et infrastructure"],"tradeoff":"Très long et coûteux ; chaleur, pluie et stingers à gérer."},
+    {"tripId":"costa-rica-nov-2026","comfortBudgetEUR":6500,"doorToDoorMin":1020,"climate":"Mois de transition ; amélioration progressive surtout après la mi-novembre sur le Pacifique.","scores":{"wildlife":4.7,"season":3.8,"relaxation":4.2,"beach":4.2,"culture":3,"food":3,"safety":3.2,"logistics":4},"advantages":["Biodiversité très accessible","Circuit terrestre facile à adapter selon la météo"],"tradeoff":"Début novembre reste humide, surtout dans le sud Pacifique."},
+    {"tripId":"madagascar-nov-2026","comfortBudgetEUR":6700,"doorToDoorMin":1200,"climate":"Début de saison humide, mais excellente période marine autour de Nosy Be et forte valeur faune endémique.","scores":{"wildlife":5,"season":3.7,"relaxation":4.4,"beach":4.5,"culture":3.5,"food":3.5,"safety":2.8,"logistics":2.7},"advantages":["Lémuriens + requins-baleines + raies","Longue fin tropicale possible avec peu de changements"],"tradeoff":"Météo et logistique moins robustes ; sécurité à encadrer."},
+    {"tripId":"oman-nov-2026","comfortBudgetEUR":6500,"doorToDoorMin":720,"climate":"Novembre est climatiquement excellent pour wadis, désert et mer ; la situation sécuritaire régionale 2026 dégrade fortement le classement.","scores":{"wildlife":3.5,"season":5,"relaxation":4.5,"beach":4.5,"culture":4.5,"food":4,"safety":1.5,"logistics":4},"advantages":["Très faible fatigue porte-à-porte et superbe saison","Tortues, dauphins, snorkeling, désert et culture dans un circuit compact"],"tradeoff":"France Diplomatie place actuellement tout le pays en vigilance renforcée et déconseille plusieurs régions sauf raison impérative."},
+    {"tripId":"philippines-palawan-bohol-nov-2026","comfortBudgetEUR":6300,"doorToDoorMin":1320,"climate":"Palawan entre dans sa bonne saison, mais novembre reste un mois de transition avec risque cyclonique résiduel.","scores":{"wildlife":4,"season":3.6,"relaxation":4.8,"beach":5,"culture":3.5,"food":3.8,"safety":3.2,"logistics":2.8},"advantages":["Très belles plages, lagons et snorkeling","Tarsiers + tortues + forte détente"],"tradeoff":"Météo début novembre moins robuste et plusieurs vols/ferries intérieurs."},
+    {"tripId":"namibia-botswana-nov-2026","comfortBudgetEUR":9800,"doorToDoorMin":1260,"climate":"Début de l’été et de la saison verte : très chaud, pluies possibles, mais excellente faune et beaux lodges.","scores":{"wildlife":5,"season":3.7,"relaxation":4.2,"beach":0,"culture":3,"food":3.5,"safety":4.2,"logistics":2.8},"advantages":["Safari terrestre de très haut niveau","Repos en lodges de brousse exceptionnel"],"tradeoff":"Aucune vraie plage et logistique coûteuse/complexe entre Namibie, Chobe et Okavango."}
   ]
 }
