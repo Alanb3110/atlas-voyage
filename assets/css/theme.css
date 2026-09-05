@@ -1,0 +1,29 @@
+/* Atlas Voyage — light / dark theme */
+:root{color-scheme:light}.theme-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:var(--panel);color:var(--ink);font-weight:850;cursor:pointer;white-space:nowrap}.theme-toggle span:first-child{font-size:1rem}.theme-toggle:hover{border-color:var(--primary)}
+html[data-theme="dark"]{color-scheme:dark;--bg:#0b1210;--panel:#111b18;--ink:#edf3ef;--muted:#a6b2ac;--primary:#7ac4a6;--accent:#e39a82;--line:#293933;--shadow:0 18px 46px rgba(0,0,0,.34)}
+html[data-theme="dark"] body{background:linear-gradient(180deg,#0b1210,#0e1714)}
+html[data-theme="dark"] .appbar{background:rgba(11,18,16,.92)}
+html[data-theme="dark"] .section-nav{background:rgba(11,18,16,.94)}
+html[data-theme="dark"] input,html[data-theme="dark"] select{background:#0f1916;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .chip,html[data-theme="dark"] .button.secondary,html[data-theme="dark"] .empty,html[data-theme="dark"] .error-box{background:#0f1916;color:var(--ink)}
+html[data-theme="dark"] .button,html[data-theme="dark"] .icon-button,html[data-theme="dark"] .brand-mark,html[data-theme="dark"] .stop-num,html[data-theme="dark"] .marker-pin{color:#08110e}
+html[data-theme="dark"] .hero-note{background:#173b33;color:#fff}
+html[data-theme="dark"] .privacy-chip{background:rgba(122,196,166,.08);color:var(--primary)}
+html[data-theme="dark"] .section-nav a:hover{background:rgba(122,196,166,.10)}
+html[data-theme="dark"] .section-nav a.active{color:#08110e}
+html[data-theme="dark"] .selected-lodging,html[data-theme="dark"] .step-detail,html[data-theme="dark"] .destination-kpis>div,html[data-theme="dark"] .airport-metrics>div{background:rgba(122,196,166,.07)}
+html[data-theme="dark"] .status,html[data-theme="dark"] .destination-rank,html[data-theme="dark"] .airport-rank,html[data-theme="dark"] .value-pill,html[data-theme="dark"] .budget-status,html[data-theme="dark"] .booking-status{background:rgba(122,196,166,.10);color:var(--primary)}
+html[data-theme="dark"] .destination-score-track,html[data-theme="dark"] .score-track,html[data-theme="dark"] .booking-progress-track{background:rgba(122,196,166,.12)}
+html[data-theme="dark"] .destination-tradeoff,html[data-theme="dark"] .signature{background:rgba(227,154,130,.08)}
+html[data-theme="dark"] .airport-recommendation{background:linear-gradient(135deg,#111b18,rgba(122,196,166,.07));box-shadow:0 12px 28px rgba(0,0,0,.24)}
+html[data-theme="dark"] .airport-flight-line{background:rgba(66,135,173,.12)}
+html[data-theme="dark"] .status-pill.regulation,html[data-theme="dark"] .booking-status.verified{background:rgba(76,150,190,.14);color:#8ec7e5}
+html[data-theme="dark"] .status-pill.culture,html[data-theme="dark"] .booking-status.shortlisted{background:rgba(181,151,88,.14);color:#d7bd82}
+html[data-theme="dark"] .status-pill.check,html[data-theme="dark"] .value-pill.warn,html[data-theme="dark"] .booking-status.research,html[data-theme="dark"] .booking-status.recheck,html[data-theme="dark"] .budget-status.estimated{background:rgba(227,154,130,.13);color:#f0b19b}
+html[data-theme="dark"] .map{filter:saturate(.85) brightness(.88)}
+html[data-theme="dark"] .leaflet-popup-content-wrapper,html[data-theme="dark"] .leaflet-popup-tip{background:#17231f;color:#edf3ef}
+html[data-theme="dark"] .leaflet-control-zoom a{background:#17231f;color:#edf3ef;border-color:#293933}
+html[data-theme="dark"] .leaflet-control-attribution{background:rgba(11,18,16,.82);color:#b7c3bd}
+html[data-theme="dark"] .leaflet-control-attribution a{color:#9ed9bf}
+@media(max-width:900px){.theme-toggle{padding:8px 10px}}
+@media(max-width:620px){.theme-toggle span:last-child{display:none}.theme-toggle{width:40px;height:40px;justify-content:center;padding:0}}
