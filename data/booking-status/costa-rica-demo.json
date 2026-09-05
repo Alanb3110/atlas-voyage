@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "tripId": "costa-rica-demo",
+  "status": "demo",
+  "checkedAt": "2026-09-05",
+  "intro": "Suivi de démonstration destiné à tester le workflow recherche → vérification → réservation.",
+  "publicNote": "Aucune référence de réservation ni donnée personnelle ne doit être ajoutée tant que le site est public.",
+  "items": [
+    {"category":"Transport","label":"Accès Reims → aéroport","status":"research","note":"Comparer CDG, ORY, BRU et alternatives pertinentes."},
+    {"category":"Transport","label":"Vol international","status":"shortlisted","note":"Scénario fictif ; prix, bagages et horaires à rechercher."},
+    {"category":"Transport","label":"Location de voiture / transferts","status":"research","note":"Comparer véhicule, assurances, conduite et transferts privés ciblés."},
+    {"category":"Hébergements","label":"La Fortuna","status":"research","note":"Lodge selon niveau de budget."},
+    {"category":"Hébergements","label":"Monteverde","status":"research","note":"Lodge forêt / alternative à sélectionner."},
+    {"category":"Hébergements","label":"Côte Pacifique","status":"research","note":"Manuel Antonio / Uvita selon variante."},
+    {"category":"Activités","label":"Guides nature","status":"research","note":"Identifier opérateurs, tailles de groupe et politiques d’annulation."},
+    {"category":"Activités","label":"Parcs nationaux","status":"recheck","note":"Horaires, billets et règles d’accès à vérifier pour les dates réelles."},
+    {"category":"Formalités","label":"Entrée / permis de conduire","status":"recheck","note":"Sources officielles uniquement."},
+    {"category":"Formalités","label":"Santé / carte bancaire / assurance","status":"recheck","note":"Vérifier garanties Boursobank noire et couverture location de véhicule."}
+  ]
+}
