@@ -11,6 +11,7 @@ const fail = (file, msg) => errors.push(`${file}: ${msg}`);
 const warn = (file, msg) => warnings.push(`${file}: ${msg}`);
 const readJson = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
 const validCoord = c => Array.isArray(c) && c.length === 2 && Number.isFinite(Number(c[0])) && Number.isFinite(Number(c[1])) && Math.abs(Number(c[0])) <= 90 && Math.abs(Number(c[1])) <= 180;
+const finiteNonNegative = v => Number.isFinite(Number(v)) && Number(v) >= 0;
 
 const catalog = await readJson('data/catalog.json');
 const ids = new Set();
@@ -55,6 +56,40 @@ for (const entry of catalog.trips ?? []) {
       if (route.real == null) warn(file, `variante ${v.id}, route ${i + 1}: préciser real=true/false`);
     }
   }
+
+  const airportFile = `data/airport-access/${entry.id}.json`;
+  let airportData;
+  try { airportData = await readJson(airportFile); }
+  catch (e) {
+    warn(airportFile, `comparateur aéroports absent ou illisible: ${e.message}`);
+    continue;
+  }
+
+  if (airportData.tripId !== entry.id) fail(airportFile, `tripId (${airportData.tripId}) différent du catalogue (${entry.id})`);
+  const weights = airportData.defaultWeights ?? {};
+  const weightKeys = ['cost','time','flight','fatigue'];
+  for (const key of weightKeys) if (!finiteNonNegative(weights[key])) fail(airportFile, `pondération ${key} invalide`);
+  const weightSum = weightKeys.reduce((a, key) => a + (Number(weights[key]) || 0), 0);
+  if (Math.abs(weightSum - 100) > 0.01) warn(airportFile, `somme des pondérations=${weightSum}, attendu 100`);
+
+  const airportIds = new Set();
+  for (const [i, option] of (airportData.options ?? []).entries()) {
+    const label = option.id || `option ${i + 1}`;
+    if (!option.id) fail(airportFile, `option ${i + 1}: id manquant`);
+    if (airportIds.has(option.id)) fail(airportFile, `id aéroport dupliqué: ${option.id}`);
+    airportIds.add(option.id);
+    if (!option.airport?.code || !option.airport?.name) fail(airportFile, `${label}: airport.code/name manquant`);
+    if (!finiteNonNegative(option.access?.durationMin)) fail(airportFile, `${label}: access.durationMin invalide`);
+    if (!finiteNonNegative(option.access?.costEUR)) fail(airportFile, `${label}: access.costEUR invalide`);
+    if (!finiteNonNegative(option.flight?.priceEUR)) fail(airportFile, `${label}: flight.priceEUR invalide`);
+    if (!finiteNonNegative(option.flight?.durationMin)) fail(airportFile, `${label}: flight.durationMin invalide`);
+    if (!finiteNonNegative(option.doorToDoorMin)) fail(airportFile, `${label}: doorToDoorMin invalide`);
+    const quality = Number(option.flight?.quality);
+    if (!Number.isFinite(quality) || quality < 0 || quality > 5) fail(airportFile, `${label}: flight.quality doit être entre 0 et 5`);
+    const fatigue = Number(option.fatigue);
+    if (!Number.isFinite(fatigue) || fatigue < 1 || fatigue > 5) fail(airportFile, `${label}: fatigue doit être entre 1 et 5`);
+  }
+  if (!(airportData.options ?? []).length) warn(airportFile, 'aucun aéroport comparé');
 }
 
 if (warnings.length) {
