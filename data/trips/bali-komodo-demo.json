@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "bali-komodo-demo",
+  "defaultVariant": "balanced",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Bali + Komodo",
+    "subtitle": "Nature, faune marine, culture et fin de séjour détendue.",
+    "travelers": "2 adultes",
+    "duration": "15 jours",
+    "dates": "Démonstration",
+    "departure": "Départ réel : Reims",
+    "heroImage": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1800&q=80"
+  },
+  "traceability": {
+    "researchDate": "2026-09-05",
+    "priceDate": "2026-09-05",
+    "lastChecked": "2026-09-05",
+    "budgetConfidence": "démo uniquement"
+  },
+  "budgetIntro": "Budgets fictifs uniquement destinés à valider le changement de niveau de prestation dans l’interface.",
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Équilibrée",
+      "subtitle": "Le compromis par défaut entre culture, faune et repos.",
+      "rhythm": "Modéré",
+      "overviewIntro": "Quatre étapes, peu de changements d’hôtel et une fin plus reposante.",
+      "summary": [
+        {"value": "4", "text": "étapes principales"},
+        {"value": "≈ 3 nuits", "text": "par étape"},
+        {"value": "Élevé", "text": "potentiel nature"},
+        {"value": "Faible", "text": "fatigue en fin de séjour"}
+      ],
+      "steps": [
+        {"name":"Ubud","nights":"3 nuits","coords":[-8.5069,115.2625],"summary":"Rizières, temples et cuisine balinaise.","transfer":"Arrivée + route depuis l’aéroport","fatigue":"Moyenne","tags":["Culture","Nature"],"lodging":{"essential":"Guesthouse bien notée","comfort":"Boutique-hôtel avec piscine","premium":"Resort haut de gamme"}},
+        {"name":"Labuan Bajo","nights":"3 nuits","coords":[-8.496,119.8877],"summary":"Base d’accès au parc national de Komodo.","transfer":"Vol intérieur","fatigue":"Moyenne","tags":["Faune","Bateau"],"lodging":{"essential":"Hôtel simple central","comfort":"Hôtel vue mer","premium":"Resort premium"}},
+        {"name":"Nusa Lembongan","nights":"3 nuits","coords":[-8.6785,115.4555],"summary":"Snorkeling, récifs et rythme insulaire.","transfer":"Vol + bateau rapide","fatigue":"Moyenne","tags":["Snorkeling","Plage"],"lodging":{"essential":"Bungalow","comfort":"Petit resort","premium":"Villa avec piscine"}},
+        {"name":"Sanur","nights":"4 nuits","coords":[-8.707,115.262],"summary":"Fin de séjour calme, plage et accès aéroport facile.","transfer":"Bateau + court transfert routier","fatigue":"Faible","tags":["Repos","Plage"],"lodging":{"essential":"Hôtel 3★","comfort":"Hôtel 4★ en bord de mer","premium":"Resort 5★"}}
+      ],
+      "daysIntro": "Programme de démonstration condensé.",
+      "days": [
+        {"day":"J1–J3","title":"Ubud","detail":"Installation, rizières et journée culture/nature."},
+        {"day":"J4–J6","title":"Komodo","detail":"Vol vers Flores puis sorties bateau selon météo et opérateur."},
+        {"day":"J7–J9","title":"Nusa Lembongan","detail":"Snorkeling, plage et journée libre."},
+        {"day":"J10–J13","title":"Sanur","detail":"Fin de séjour reposante avant le retour."}
+      ]
+    },
+    {
+      "id": "wildlife",
+      "label": "Faune renforcée",
+      "subtitle": "Davantage de temps autour de Komodo et des activités marines.",
+      "rhythm": "Soutenu",
+      "overviewIntro": "Cette variante augmente la part bateau et faune au prix d’un peu plus de fatigue.",
+      "summary": [
+        {"value":"5 nuits","text":"autour de Komodo"},
+        {"value":"Très élevé","text":"potentiel faune"},
+        {"value":"Plus","text":"de navigation"},
+        {"value":"Moyenne","text":"fatigue globale"}
+      ],
+      "steps": [
+        {"name":"Ubud","nights":"3 nuits","coords":[-8.5069,115.2625],"summary":"Culture et nature terrestre.","transfer":"Route","fatigue":"Moyenne","tags":["Culture"],"lodging":{"essential":"Guesthouse","comfort":"Boutique-hôtel","premium":"Resort"}},
+        {"name":"Labuan Bajo / Komodo","nights":"5 nuits","coords":[-8.496,119.8877],"summary":"Séjour prolongé pour multiplier les opportunités de sorties nature.","transfer":"Vol intérieur","fatigue":"Élevée","tags":["Faune","Snorkeling"],"lodging":{"essential":"Hôtel simple + bateau partagé","comfort":"Hôtel vue mer + croisière confort","premium":"Resort + bateau premium"}},
+        {"name":"Sanur","nights":"4 nuits","coords":[-8.707,115.262],"summary":"Récupération en fin de voyage.","transfer":"Vol + route","fatigue":"Faible","tags":["Repos"],"lodging":{"essential":"Hôtel 3★","comfort":"Hôtel 4★","premium":"Resort 5★"}}
+      ],
+      "daysIntro":"Version plus orientée faune.",
+      "days":[{"day":"J1–J3","title":"Ubud","detail":"Mise en jambes et culture."},{"day":"J4–J8","title":"Komodo","detail":"Fenêtre plus large pour les sorties bateau ; observations sauvages jamais garanties."},{"day":"J9–J12","title":"Sanur","detail":"Repos."}]
+    },
+    {
+      "id": "relaxed",
+      "label": "Détente renforcée",
+      "subtitle": "Moins de changements et davantage de temps en bord de mer.",
+      "rhythm": "Doux",
+      "overviewIntro": "La variante la plus simple logistiquement, avec une longue fin de séjour balnéaire.",
+      "summary": [
+        {"value":"3","text":"étapes"},
+        {"value":"Faible","text":"fatigue"},
+        {"value":"Élevé","text":"temps libre"},
+        {"value":"Bon","text":"équilibre nature/repos"}
+      ],
+      "steps": [
+        {"name":"Ubud","nights":"4 nuits","coords":[-8.5069,115.2625],"summary":"Séjour plus long sans courir.","transfer":"Route","fatigue":"Faible","tags":["Culture","Spa"],"lodging":{"essential":"Guesthouse","comfort":"Boutique-hôtel","premium":"Resort"}},
+        {"name":"Labuan Bajo","nights":"3 nuits","coords":[-8.496,119.8877],"summary":"Une séquence Komodo ciblée.","transfer":"Vol intérieur","fatigue":"Moyenne","tags":["Faune"],"lodging":{"essential":"Hôtel simple","comfort":"Hôtel vue mer","premium":"Resort"}},
+        {"name":"Sanur","nights":"6 nuits","coords":[-8.707,115.262],"summary":"Longue séquence détente avant le retour.","transfer":"Vol + route","fatigue":"Faible","tags":["Repos","Plage"],"lodging":{"essential":"Hôtel 3★","comfort":"Hôtel 4★ bord de mer","premium":"Resort 5★"}}
+      ],
+      "daysIntro":"Version volontairement lente.",
+      "days":[{"day":"J1–J4","title":"Ubud","detail":"Culture, nature et temps libre."},{"day":"J5–J7","title":"Komodo","detail":"Séquence nature ciblée."},{"day":"J8–J13","title":"Sanur","detail":"Repos et journées libres."}]
+    }
+  ],
+  "budgets": [
+    {
+      "id":"essential","label":"Essentiel","total":4700,"items":["Vols économiques","Hébergements simples bien notés","Activités partagées"],
+      "breakdown":[{"label":"Accès aéroport depuis Reims","status":"estimé","amount":180},{"label":"Vols internationaux + intérieurs","status":"estimé","amount":2100},{"label":"Hébergements","status":"estimé","amount":1050},{"label":"Transferts et activités","status":"estimé","amount":820},{"label":"Repas + marge","status":"estimé","amount":550}]
+    },
+    {
+      "id":"comfort","label":"Confort recommandé","recommended":true,"total":6500,"items":["Meilleurs horaires de vol","Boutique-hôtels / 4★","Transferts privés ciblés"],
+      "breakdown":[{"label":"Accès aéroport depuis Reims","status":"estimé","amount":220},{"label":"Vols internationaux + intérieurs","status":"estimé","amount":2700},{"label":"Hébergements","status":"estimé","amount":1650},{"label":"Transferts et activités","status":"estimé","amount":1150},{"label":"Repas + marge","status":"estimé","amount":780}]
+    },
+    {
+      "id":"premium","label":"Premium","total":9800,"items":["Vols mieux placés","Resorts premium","Prestations privées"],
+      "breakdown":[{"label":"Accès aéroport depuis Reims","status":"estimé","amount":260},{"label":"Vols internationaux + intérieurs","status":"estimé","amount":3600},{"label":"Hébergements","status":"estimé","amount":3100},{"label":"Transferts et activités","status":"estimé","amount":1750},{"label":"Repas + marge","status":"estimé","amount":1090}]
+    }
+  ],
+  "sources": [
+    {"label":"Données de démonstration","url":"https://github.com/Alanb3110/atlas-voyage","note":"Ces montants et itinéraires ne sont pas une recherche de voyage actuelle.","type":"interne","checkedAt":"2026-09-05"}
+  ]
+}
