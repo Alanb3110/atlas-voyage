@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173b33">
+  <title>Voyage — Atlas Voyage</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body data-page="trip">
+  <header class="appbar trip-appbar">
+    <a class="brand compact" href="./index.html" aria-label="Retour aux voyages">
+      <span class="brand-mark">AV</span><span><strong>Atlas Voyage</strong><small>Mes voyages</small></span>
+    </a>
+    <nav class="global-switchers" aria-label="Navigation voyage">
+      <label><span>Voyage</span><select id="tripSelector"></select></label>
+      <label><span>Option</span><select id="variantSelector"></select></label>
+      <label><span>Budget</span><select id="budgetSelector"></select></label>
+    </nav>
+    <button id="shareBtn" class="icon-button" type="button">Partager</button>
+  </header>
+
+  <main class="shell trip-shell">
+    <section id="hero" class="trip-hero">
+      <div class="hero-overlay"></div>
+      <div class="trip-hero-copy">
+        <p id="heroEyebrow" class="eyebrow light"></p>
+        <h1 id="tripTitle"></h1>
+        <p id="tripSubtitle" class="lede light"></p>
+        <div id="heroTags" class="chips"></div>
+      </div>
+      <aside class="hero-panel"><div id="kpis" class="kpi-grid"></div></aside>
+    </section>
+
+    <nav id="sectionNav" class="section-nav" aria-label="Sections"></nav>
+
+    <section id="overview" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Synthèse</p><h2>Pourquoi cette option ?</h2></div><p id="overviewIntro" class="muted"></p></div>
+      <div id="summaryCards" class="summary-grid"></div>
+    </section>
+
+    <section id="mapSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Carte interactive</p><h2>Le circuit</h2></div><p class="muted">Les liaisons de démonstration sont schématiques.</p></div>
+      <div class="map-layout"><aside id="stops" class="stops"></aside><div id="map" class="map"></div></div>
+    </section>
+
+    <section id="stepsSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Étapes</p><h2>Les temps forts</h2></div><p class="muted">L’hébergement affiché suit le budget sélectionné.</p></div>
+      <div id="steps" class="steps-grid"></div>
+    </section>
+
+    <section id="budgetSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Budget</p><h2>Trois niveaux de prestation</h2></div><p id="budgetIntro" class="muted"></p></div>
+      <div id="budgetCards" class="budget-grid"></div>
+      <div id="budgetBreakdown" class="budget-breakdown"></div>
+    </section>
+
+    <section id="daysSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Programme</p><h2>Jour par jour</h2></div><p id="daysIntro" class="muted"></p></div>
+      <div id="days" class="days-grid"></div>
+    </section>
+
+    <section id="sourcesSection" class="panel-section">
+      <div class="section-head"><div><p class="eyebrow">Traçabilité</p><h2>Sources et confiance</h2></div><p id="traceability" class="muted"></p></div>
+      <div id="sources" class="sources"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <footer class="site-footer">Atlas Voyage · Reims comme origine porte-à-porte</footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script type="module" src="./assets/js/trip.js"></script>
+</body>
+</html>
