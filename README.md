@@ -37,6 +37,20 @@ Le **top 3** est recalculé après ces contraintes. Une shortlist locale peut ê
 
 Voir `docs/data-lifecycle-v3.md`.
 
+## Revue homogène des preuves longlist
+
+`data/longlist-evidence.json` constitue le registre de preuves commun aux 12 candidates. Chaque destination doit désormais documenter les cinq mêmes dimensions :
+
+- saison / météo ;
+- faune ;
+- sécurité ;
+- formalités ;
+- santé.
+
+Chaque dimension porte un statut (`verified`, `supported`, `to_recheck`, `unresolved`), une confiance, une synthèse et au moins une source datée. Les sujets évolutifs comportent une échéance de revérification lorsque nécessaire.
+
+La qualité des preuves est volontairement séparée du score : une destination mieux documentée ne gagne pas automatiquement des points. Les observations d'animaux sauvages ne sont jamais garanties.
+
 ## Comparateur aéroports depuis Reims
 
 L'accès terrestre et la recherche de vols sont séparés.
@@ -88,16 +102,16 @@ Les valeurs actuelles restent des **estimations de comparaison**, pas des offres
 npm run validate
 ```
 
-La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores et incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, anciens comparateurs aéroports, base commune des six accès depuis Reims, préparation et syntaxe JavaScript/service worker.
+La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores et incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, anciens comparateurs aéroports, base commune des six accès depuis Reims, **12 dossiers de preuves longlist × 5 dimensions obligatoires**, préparation et syntaxe JavaScript/service worker.
 
 ## PWA / cache
 
-Le service worker met en cache uniquement le shell applicatif local, le manifest et les deux fichiers explicitement publics nécessaires à la longlist :
+Le service worker met en cache uniquement le shell applicatif local, le manifest et les deux fichiers explicitement publics nécessaires au rendu courant de la longlist :
 
 - `data/catalog.json` ;
 - `data/destination-comparison.json`.
 
-Il ne met pas automatiquement en cache les dossiers détaillés, données `airport-access`, états de réservation, tuiles OpenStreetMap, images ou CDN externes. Lors de l'activation, il ne supprime que les anciens caches `atlas-*`.
+Le registre de preuves, les dossiers détaillés, données `airport-access`, états de réservation, tuiles OpenStreetMap, images et CDN externes ne sont pas mis automatiquement en cache. Lors de l'activation, le service worker ne supprime que les anciens caches `atlas-*`.
 
 Le mode hors-ligne est volontairement limité tant que la future politique de confidentialité n'est pas finalisée.
 
@@ -110,7 +124,7 @@ Voir :
 - `docs/architecture.md` ;
 - `instructions_projet_atlas_voyage.md`.
 
-Les prochains chantiers de fond sont l'homogénéisation factuelle des 12 candidates puis, sur les destinations réellement short-listées, la recherche de vols sur des dates identiques et le chiffrage exact train/voiture + péages + carburant + parking + hôtel éventuel.
+Les prochains chantiers de fond sont l'ajustement contradictoire des scores à partir du registre de preuves puis, sur les destinations réellement short-listées, la recherche de vols sur des dates identiques et le chiffrage exact train/voiture + péages + carburant + parking + hôtel éventuel.
 
 ## Démonstrations
 
