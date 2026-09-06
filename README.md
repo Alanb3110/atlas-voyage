@@ -71,6 +71,24 @@ Un prix `observed` doit porter sa compagnie, sa source HTTPS et sa date de contr
 
 L'accueil expose une synthèse compacte : prix aérien observé, qualité temporelle de l'observation et benchmarks d'accès depuis Reims. Tant que les billets terrestres/parking et l'horaire précis du vol ne sont pas ouverts, Atlas Voyage ne présente pas de faux total porte-à-porte.
 
+### Compromis Pareto aéroport
+
+Le scan ne convertit pas le temps en argent et n'applique aucun coefficient de « valeur du temps » caché. Chaque alternative à l'aéroport leader est présentée avec les grandeurs brutes :
+
+```text
+ΔC_partie = N_voyageurs × (prix_leader − prix_alternative)
+Δt_rail,A/R = 2 × (temps_rail,alternative − temps_rail,leader)
+Δescales = escales_alternative − escales_leader
+```
+
+- `ΔC_partie > 0` signifie une économie aérienne brute pour le couple ;
+- `Δt_rail,A/R > 0` signifie davantage de pré-acheminement ferroviaire ;
+- une alternative moins chère mais plus lente est affichée comme **compromis**, pas comme gagnante ;
+- une alternative plus chère, plus lente et sans réduction d'escales est marquée **signal dominé** ;
+- si les dates tarifaires ne sont pas toutes `exact`, la ligne reste explicitement **signal non strict**.
+
+Cette lecture est volontairement distincte du futur calcul porte-à-porte complet, qui nécessitera billets terrestres ou voiture, carburant, péages, parking, hôtel éventuel, marge aéroport et horaires exacts.
+
 ## Fonctionnalités
 
 Le renderer générique gère plusieurs dossiers et variantes, trois budgets, URL partageables, comparateurs, carte Leaflet, étapes, faune, cuisine, météo, santé/sécurité, règles locales, budgets détaillés, programme, sources/traçabilité, accès aéroports depuis Reims, préparation/réservation abstraite, mode Auto/Clair/Sombre et PWA à cache restrictif.
@@ -103,7 +121,7 @@ Les valeurs longlist et scan marché restent des données de comparaison, pas de
 npm run validate
 ```
 
-La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores/incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, base des six accès Reims, 12 dossiers de preuves × 5 dimensions, provenance/dateMatch du scan tarifaire, préparation et syntaxe JavaScript/service worker.
+La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores/incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, base des six accès Reims, 12 dossiers de preuves × 5 dimensions, provenance/dateMatch du scan tarifaire, unicité des aéroports comparés, préparation et syntaxe JavaScript/service worker.
 
 ## PWA / cache
 
