@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 2,
+  "checkedAt": "2026-09-06",
+  "origin": {
+    "label": "Reims centre",
+    "country": "France"
+  },
+  "status": "research",
+  "note": "Benchmarks d'accès terrestre destinés au choix initial de l'aéroport. Les durées et distances sont observées/estimées à partir de planificateurs publics consultés le 06/09/2026. Les prix de billets, péages, carburant, parking et éventuelle nuit d'hôtel doivent être recalculés pour les dates et horaires exacts du vol avant décision.",
+  "airports": [
+    {
+      "code": "CDG",
+      "name": "Paris-Charles-de-Gaulle",
+      "country": "France",
+      "accessModes": [
+        {
+          "id": "car",
+          "mode": "Voiture",
+          "durationMin": 87,
+          "distanceKm": 126.5,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Paris-Charles-de-Gaulle-Airport-CDG",
+          "confidence": "medium",
+          "costs": {"fuel":"to_recheck","tolls":"to_recheck","parking":"to_recheck","hotel":"to_recheck"}
+        },
+        {
+          "id": "rail",
+          "mode": "Train",
+          "durationMin": 103,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Paris-Charles-de-Gaulle-Airport-CDG",
+          "confidence": "medium",
+          "costs": {"tickets":"to_recheck"}
+        }
+      ]
+    },
+    {
+      "code": "ORY",
+      "name": "Paris-Orly",
+      "country": "France",
+      "accessModes": [
+        {
+          "id": "car",
+          "mode": "Voiture",
+          "durationMin": 91,
+          "distanceKm": 150.3,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Paris-Orly-Airport-ORY",
+          "confidence": "medium",
+          "costs": {"fuel":"to_recheck","tolls":"to_recheck","parking":"to_recheck","hotel":"to_recheck"}
+        },
+        {
+          "id": "rail",
+          "mode": "Train + métro 14",
+          "durationMin": 84,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Paris-Orly-Airport-ORY",
+          "confidence": "medium",
+          "costs": {"tickets":"to_recheck"}
+        }
+      ]
+    },
+    {
+      "code": "BRU",
+      "name": "Brussels Airport",
+      "country": "Belgique",
+      "accessModes": [
+        {
+          "id": "car",
+          "mode": "Voiture",
+          "durationMin": 164,
+          "distanceKm": 215,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Brussels-Airport-BRU",
+          "confidence": "medium",
+          "costs": {"fuel":"to_recheck","tolls":"to_recheck","parking":"to_recheck","hotel":"to_recheck"}
+        },
+        {
+          "id": "rail",
+          "mode": "Train via Paris",
+          "durationMin": 176,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Brussels-Airport-BRU",
+          "confidence": "medium",
+          "costs": {"tickets":"to_recheck"}
+        }
+      ]
+    },
+    {
+      "code": "LUX",
+      "name": "Luxembourg Airport",
+      "country": "Luxembourg",
+      "accessModes": [
+        {
+          "id": "car",
+          "mode": "Voiture",
+          "durationMin": 155,
+          "distanceKm": 196,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Carnegie-Library-of-Reims/Luxembourg-Airport-LUX",
+          "confidence": "medium",
+          "costs": {"fuel":"to_recheck","tolls":"to_recheck","parking":"to_recheck","hotel":"to_recheck"}
+        },
+        {
+          "id": "rail",
+          "mode": "Train + tram",
+          "durationMin": 243,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Carnegie-Library-of-Reims/Luxembourg-Airport-LUX",
+          "confidence": "low",
+          "costs": {"tickets":"to_recheck"}
+        }
+      ]
+    },
+    {
+      "code": "AMS",
+      "name": "Amsterdam Schiphol",
+      "country": "Pays-Bas",
+      "accessModes": [
+        {
+          "id": "car",
+          "mode": "Voiture",
+          "durationMin": 290,
+          "distanceKm": 403.1,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Schiphol-Airport",
+          "confidence": "medium",
+          "costs": {"fuel":"to_recheck","tolls":"to_recheck","parking":"to_recheck","hotel":"to_recheck"}
+        },
+        {
+          "id": "rail",
+          "mode": "Train via Paris",
+          "durationMin": 275,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Schiphol-Airport",
+          "confidence": "medium",
+          "costs": {"tickets":"to_recheck"}
+        }
+      ]
+    },
+    {
+      "code": "FRA",
+      "name": "Frankfurt Airport",
+      "country": "Allemagne",
+      "accessModes": [
+        {
+          "id": "car",
+          "mode": "Voiture",
+          "durationMin": 222,
+          "distanceKm": 419.7,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Frankfurt-Airport-FRA",
+          "confidence": "medium",
+          "costs": {"fuel":"to_recheck","tolls":"to_recheck","parking":"to_recheck","hotel":"to_recheck"}
+        },
+        {
+          "id": "rail",
+          "mode": "Train via Strasbourg/Mannheim",
+          "durationMin": 297,
+          "status": "estimated",
+          "checkedAt": "2026-09-06",
+          "source": "https://www.rome2rio.com/s/Reims/Frankfurt-Airport-FRA",
+          "confidence": "medium",
+          "costs": {"tickets":"to_recheck"}
+        }
+      ]
+    }
+  ]
+}
