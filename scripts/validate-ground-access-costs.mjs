@@ -10,7 +10,7 @@ const access = JSON.parse(await readFile(resolve(root, 'data/airport-access/reim
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
-const finite = value => Number.isFinite(Number(value));
+const finite = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
 const requiredCodes = new Set((access.airports || []).map(item => item.code));
 
 if (!validDate(data.checkedAt)) fail('checkedAt invalide');
