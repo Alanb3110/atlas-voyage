@@ -1,4 +1,4 @@
-const CACHE = 'atlas-v18-shell';
+const CACHE = 'atlas-v19-shell';
 
 const SHELL = [
   './index.html',
@@ -18,6 +18,7 @@ const SHELL = [
   './assets/js/home.js',
   './assets/js/trip.js',
   './assets/js/airport-access.js',
+  './assets/js/destination-data-contract.js',
   './assets/js/destination-compare.js',
   './assets/js/destination-rank-robustness.js',
   './assets/js/shortlist-market-scan.js',
