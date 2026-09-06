@@ -126,6 +126,17 @@ const cases = [
     mutate: data => { data.airports[0].accessModes[0].distanceKm = '126.5'; }
   },
   {
+    label: 'accès aéroport: plage de durée incohérente est rejetée',
+    file: 'data/airport-access/reims-airports.json',
+    validator: 'scripts/validate-airport-origins.mjs',
+    expected: 'BRU/rail: durationRangeMin invalide',
+    mutate: data => {
+      const bru = data.airports.find(airport => airport.code === 'BRU');
+      const rail = bru.accessModes.find(mode => mode.id === 'rail');
+      rail.durationRangeMin = { low: 300, high: 200 };
+    }
+  },
+  {
     label: 'coûts terrestres: chaîne numérique de durée voyage est rejetée',
     file: 'data/airport-access/reims-ground-costs.json',
     validator: 'scripts/validate-ground-access-costs.mjs',
@@ -152,6 +163,29 @@ const cases = [
     validator: 'scripts/validate-shortlist-market-scan.mjs',
     expected: 'sa-cdg-af-2026-11: price.value invalide',
     mutate: data => { data.destinations[0].observations[0].price.value = null; }
+  },
+  {
+    label: 'scan marché: tarif nearby candidat budget est rejeté',
+    file: 'data/shortlist-market-scan.json',
+    validator: 'scripts/validate-shortlist-market-scan.mjs',
+    expected: 'budgetUse incompatible avec dateMatch=nearby',
+    mutate: data => { data.destinations[0].observations[0].budgetUse = 'exact_budget_candidate'; }
+  },
+  {
+    label: 'scan marché: retour antérieur au départ est rejeté',
+    file: 'data/shortlist-market-scan.json',
+    validator: 'scripts/validate-shortlist-market-scan.mjs',
+    expected: 'observedDates ordre invalide',
+    mutate: data => {
+      data.destinations[0].observations[0].observedDates = { departure: '2026-11-26', return: '2026-11-05' };
+    }
+  },
+  {
+    label: 'scan marché: stops en chaîne est rejeté',
+    file: 'data/shortlist-market-scan.json',
+    validator: 'scripts/validate-shortlist-market-scan.mjs',
+    expected: 'stops invalide',
+    mutate: data => { data.destinations[0].observations[0].stops = '0'; }
   },
   {
     label: 'géométrie shortlist: marge aéroport blanche est rejetée',
@@ -229,6 +263,14 @@ if (!mainRenderer.includes("return typeof value === 'number' && Number.isFinite(
 } else {
   passed += 1;
   console.log('✓ renderer conserve la garde numérique stricte');
+}
+
+const marketRenderer = await readFile(resolve(root, 'assets/js/shortlist-market-scan.js'), 'utf8');
+if (!marketRenderer.includes("const status = strictDates ? paretoStatus(fareDeltaParty, extraRailRoundTripMin, stopDelta) : 'non_strict';")) {
+  fail('renderer marché: dominance réservée aux dates exactes', 'la garde non_strict attendue a disparu');
+} else {
+  passed += 1;
+  console.log('✓ renderer marché: aucune dominance sur dates non strictes');
 }
 
 if (failures.length) {

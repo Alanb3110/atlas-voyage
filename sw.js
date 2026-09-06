@@ -1,4 +1,4 @@
-const CACHE = 'atlas-v19-shell';
+const CACHE = 'atlas-v20-shell';
 
 const SHELL = [
   './index.html',

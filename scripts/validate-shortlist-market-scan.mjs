@@ -13,15 +13,19 @@ const fail = message => errors.push(`${file}: ${message}`);
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
 const finiteNumber = value => typeof value === 'number' && Number.isFinite(value);
 const dateMatches = new Set(['exact','nearby','month']);
+const budgetUses = new Set(['exact_budget_candidate','signal_only']);
 const confidences = new Set(['high','medium','low']);
 const priceStatuses = new Set(['observed','estimated','hypothesis','to_recheck','confirmed']);
 const catalogById = new Map((catalog.trips || []).map(x => [x.id, x]));
 const airportCodes = new Set((access.airports || []).map(x => x.code));
 const researchedStages = new Set(['shortlist','selected','detailed','bookable','booked']);
+const day = value => Date.parse(`${value}T00:00:00Z`);
 
+if (data.schemaVersion !== 2) fail(`schemaVersion attendu=2, trouvé ${data.schemaVersion}`);
 if (!dateRe.test(data.checkedAt || '')) fail('checkedAt invalide');
 if (!dateRe.test(data.targetWindow?.departure || '')) fail('targetWindow.departure invalide');
 if (!dateRe.test(data.targetWindow?.return || '')) fail('targetWindow.return invalide');
+if (dateRe.test(data.targetWindow?.departure || '') && dateRe.test(data.targetWindow?.return || '') && day(data.targetWindow.return) <= day(data.targetWindow.departure)) fail('targetWindow ordre invalide');
 if (!finiteNumber(data.travelers) || data.travelers < 1) fail('travelers invalide');
 
 const seenTrips = new Set();
@@ -48,6 +52,9 @@ for (const destination of data.destinations || []) {
     if (!airportCodes.has(obs.origin)) fail(`${obs.id}: origine ${obs.origin} absente de la base Reims`);
     if (obs.destination !== destination.arrivalAirport) fail(`${obs.id}: destination ${obs.destination} ≠ arrivalAirport ${destination.arrivalAirport}`);
     if (!dateMatches.has(obs.dateMatch)) fail(`${obs.id}: dateMatch invalide`);
+    if (!budgetUses.has(obs.budgetUse)) fail(`${obs.id}: budgetUse invalide`);
+    if (obs.dateMatch === 'exact' && obs.budgetUse !== 'exact_budget_candidate') fail(`${obs.id}: dateMatch exact exige budgetUse=exact_budget_candidate`);
+    if (obs.dateMatch !== 'exact' && obs.budgetUse !== 'signal_only') fail(`${obs.id}: budgetUse incompatible avec dateMatch=${obs.dateMatch}`);
     if (!dateRe.test(obs.checkedAt || '')) fail(`${obs.id}: checkedAt invalide`);
     if (!/^https:\/\//.test(obs.source || '')) fail(`${obs.id}: source HTTPS manquante`);
     if (!confidences.has(obs.confidence)) fail(`${obs.id}: confidence invalide`);
@@ -55,6 +62,8 @@ for (const destination of data.destinations || []) {
     if (!obs.price?.currency) fail(`${obs.id}: price.currency manquante`);
     if (!priceStatuses.has(obs.price?.status)) fail(`${obs.id}: price.status invalide`);
     if (obs.price?.status === 'observed' && !obs.source) fail(`${obs.id}: prix observé sans source`);
+    if (!Number.isInteger(obs.stops) || obs.stops < 0) fail(`${obs.id}: stops invalide`);
+    if (obs.flightDurationMin != null && (!finiteNumber(obs.flightDurationMin) || obs.flightDurationMin <= 0)) fail(`${obs.id}: flightDurationMin invalide`);
 
     const hasDates = Boolean(obs.observedDates?.departure && obs.observedDates?.return);
     if (obs.dateMatch === 'exact') {
@@ -69,8 +78,10 @@ for (const destination of data.destinations || []) {
         fail(`${obs.id}: dates exactes mais dateMatch=nearby`);
       }
     }
-    if (hasDates && (!dateRe.test(obs.observedDates.departure) || !dateRe.test(obs.observedDates.return))) {
-      fail(`${obs.id}: observedDates invalides`);
+    if (obs.dateMatch === 'month' && hasDates) fail(`${obs.id}: month ne doit pas exposer observedDates comme une paire tarifaire`);
+    if (hasDates) {
+      if (!dateRe.test(obs.observedDates.departure) || !dateRe.test(obs.observedDates.return)) fail(`${obs.id}: observedDates invalides`);
+      else if (day(obs.observedDates.return) <= day(obs.observedDates.departure)) fail(`${obs.id}: observedDates ordre invalide`);
     }
   }
 
@@ -78,8 +89,6 @@ for (const destination of data.destinations || []) {
   if (!origins.has(destination.currentLeader)) fail(`${destination.tripId}: currentLeader absent des observations`);
 }
 
-// Every candidate explicitly promoted to shortlist must already have the targeted
-// market scan. A later promotion to selected/detailed does not invalidate the scan.
 const shortlistIds = new Set((catalog.trips || []).filter(x => x.status === 'shortlist').map(x => x.id));
 for (const id of shortlistIds) if (!seenTrips.has(id)) fail(`${id}: shortlist catalogue absente du scan marché`);
 if (seenTrips.size !== 3) fail(`scan actuel attendu sur 3 destinations approfondies, trouvé ${seenTrips.size}`);

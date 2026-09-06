@@ -6,7 +6,7 @@
     "country": "France"
   },
   "status": "research",
-  "note": "Benchmarks d'accès terrestre destinés au choix initial de l'aéroport. Les temps ferroviaires utilisent désormais en priorité des horaires/opérateurs officiels consultés le 06/09/2026. Ils restent des benchmarks, pas les horaires garantis de novembre. Les billets, péages, carburant, parking et éventuelle nuit d'hôtel doivent être recalculés pour le vol exact avant décision.",
+  "note": "Benchmarks d'accès terrestre destinés au choix initial de l'aéroport. Les temps ferroviaires utilisent en priorité des horaires/opérateurs officiels consultés le 06/09/2026. Ils restent des benchmarks, pas les horaires garantis de novembre. Les billets, péages, carburant, parking et éventuelle nuit d'hôtel doivent être recalculés pour le vol exact avant décision.",
   "airports": [
     {
       "code": "CDG",
@@ -28,13 +28,13 @@
           "id": "rail",
           "mode": "TER + TGV vers CDG 2",
           "durationMin": 85,
-          "durationRangeMin": {"low":53,"high":92},
+          "durationRangeMin": {"low":81,"high":92},
           "status": "estimated",
           "checkedAt": "2026-09-06",
           "source": "https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle",
           "secondarySource": "https://www.sncf-connect.com/train/trajet/reims/roissy-charles-de-gaulle",
           "confidence": "high",
-          "note": "Horaire du 06/09 : 1 h 21 à 1 h 32 selon le départ ; la page trajet affiche un minimum théorique de 53 min. Retenir ~1 h 25 comme benchmark prudent tant que l'horaire du vol n'est pas fixé.",
+          "note": "Horaires SNCF observés le 06/09 : 1 h 21 à 1 h 32 selon le départ. Le précédent minimum théorique de 53 min n'est plus utilisé dans la plage opérationnelle ; retenir ~1 h 25 comme benchmark tant que le vol n'est pas fixé.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -88,13 +88,14 @@
         {
           "id": "rail",
           "mode": "TGV/Eurostar via Bruxelles-Midi + train aéroport",
-          "durationMin": 187,
+          "durationMin": 234,
+          "durationRangeMin": {"low":187,"high":291},
           "status": "estimated",
           "checkedAt": "2026-09-06",
           "source": "https://www.sncf-connect.com/train/horaires/reims/bruxelles",
           "secondarySource": "https://www.brusselsairport.be/fr/passenger/mobility/public-transport/train",
           "confidence": "high",
-          "note": "SNCF affiche 2 h 44 comme meilleur Reims–Bruxelles ; Brussels Airport annonce environ 23 min depuis Bruxelles-Midi. Les correspondances réelles peuvent allonger le total.",
+          "note": "SNCF affiche 2 h 44 au mieux et 3 h 31 en moyenne Reims–Bruxelles ; un trajet observé atteint 4 h 28. Brussels Airport ajoute environ 23 min depuis Bruxelles-Midi, avec six trains directs par heure. Benchmark central ~3 h 54, plage indicative 3 h 07–4 h 51. Le supplément Brussels Airport est actuellement de 6,90 € par trajet/passager et doit être inclus dans le billet ou ajouté séparément.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -181,8 +182,9 @@
           "status": "estimated",
           "checkedAt": "2026-09-06",
           "source": "https://www.sncf-connect.com/train/horaires/reims/francfort-sur-le-main",
+          "secondarySource": "https://www.frankfurt-airport.com/en/transport-and-parking/to-from-the-airport/travel-by-train.html",
           "confidence": "low",
-          "note": "SNCF affiche un meilleur temps vers Frankfurt Hbf autour de 4 h 54 ; le segment vers FRA et la correspondance doivent encore être ajoutés précisément au vol retenu.",
+          "note": "SNCF affiche un meilleur temps vers Frankfurt Hbf autour de 4 h 54 ; Frankfurt Airport dispose d'une gare grandes lignes directement à l'aéroport, mais l'itinéraire Reims→FRA exact doit encore être recherché pour le vol retenu.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
