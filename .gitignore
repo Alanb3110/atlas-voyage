@@ -1,0 +1,20 @@
+# Local/private travel data — never commit while the repository is public
+.env
+.env.*
+!.env.example
+*.local.json
+*.private.json
+private/
+secrets/
+data/private/
+data/personal/
+data/reservations/
+data/tickets/
+data/documents/
+
+# Common local/editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+node_modules/
