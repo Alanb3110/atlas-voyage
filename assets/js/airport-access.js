@@ -75,6 +75,10 @@ function clamp01(value) {
   return Math.max(0, Math.min(1, Number(value) || 0));
 }
 
+function hasNumericValue(value) {
+  return value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+}
+
 // Stable regret model retained only for legacy researched flight files. Adding a
 // very expensive/slow option no longer changes the normalization of all existing
 // options. New shortlist decisions should prefer the explicit Pareto view.
@@ -118,7 +122,7 @@ function formatDuration(mins) {
 }
 
 function formatRangeEUR(range) {
-  if (!range || !Number.isFinite(Number(range.low)) || !Number.isFinite(Number(range.high))) return '—';
+  if (!range || !hasNumericValue(range.low) || !hasNumericValue(range.high)) return '—';
   const low = Number(range.low);
   const high = Number(range.high);
   return Math.abs(high - low) < 0.01 ? formatEUR(low) : `${formatEUR(low)}–${formatEUR(high)}`;
@@ -239,14 +243,14 @@ function renderGroundCost(cost) {
   const railFare = cost.railFare;
   const route = routeRange ? `${formatRangeEUR(routeRange)} A/R hors parking` : 'route A/R à revérifier';
   let parkingText = 'parking 20 j à revérifier';
-  if (Number.isFinite(Number(parking?.valueEUR))) {
+  if (hasNumericValue(parking?.valueEUR)) {
     parkingText = `parking 20 j ${formatEUR(parking.valueEUR)}`;
   } else if (parking?.publishedBenchmark?.fromEUR != null) {
     parkingText = `${parking.publishedBenchmark.durationDays} j dès ${formatEUR(parking.publishedBenchmark.fromEUR)} · 20 j dynamique`;
   }
 
   let carTotal = null;
-  if (routeRange && Number.isFinite(Number(parking?.valueEUR))) {
+  if (routeRange && hasNumericValue(parking?.valueEUR)) {
     carTotal = {
       low: Number(routeRange.low) + Number(parking.valueEUR),
       high: Number(routeRange.high) + Number(parking.valueEUR)
@@ -254,7 +258,7 @@ function renderGroundCost(cost) {
   }
 
   let railText = 'tarif rail à revérifier';
-  if (Number.isFinite(Number(railFare?.oneWayPerPersonFromEUR))) {
+  if (hasNumericValue(railFare?.oneWayPerPersonFromEUR)) {
     const floor = Number(railFare.oneWayPerPersonFromEUR) * 4;
     railText = `rail ≥ ${formatEUR(floor)} pour 2 A/R, hors segments additionnels`;
   }
