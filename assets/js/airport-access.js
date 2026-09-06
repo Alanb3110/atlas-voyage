@@ -15,14 +15,35 @@ if (!tripId) {
 }
 
 async function init() {
-  const response = await fetch(`./data/airport-access/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  if (data.tripId !== tripId) throw new Error('tripId incohérent');
+  const [accessResponse, tripResponse] = await Promise.all([
+    fetch('./data/airport-access/reims-airports.json', { cache: 'no-store' }),
+    fetch(`./data/airport-access/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' })
+  ]);
+  if (!accessResponse.ok) throw new Error(`Accès Reims HTTP ${accessResponse.status}`);
+  const accessData = await accessResponse.json();
+
+  let data;
+  if (tripResponse.ok) {
+    data = await tripResponse.json();
+    if (data.tripId !== tripId) throw new Error('tripId incohérent');
+  } else if (tripResponse.status === 404) {
+    data = {
+      schemaVersion: 1,
+      tripId,
+      status: 'research',
+      checkedAt: accessData.checkedAt,
+      intro: 'Les accès terrestres depuis Reims sont documentés ; les vols de cette destination n’ont pas encore été recherchés au niveau aéroport.',
+      note: 'Aucun classement de départ n’est produit tant que les vols compatibles avec les dates ne sont pas recherchés.',
+      defaultWeights: { cost: 30, time: 30, flight: 25, fatigue: 15 },
+      options: []
+    };
+  } else {
+    throw new Error(`Vols HTTP ${tripResponse.status}`);
+  }
 
   const stored = loadWeights(tripId);
-  const weights = normalizeWeights(stored || data.defaultWeights || { cost: 35, time: 25, flight: 20, fatigue: 20 });
-  renderShell(data, weights);
+  const weights = normalizeWeights(stored || data.defaultWeights || { cost: 30, time: 30, flight: 25, fatigue: 15 });
+  renderShell(data, accessData, weights);
   ensureNavLink();
 }
 
@@ -47,32 +68,39 @@ function saveWeights(id, weights) {
   catch {}
 }
 
-function minMaxScore(value, values, inverse = false) {
-  const valid = values.map(Number).filter(Number.isFinite);
-  if (!valid.length) return 0.5;
-  const min = Math.min(...valid);
-  const max = Math.max(...valid);
-  if (Math.abs(max - min) < 1e-9) return 1;
-  const n = (Number(value) - min) / (max - min);
-  return inverse ? 1 - n : n;
+function clamp01(value) {
+  return Math.max(0, Math.min(1, Number(value) || 0));
 }
 
+// Stable regret model: adding a very expensive/slow option no longer changes the
+// normalization of all existing options. Cost and time are measured as regret
+// versus the best researched option, with explicit saturation thresholds.
 function scoreOptions(options, weights) {
-  const totalCosts = options.map(totalCost);
-  const totalTimes = options.map(o => Number(o.doorToDoorMin));
-  return options.map(option => {
-    const costScore = minMaxScore(totalCost(option), totalCosts, true);
-    const timeScore = minMaxScore(option.doorToDoorMin, totalTimes, true);
-    const flightScore = Math.max(0, Math.min(1, (Number(option.flight?.quality) || 0) / 5));
-    const fatigueScore = Math.max(0, Math.min(1, (6 - (Number(option.fatigue) || 5)) / 5));
-    const score = (
-      costScore * weights.cost +
-      timeScore * weights.time +
-      flightScore * weights.flight +
-      fatigueScore * weights.fatigue
+  const valid = options.filter(o => o.considered !== false && Number.isFinite(Number(o.flight?.priceEUR)) && Number.isFinite(Number(o.doorToDoorMin)));
+  if (!valid.length) return [];
+  const minCost = Math.min(...valid.map(totalCost));
+  const minTime = Math.min(...valid.map(o => Number(o.doorToDoorMin)));
+  const costSpanEUR = 1500;
+  const timeSpanMin = 480;
+
+  return valid.map(option => {
+    const costRegret = clamp01((totalCost(option) - minCost) / costSpanEUR);
+    const timeRegret = clamp01((Number(option.doorToDoorMin) - minTime) / timeSpanMin);
+    const flightRegret = clamp01((5 - (Number(option.flight?.quality) || 0)) / 5);
+    const fatigueRegret = clamp01(((Number(option.fatigue) || 5) - 1) / 4);
+    const penalty = (
+      costRegret * weights.cost +
+      timeRegret * weights.time +
+      flightRegret * weights.flight +
+      fatigueRegret * weights.fatigue
     );
-    return { ...option, score, components: { costScore, timeScore, flightScore, fatigueScore } };
-  }).sort((a, b) => b.score - a.score);
+    return {
+      ...option,
+      decisionPenalty: penalty,
+      components: { costRegret, timeRegret, flightRegret, fatigueRegret },
+      comparisonBaseline: { minCost, minTime, costSpanEUR, timeSpanMin }
+    };
+  }).sort((a, b) => a.decisionPenalty - b.decisionPenalty);
 }
 
 function totalCost(option) {
@@ -86,19 +114,20 @@ function formatDuration(mins) {
   return h ? `${h} h${r ? ` ${String(r).padStart(2, '0')}` : ''}` : `${r} min`;
 }
 
-function renderShell(data, weights) {
+function renderShell(data, accessData, weights) {
   $('#airportIntro').textContent = data.intro || 'Comparaison porte-à-porte depuis Reims.';
-  renderWeights(data, weights);
-  renderRanking(data, weights);
-  $('#airportTrace').textContent = `${data.status === 'demo' ? 'Données de démonstration' : 'Données voyage'} · vérifiées ${formatDateFR(data.checkedAt)}${data.note ? ` · ${data.note}` : ''}`;
+  renderWeights(data, accessData, weights);
+  renderRanking(data, accessData, weights);
+  renderAccessCoverage(data, accessData);
+  $('#airportTrace').textContent = `${data.status === 'demo' ? 'Données de démonstration' : 'Recherche aérienne'} · ${formatDateFR(data.checkedAt || accessData.checkedAt)}${data.note ? ` · ${data.note}` : ''}`;
 }
 
-function renderWeights(data, weights) {
+function renderWeights(data, accessData, weights) {
   const labels = { cost: 'Prix total', time: 'Temps porte-à-porte', flight: 'Qualité du vol', fatigue: 'Fatigue' };
   $('#airportWeights').innerHTML = Object.entries(labels).map(([key, label]) => `
     <label class="airport-weight">
       <span><strong>${escapeHtml(label)}</strong><output id="airportWeightValue-${key}">${Math.round(weights[key])}%</output></span>
-      <input type="range" min="0" max="100" step="5" value="${Math.round(weights[key])}" data-airport-weight="${key}">
+      <input type="range" min="0" max="100" step="5" value="${Math.round(weights[key])}" data-airport-weight="${key}" aria-label="Poids ${escapeHtml(label)}">
     </label>`).join('') + '<button class="button secondary airport-reset" type="button" id="airportWeightsReset">Réinitialiser</button>';
 
   document.querySelectorAll('[data-airport-weight]').forEach(input => input.addEventListener('input', () => {
@@ -110,19 +139,22 @@ function renderWeights(data, weights) {
       if (out) out.textContent = `${Math.round(value)}%`;
     });
     saveWeights(tripId, raw);
-    renderRanking(data, normalized);
+    renderRanking(data, accessData, normalized);
   }));
 
   $('#airportWeightsReset').onclick = () => {
     try { localStorage.removeItem(`atlas-airport-weights:${tripId}`); } catch {}
-    renderShell(data, normalizeWeights(data.defaultWeights || { cost: 35, time: 25, flight: 20, fatigue: 20 }));
+    renderShell(data, accessData, normalizeWeights(data.defaultWeights || { cost: 30, time: 30, flight: 25, fatigue: 15 }));
   };
 }
 
-function renderRanking(data, weights) {
-  const options = scoreOptions((data.options || []).filter(o => o.considered !== false), weights);
+function renderRanking(data, accessData, weights) {
+  const options = scoreOptions(data.options || [], weights);
   if (!options.length) {
-    $('#airportRecommendation').innerHTML = '<div class="error-box">Aucun aéroport comparé pour ce voyage.</div>';
+    $('#airportRecommendation').innerHTML = `
+      <article class="airport-recommendation research-needed">
+        <div><p class="eyebrow">Recherche nécessaire</p><h3>Aucun vol comparable pour l’instant</h3><p>Les six accès depuis Reims sont visibles ci-dessous, mais aucun aéroport ne doit être recommandé avant recherche de vols sur des dates comparables.</p></div>
+      </article>`;
     $('#airportCompare').innerHTML = '';
     return;
   }
@@ -130,29 +162,62 @@ function renderRanking(data, weights) {
   const best = options[0];
   $('#airportRecommendation').innerHTML = `
     <article class="airport-recommendation">
-      <div><p class="eyebrow">Choix actuel</p><h3>${escapeHtml(best.airport?.code || '')} · ${escapeHtml(best.airport?.name || '')}</h3><p>${escapeHtml(best.recommendation || best.advantages?.[0] || 'Meilleur compromis avec les pondérations actuelles.')}</p></div>
-      <div class="airport-score-big"><span>Score</span><strong>${Math.round(best.score)}</strong><small>/100</small></div>
+      <div><p class="eyebrow">Meilleur compromis provisoire</p><h3>${escapeHtml(best.airport?.code || '')} · ${escapeHtml(best.airport?.name || '')}</h3><p>${escapeHtml(best.recommendation || best.advantages?.[0] || 'Premier rang parmi les seules options aériennes déjà recherchées.')}</p><small>Rang calculé parmi ${options.length} option(s) recherchée(s), sans prétendre couvrir encore ORY/FRA si leurs vols manquent.</small></div>
+      <div class="airport-rank-big"><span>Rang</span><strong>#1</strong><small>provisoire</small></div>
     </article>`;
 
-  $('#airportCompare').innerHTML = options.map((option, index) => `
-    <article class="airport-card ${index === 0 ? 'recommended' : ''}">
+  $('#airportCompare').innerHTML = options.map((option, index) => {
+    const baseline = option.comparisonBaseline;
+    const extraCost = Math.max(0, totalCost(option) - baseline.minCost);
+    const extraTime = Math.max(0, Number(option.doorToDoorMin) - baseline.minTime);
+    return `<article class="airport-card ${index === 0 ? 'recommended' : ''}">
       <div class="airport-card-head">
-        <div><span class="airport-rank">#${index + 1}</span><h3>${escapeHtml(option.airport?.code || '')}</h3><p>${escapeHtml(option.airport?.name || '')}</p></div>
-        <div class="airport-score"><strong>${Math.round(option.score)}</strong><span>/100</span></div>
+        <div><span class="airport-rank">#${index + 1} parmi vols recherchés</span><h3>${escapeHtml(option.airport?.code || '')}</h3><p>${escapeHtml(option.airport?.name || '')}</p></div>
+        <span class="airport-option-status">${escapeHtml(option.status || data.status || 'estimated')}</span>
       </div>
       <div class="airport-metrics">
-        <div><span>Accès Reims</span><strong>${formatDuration(option.access?.durationMin)}</strong><small>${escapeHtml(option.access?.mode || '')}</small></div>
-        <div><span>Coût porte-à-porte</span><strong>${formatEUR(totalCost(option))}</strong><small>pour le voyage</small></div>
-        <div><span>Temps total</span><strong>${formatDuration(option.doorToDoorMin)}</strong><small>${Number(option.flight?.stops) || 0} escale(s)</small></div>
+        <div><span>Accès utilisé par l'ancien benchmark</span><strong>${formatDuration(option.access?.durationMin)}</strong><small>${escapeHtml(option.access?.mode || '')}</small></div>
+        <div><span>Budget comparatif</span><strong>${formatEUR(totalCost(option))}</strong><small>${extraCost ? `+${formatEUR(extraCost)} vs moins cher` : 'référence la moins chère'}</small></div>
+        <div><span>Temps total</span><strong>${formatDuration(option.doorToDoorMin)}</strong><small>${extraTime ? `+${formatDuration(extraTime)} vs plus rapide` : 'référence la plus rapide'}</small></div>
         <div><span>Fatigue</span><strong>${Math.max(1, Math.min(5, Number(option.fatigue) || 5))}/5</strong><small>plus bas = mieux</small></div>
       </div>
       <div class="airport-flight-line"><strong>Vol :</strong> ${formatDuration(option.flight?.durationMin)} · qualité ${Math.max(0, Math.min(5, Number(option.flight?.quality) || 0))}/5 · ${formatEUR(option.flight?.priceEUR || 0)}</div>
+      <div class="airport-legacy-warning">Le coût d'accès de ce benchmark est encore agrégé. Il sera remplacé par train ou voiture + carburant + péages + parking + hôtel éventuel lorsque les horaires de vol seront figés.</div>
       <div class="airport-procon">
         <div><strong>+</strong><ul>${(option.advantages || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
         <div><strong>−</strong><ul>${(option.compromises || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
       </div>
       <div class="airport-status">${escapeHtml(option.status || data.status || 'estimated')} · ${formatDateFR(option.checkedAt || data.checkedAt)}</div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
+}
+
+function renderAccessCoverage(data, accessData) {
+  const node = $('#airportCoverage');
+  if (!node) return;
+  const researched = new Map((data.options || []).map(option => [option.airport?.code, option]));
+  node.innerHTML = `
+    <div class="airport-coverage-head">
+      <div><p class="eyebrow">Accès terrestre indépendant du voyage</p><h3>Six aéroports à considérer depuis Reims</h3></div>
+      <p>Les coûts complets ne sont volontairement pas inventés : parking, péages, carburant, billets de train et hôtel éventuel restent à recalculer pour l'horaire et la durée réels.</p>
+    </div>
+    <div class="airport-coverage-grid">
+      ${(accessData.airports || []).map(airport => {
+        const flightOption = researched.get(airport.code);
+        const modes = airport.accessModes || [];
+        const car = modes.find(mode => mode.id === 'car');
+        const rail = modes.find(mode => mode.id === 'rail');
+        return `<article class="airport-access-card ${flightOption ? 'flight-researched' : 'flight-missing'}">
+          <div class="airport-access-card-head"><div><strong>${escapeHtml(airport.code)}</strong><span>${escapeHtml(airport.name)}</span></div><span class="airport-flight-research ${flightOption ? 'done' : 'todo'}">${flightOption ? 'Vol recherché' : 'Vol à rechercher'}</span></div>
+          <div class="airport-access-modes">
+            ${car ? `<div><span>Voiture</span><strong>${formatDuration(car.durationMin)}</strong><small>${car.distanceKm ? `${Math.round(car.distanceKm)} km` : '—'}</small></div>` : ''}
+            ${rail ? `<div><span>Rail</span><strong>${formatDuration(rail.durationMin)}</strong><small>${escapeHtml(rail.mode || 'Train')}</small></div>` : ''}
+          </div>
+          <div class="airport-access-costs">Coûts détaillés : <strong>à revérifier</strong></div>
+        </article>`;
+      }).join('')}
+    </div>
+    <div class="airport-coverage-trace">Benchmarks accès vérifiés ${formatDateFR(accessData.checkedAt)} · statut : ${escapeHtml(accessData.status || 'research')}.</div>`;
 }
 
 function ensureNavLink() {

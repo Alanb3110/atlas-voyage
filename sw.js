@@ -1,4 +1,4 @@
-const CACHE = 'atlas-v8-shell';
+const CACHE = 'atlas-v9-shell';
 
 const SHELL = [
   './index.html',
@@ -19,9 +19,9 @@ const SHELL = [
   './assets/js/theme.js'
 ];
 
-// Explicitly public, non-sensitive data only. Detailed trip, airport and booking
-// files are intentionally excluded so future protected data is never persisted
-// by the application service worker by default.
+// Explicitly public, non-sensitive longlist data only. Detailed trip, airport
+// access and booking files are intentionally excluded so future protected data
+// is never persisted by the application service worker by default.
 const PUBLIC_DATA = [
   './data/catalog.json',
   './data/destination-comparison.json'

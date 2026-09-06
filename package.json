@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "validate:data": "node scripts/validate-data.mjs",
+    "validate:airports": "node scripts/validate-airport-origins.mjs",
     "validate:booking": "node scripts/validate-booking.mjs",
     "validate:js": "node --check assets/js/store.js && node --check assets/js/home.js && node --check assets/js/trip.js && node --check assets/js/airport-access.js && node --check assets/js/destination-compare.js && node --check assets/js/booking-readiness.js && node --check assets/js/theme.js && node --check sw.js",
-    "validate": "npm run validate:data && npm run validate:booking && npm run validate:js"
+    "validate": "npm run validate:data && npm run validate:airports && npm run validate:booking && npm run validate:js"
   }
 }
