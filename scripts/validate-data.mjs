@@ -34,10 +34,12 @@ function validateTraceableValue(file, label, item, expectedUnit = null) {
 
 const catalog = await readJson('data/catalog.json');
 const ids = new Set();
+const catalogById = new Map();
 for (const entry of catalog.trips ?? []) {
   if (!entry.id) { fail('data/catalog.json', 'voyage sans id'); continue; }
   if (ids.has(entry.id)) fail('data/catalog.json', `id dupliqué: ${entry.id}`);
   ids.add(entry.id);
+  catalogById.set(entry.id, entry);
   if (!allowedLifecycle.has(entry.status)) fail('data/catalog.json', `${entry.id}: statut lifecycle inconnu ${entry.status}`);
   if (entry.researchDepth && !allowedResearchDepth.has(entry.researchDepth)) fail('data/catalog.json', `${entry.id}: researchDepth inconnu ${entry.researchDepth}`);
 
@@ -130,7 +132,9 @@ try {
     if (seenTrips.has(row.tripId)) fail(destinationFile, `tripId dupliqué: ${row.tripId}`);
     seenTrips.add(row.tripId);
     if (!ids.has(row.tripId)) fail(destinationFile, `${label}: tripId absent du catalogue`);
-    if (!allowedLifecycle.has(row.stage)) fail(destinationFile, `${label}: stage lifecycle inconnu ${row.stage}`);
+    // Lifecycle authority is data/catalog.json. `stage` remains tolerated only as
+    // legacy schema baggage until destination-comparison v4 removes it entirely.
+    if (row.stage != null && !allowedLifecycle.has(row.stage)) fail(destinationFile, `${label}: stage legacy inconnu ${row.stage}`);
     if (!allowedConfidence.has(row.evidenceConfidence)) fail(destinationFile, `${label}: evidenceConfidence doit être A, B, C ou D`);
     const defaultHalf = Number(row.uncertaintyHalfWidth);
     if (!Number.isFinite(defaultHalf) || defaultHalf < 0 || defaultHalf > 2) fail(destinationFile, `${label}: uncertaintyHalfWidth doit être entre 0 et 2`);
