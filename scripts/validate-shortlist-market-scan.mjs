@@ -7,6 +7,7 @@ const root = resolve(here, '..');
 const file = 'data/shortlist-market-scan.json';
 const data = JSON.parse(await readFile(resolve(root, file), 'utf8'));
 const catalog = JSON.parse(await readFile(resolve(root, 'data/catalog.json'), 'utf8'));
+const access = JSON.parse(await readFile(resolve(root, 'data/airport-access/reims-airports.json'), 'utf8'));
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
@@ -14,6 +15,7 @@ const dateMatches = new Set(['exact','nearby','month']);
 const confidences = new Set(['high','medium','low']);
 const priceStatuses = new Set(['observed','estimated','hypothesis','to_recheck','confirmed']);
 const catalogIds = new Set((catalog.trips || []).map(x => x.id));
+const airportCodes = new Set((access.airports || []).map(x => x.code));
 
 if (!dateRe.test(data.checkedAt || '')) fail('checkedAt invalide');
 if (!dateRe.test(data.targetWindow?.departure || '')) fail('targetWindow.departure invalide');
@@ -36,8 +38,11 @@ for (const destination of data.destinations || []) {
     if (!obs.id) { fail(`${destination.tripId}: observation sans id`); continue; }
     if (seenObs.has(obs.id)) fail(`${obs.id}: id observation dupliqué`);
     seenObs.add(obs.id);
+    if (origins.has(obs.origin)) fail(`${destination.tripId}: plusieurs observations pour l'origine ${obs.origin}; agréger ou identifier explicitement le produit de comparaison`);
     origins.add(obs.origin);
     if (!obs.origin || !obs.destination || !obs.airline) fail(`${obs.id}: origine/destination/airline manquant`);
+    if (!airportCodes.has(obs.origin)) fail(`${obs.id}: origine ${obs.origin} absente de la base Reims`);
+    if (obs.destination !== destination.arrivalAirport) fail(`${obs.id}: destination ${obs.destination} ≠ arrivalAirport ${destination.arrivalAirport}`);
     if (!dateMatches.has(obs.dateMatch)) fail(`${obs.id}: dateMatch invalide`);
     if (!dateRe.test(obs.checkedAt || '')) fail(`${obs.id}: checkedAt invalide`);
     if (!/^https:\/\//.test(obs.source || '')) fail(`${obs.id}: source HTTPS manquante`);
