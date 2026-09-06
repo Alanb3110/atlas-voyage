@@ -1,6 +1,6 @@
 # Atlas Voyage
 
-Application web statique pour préparer, comparer et partager plusieurs voyages, plusieurs variantes d’itinéraires et trois niveaux de budget.
+Application web statique pour préparer, comparer et partager des voyages nature, animaux et détente pour deux adultes au départ réel de Reims.
 
 ## Déploiement actuel
 
@@ -10,14 +10,43 @@ URL : `https://alanb3110.github.io/atlas-voyage/`
 
 > ⚠️ La version actuelle est publique. Ne pas stocker dans le dépôt de références de réservation, données de passeport, informations médicales, moyens de paiement, clés API ou autres données sensibles.
 
-## Fonctionnalités V2
+## Lifecycle v3
 
-Le renderer générique gère maintenant :
+Atlas Voyage distingue désormais la maturité réelle des dossiers :
 
-- plusieurs voyages ;
-- plusieurs variantes par voyage ;
+```text
+Longlist
+→ Shortlist
+→ Destination sélectionnée
+→ Itinéraire détaillé
+→ Voyage réservable
+→ Voyage réservé
+```
+
+Les 12 destinations de novembre 2026 sont actuellement en **longlist**, même lorsque des anciens fichiers `data/trips/*.json` contiennent déjà beaucoup de détails. Cela évite de donner l'impression que toutes les candidates ont été recherchées avec la même profondeur.
+
+Le comparateur de longlist affiche maintenant :
+
+- score central ;
+- plage d'incertitude méthodologique ;
+- confiance A–D ;
+- gates `pass / watch / hold / fail` ;
+- budget Confort estimé ;
+- temps porte-à-porte estimé depuis Reims ;
+- avantages et compromis.
+
+Un gate bloquant suspend le classement normal ; le score ne peut pas compenser un critère éliminatoire.
+
+Voir `docs/data-lifecycle-v3.md`.
+
+## Fonctionnalités
+
+Le renderer générique gère :
+
+- plusieurs dossiers ;
+- plusieurs variantes par voyage détaillé ;
 - Essentiel / Confort recommandé / Premium ;
-- partage d’une sélection précise via l’URL ;
+- partage d'une sélection précise via l'URL ;
 - comparateur de variantes avec scores relatifs ;
 - carte Leaflet, étapes cliquables et types de liaison ;
 - distinction tracé réel / schématique ;
@@ -30,11 +59,14 @@ Le renderer générique gère maintenant :
 - budgets détaillés avec contrôle de cohérence ;
 - programme jour par jour ;
 - sources et traçabilité ;
-- PWA/cache pour usage mobile.
+- comparateur aéroports lorsqu'un fichier existe ;
+- suivi abstrait de préparation/réservation ;
+- mode Auto / Clair / Sombre ;
+- PWA avec cache restrictif.
 
 ## Démarrage local
 
-Le navigateur ne doit pas ouvrir les fichiers directement en `file://` car l’application charge des JSON avec `fetch()`.
+Le navigateur ne doit pas ouvrir les fichiers directement en `file://` car l'application charge des JSON avec `fetch()`.
 
 ```bash
 python -m http.server 8000
@@ -42,50 +74,71 @@ python -m http.server 8000
 
 Puis ouvrir `http://localhost:8000`.
 
-## Navigation
+## Navigation des dossiers détaillés
 
-La hiérarchie est :
-
-`Voyage → Variante d’itinéraire → Budget`
-
-L’état est conservé dans l’URL, par exemple :
+L'état reste encodé dans l'URL :
 
 `trip.html?trip=bali-komodo-demo&variant=balanced&budget=comfort`
 
-## Ajouter un voyage
-
-1. Créer `data/trips/<id>.json` à partir du modèle V2.
-2. Lui donner un `id` unique.
-3. Ajouter l’entrée correspondante dans `data/catalog.json`.
-4. Définir au moins une variante et les trois budgets.
-5. Exécuter la validation.
+## Validation
 
 ```bash
-node scripts/validate-data.mjs
+npm run validate
 ```
 
-La même validation est lancée automatiquement par GitHub Actions à chaque push et pull request.
+La validation est lancée automatiquement par GitHub Actions sur `main` et sur les pull requests.
+
+Elle contrôle notamment :
+
+- cohérence catalogue/fichiers ;
+- lifecycle ;
+- scores et pondérations ;
+- plages d'incertitude ;
+- confiance A–D ;
+- gates ;
+- variantes, coordonnées et routes ;
+- cohérence des budgets ;
+- comparateurs aéroports lorsqu'ils existent ;
+- états de préparation ;
+- syntaxe JavaScript et service worker.
+
+## PWA / cache
+
+Le service worker met en cache uniquement le shell applicatif local et les deux fichiers explicitement publics nécessaires à la longlist :
+
+- `data/catalog.json` ;
+- `data/destination-comparison.json`.
+
+Il ne met plus automatiquement en cache les dossiers détaillés, comparateurs aéroports, états de réservation, tuiles OpenStreetMap, images ou CDN externes.
+
+Lors de l'activation, il ne supprime que les anciens caches `atlas-*`, sans toucher aux caches d'autres projets partageant l'origine `alanb3110.github.io`.
+
+Le mode hors-ligne est donc volontairement limité tant que la future politique de confidentialité n'est pas finalisée.
 
 ## Modèle de données
 
 Voir :
 
-- `docs/data-model-v2.md` ;
+- `docs/data-lifecycle-v3.md` ;
+- `docs/data-model-v2.md` pour le renderer détaillé hérité ;
 - `docs/architecture.md` ;
 - `instructions_projet_atlas_voyage.md`.
 
-Le modèle V2 sépare notamment : variantes, scores de comparaison, liaisons cartographiques, étapes, faune, cuisine, météo, santé/sécurité, règles, budgets et traçabilité.
+Le prochain chantier de données est la migration des 12 candidates vers un niveau longlist homogène et l'introduction du modèle tarifaire structuré `confirmed / observed / estimated / hypothesis / to_recheck`.
 
 ## Démonstrations
 
-Les deux voyages fournis ne sont pas des devis actuels. `bali-komodo-demo.json` reprend des données de l’ancien template pour valider la migration ; `costa-rica-demo.json` sert uniquement à tester la navigation multi-voyages.
+`bali-komodo-demo.json` et `costa-rica-demo.json` restent archivés et servent uniquement à tester d'anciens chemins de navigation.
 
-## Évolution confidentialité
+## Confidentialité
 
-L’architecture reste portable vers un hébergement protégé ultérieur, par exemple :
+Le code reste portable vers une architecture protégée ultérieure :
 
-`GitHub privé → Cloudflare Pages → Cloudflare Access`
+```text
+GitHub privé
+→ GitHub Pages désactivé
+→ Cloudflare Pages ou Workers
+→ Cloudflare Access
+```
 
-Aucune donnée ne doit être structurée de manière dépendante de GitHub Pages.
-
-Voir également `docs/security.md`.
+Aucune donnée personnelle sensible ne doit être versionnée. Un état abstrait `booked: true` est acceptable ; un PNR, numéro de billet nominatif, passeport ou information bancaire ne l'est pas.

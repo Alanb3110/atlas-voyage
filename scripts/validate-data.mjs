@@ -12,6 +12,10 @@ const warn = (file, msg) => warnings.push(`${file}: ${msg}`);
 const readJson = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
 const validCoord = c => Array.isArray(c) && c.length === 2 && Number.isFinite(Number(c[0])) && Number.isFinite(Number(c[1])) && Math.abs(Number(c[0])) <= 90 && Math.abs(Number(c[1])) <= 180;
 const finiteNonNegative = v => Number.isFinite(Number(v)) && Number(v) >= 0;
+const allowedLifecycle = new Set(['longlist','shortlist','selected','detailed','bookable','booked','archived']);
+const allowedResearchDepth = new Set(['high','medium','low','legacy']);
+const allowedConfidence = new Set(['A','B','C','D']);
+const allowedGateStates = new Set(['pass','watch','hold','fail']);
 
 const catalog = await readJson('data/catalog.json');
 const ids = new Set();
@@ -19,6 +23,9 @@ for (const entry of catalog.trips ?? []) {
   if (!entry.id) { fail('data/catalog.json', 'voyage sans id'); continue; }
   if (ids.has(entry.id)) fail('data/catalog.json', `id dupliqué: ${entry.id}`);
   ids.add(entry.id);
+  if (!allowedLifecycle.has(entry.status)) fail('data/catalog.json', `${entry.id}: statut lifecycle inconnu ${entry.status}`);
+  if (entry.researchDepth && !allowedResearchDepth.has(entry.researchDepth)) fail('data/catalog.json', `${entry.id}: researchDepth inconnu ${entry.researchDepth}`);
+
   let trip;
   try { trip = await readJson(entry.dataFile); }
   catch (e) { fail(entry.dataFile, `JSON illisible ou fichier absent: ${e.message}`); continue; }
@@ -108,11 +115,25 @@ try {
     if (seenTrips.has(row.tripId)) fail(destinationFile, `tripId dupliqué: ${row.tripId}`);
     seenTrips.add(row.tripId);
     if (!ids.has(row.tripId)) fail(destinationFile, `${label}: tripId absent du catalogue`);
+    if (!allowedLifecycle.has(row.stage)) fail(destinationFile, `${label}: stage lifecycle inconnu ${row.stage}`);
+    if (!allowedConfidence.has(row.evidenceConfidence)) fail(destinationFile, `${label}: evidenceConfidence doit être A, B, C ou D`);
+    const defaultHalf = Number(row.uncertaintyHalfWidth);
+    if (!Number.isFinite(defaultHalf) || defaultHalf < 0 || defaultHalf > 2) fail(destinationFile, `${label}: uncertaintyHalfWidth doit être entre 0 et 2`);
     if (!finiteNonNegative(row.comfortBudgetEUR)) fail(destinationFile, `${label}: comfortBudgetEUR invalide`);
     if (!finiteNonNegative(row.doorToDoorMin)) fail(destinationFile, `${label}: doorToDoorMin invalide`);
     for (const key of criteria) {
       const score = Number(row.scores?.[key]);
       if (!Number.isFinite(score) || score < 0 || score > 5) fail(destinationFile, `${label}: score ${key} doit être entre 0 et 5`);
+      if (row.uncertaintyOverrides?.[key] != null) {
+        const override = Number(row.uncertaintyOverrides[key]);
+        if (!Number.isFinite(override) || override < 0 || override > 2) fail(destinationFile, `${label}: incertitude ${key} doit être entre 0 et 2`);
+      }
+    }
+    for (const [gateIndex, gate] of (row.gates ?? []).entries()) {
+      if (!gate.id) fail(destinationFile, `${label}: gate ${gateIndex + 1} sans id`);
+      if (!allowedGateStates.has(gate.state)) fail(destinationFile, `${label}: gate ${gate.id || gateIndex + 1} état inconnu ${gate.state}`);
+      if (typeof gate.blocking !== 'boolean') fail(destinationFile, `${label}: gate ${gate.id || gateIndex + 1} blocking doit être booléen`);
+      if (gate.blocking && gate.state === 'watch') warn(destinationFile, `${label}: gate ${gate.id} est blocking mais seulement watch ; préférer hold si le classement doit être suspendu`);
     }
   }
   if (!(comparison.destinations ?? []).length) warn(destinationFile, 'aucune destination comparée');

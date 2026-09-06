@@ -33,11 +33,11 @@
       <div>
         <p class="eyebrow">Bibliothèque de voyages</p>
         <h1>Choisir, comparer, affiner.</h1>
-        <p class="lede">Chaque voyage peut contenir plusieurs variantes d’itinéraire et trois niveaux de budget. Les données restent séparées de l’interface pour faciliter les mises à jour.</p>
+        <p class="lede">Les destinations progressent par niveau de maturité : longlist, shortlist, sélection, itinéraire détaillé, voyage réservable puis réservé. Le niveau affiché indique la profondeur réelle de recherche.</p>
       </div>
       <aside class="hero-note">
         <strong id="tripCount">—</strong>
-        <span>voyages disponibles</span>
+        <span>dossiers dans le catalogue</span>
       </aside>
     </section>
 
@@ -47,12 +47,15 @@
         <input id="searchInput" type="search" placeholder="Destination, saison, thème…" autocomplete="off">
       </label>
       <label class="selectbox">
-        <span>Statut</span>
+        <span>Maturité</span>
         <select id="statusFilter">
-          <option value="all">Tous</option>
-          <option value="research">À l’étude</option>
+          <option value="all">Toutes</option>
+          <option value="longlist">Longlist</option>
+          <option value="shortlist">Shortlist</option>
           <option value="selected">Sélectionné</option>
+          <option value="detailed">Itinéraire détaillé</option>
           <option value="bookable">Réservable</option>
+          <option value="booked">Réservé</option>
           <option value="archived">Archivé</option>
         </select>
       </label>
@@ -60,21 +63,22 @@
 
     <section id="destinationCompareSection" class="destination-compare-section">
       <div class="section-head">
-        <div><p class="eyebrow">Décision</p><h2>Comparer les destinations</h2></div>
-        <p class="muted">Les scores servent à prioriser les destinations selon les critères du projet. Le budget et le temps porte-à-porte restent affichés séparément.</p>
+        <div><p class="eyebrow">Décision</p><h2>Comparer la longlist</h2></div>
+        <p class="muted">Le rang est indicatif. Les critères éliminatoires passent avant le score ; la plage d'incertitude et la confiance indiquent la robustesse réelle des données.</p>
       </div>
       <div id="destinationWeights" class="destination-weight-list" aria-label="Pondérations du comparateur destinations"></div>
+      <p id="destinationCompareMethod" class="destination-method"></p>
       <div id="destinationCompareGrid" class="destination-compare-grid"></div>
       <p id="destinationCompareTrace" class="destination-compare-trace"></p>
     </section>
 
     <section>
       <div class="section-head">
-        <div><p class="eyebrow">Voyages</p><h2>Mes itinéraires</h2></div>
+        <div><p class="eyebrow">Dossiers</p><h2>Destinations et voyages</h2></div>
         <p id="catalogUpdated" class="muted"></p>
       </div>
       <div id="tripGrid" class="trip-grid" aria-live="polite"></div>
-      <div id="emptyState" class="empty" hidden>Aucun voyage ne correspond à ce filtre.</div>
+      <div id="emptyState" class="empty" hidden>Aucun dossier ne correspond à ce filtre.</div>
     </section>
   </main>
 
