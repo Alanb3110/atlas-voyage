@@ -9,11 +9,17 @@ const DATE_MATCH_LABELS = {
   month: 'Minimum mensuel'
 };
 
+const BUDGET_USE_LABELS = {
+  exact_budget_candidate: 'Candidat budget',
+  signal_only: 'Signal prix uniquement'
+};
+
 const PARETO_LABELS = {
   tradeoff: 'Économie ↔ temps',
   dominant: 'Signal dominant',
   dominated: 'Signal dominé',
-  incomplete: 'Comparaison incomplète'
+  incomplete: 'Comparaison incomplète',
+  non_strict: 'Signal non strict'
 };
 
 const GEOMETRY_LABELS = {
@@ -41,6 +47,8 @@ async function init() {
   const market = await marketResponse.json();
   const access = await accessResponse.json();
   const geometry = await geometryResponse.json();
+  if (!Number.isInteger(market.travelers) || market.travelers < 1) throw new TypeError('market.travelers invalide');
+
   const trips = new Map((catalog.trips || []).map(t => [t.id, t]));
   const airports = new Map((access.airports || []).map(a => [a.code, a]));
   const geometryByTrip = new Map((geometry.destinations || []).map(item => [item.tripId, item]));
@@ -52,8 +60,9 @@ async function init() {
       destination,
       trips.get(destination.tripId),
       airports,
-      Number(market.travelers) || 2,
-      geometryByTrip.get(destination.tripId)
+      market.travelers,
+      geometryByTrip.get(destination.tripId),
+      market.targetWindow
     ))
     .join('');
   document.querySelector('#shortlistMarketTrace').textContent = `Scan vérifié ${formatDateFR(market.checkedAt)} · géométrie vérifiée ${formatDateFR(geometry.checkedAt)} · ${market.warning || ''}`;
@@ -63,10 +72,10 @@ function renderHeader(market) {
   const target = market.targetWindow || {};
   const node = document.querySelector('#shortlistMarketIntro');
   if (!node) return;
-  node.textContent = `Cible commune : ${formatDateFR(target.departure)} → ${formatDateFR(target.return)} (~${target.approxTripDays || '—'} jours). Les tarifs sur dates proches restent des signaux de marché, pas des devis.`;
+  node.textContent = `Cible commune : ${formatDateFR(target.departure)} → ${formatDateFR(target.return)} (~${target.approxTripDays || '—'} jours). Seuls des tarifs sur dates exactes peuvent devenir des candidats de budget.`;
 }
 
-function renderDestination(destination, trip, airports, travelers, geometry) {
+function renderDestination(destination, trip, airports, travelers, geometry, targetWindow) {
   const title = trip?.title || destination.tripId;
   const observations = destination.observations || [];
   const leader = observations.find(obs => obs.origin === destination.currentLeader) || observations[0];
@@ -82,7 +91,7 @@ function renderDestination(destination, trip, airports, travelers, geometry) {
     <p class="market-read">${escapeHtml(destination.marketRead || '')}</p>
     ${renderGeometry(geometry)}
     <div class="market-observations">
-      ${observations.map(obs => renderObservation(obs, airports.get(obs.origin), obs.id === leader?.id, geometry)).join('')}
+      ${observations.map(obs => renderObservation(obs, airports.get(obs.origin), obs.id === leader?.id, geometry, targetWindow)).join('')}
     </div>
     ${comparisons.length ? `<div class="market-pareto"><strong>Compromis vs ${escapeHtml(leader?.origin || 'leader')}</strong>${comparisons.map(renderPareto).join('')}</div>` : ''}
     ${(destination.notYetComparable || []).length ? `<p class="market-missing">À rechercher sur dates comparables : ${destination.notYetComparable.map(escapeHtml).join(', ')}.</p>` : ''}
@@ -107,21 +116,20 @@ function renderGeometry(geometry) {
   </div>`;
 }
 
-function renderObservation(obs, airport, isLeader, geometry) {
+function renderObservation(obs, airport, isLeader, geometry, targetWindow) {
   const rail = airport?.accessModes?.find(mode => mode.id === 'rail');
   const car = airport?.accessModes?.find(mode => mode.id === 'car');
   const accessBits = [];
-  if (rail?.durationMin) accessBits.push(`rail ~${formatDuration(rail.durationMin)}`);
-  if (car?.durationMin) accessBits.push(`voiture ~${formatDuration(car.durationMin)}`);
+  if (finitePositive(rail?.durationMin)) accessBits.push(`rail ~${formatDuration(rail.durationMin)}`);
+  if (finitePositive(car?.durationMin)) accessBits.push(`voiture ~${formatDuration(car.durationMin)}`);
   const observedDates = obs.observedDates
     ? `${formatDateFR(obs.observedDates.departure)} → ${formatDateFR(obs.observedDates.return)}`
-    : 'dates exactes non exposées';
-  const fare = obs.price?.currency === 'EUR'
-    ? formatEUR(obs.price.value)
-    : `${Number(obs.price?.value || 0).toLocaleString('fr-FR')} ${escapeHtml(obs.price?.currency || '')}`;
-  const duration = obs.flightDurationMin ? ` · vol/référence ${formatDuration(obs.flightDurationMin)}` : '';
+    : 'paire de dates non exposée';
+  const fare = formatFare(obs.price);
+  const duration = finitePositive(obs.flightDurationMin) ? ` · vol/référence ${formatDuration(obs.flightDurationMin)}` : '';
   const geometryMismatch = geometry?.currentMarketScan?.role === 'price_signal_only'
     && obs.destination === geometry.currentMarketScan.gateway;
+  const dateGap = dateGapLabel(obs, targetWindow);
   return `<div class="market-observation ${isLeader ? 'leader' : ''} ${geometryMismatch ? 'gateway-mismatch' : ''}">
     <div class="market-observation-main">
       <div><strong>${escapeHtml(obs.origin)} → ${escapeHtml(obs.destination)}</strong><span>${escapeHtml(obs.airline || '')} · ${escapeHtml(obs.routing || '')}${duration}</span></div>
@@ -131,7 +139,9 @@ function renderObservation(obs, airport, isLeader, geometry) {
       ${isLeader ? '<span class="market-leader-chip">Référence actuelle</span>' : ''}
       ${geometryMismatch ? '<span class="market-gateway-warning">Signal prix · gateway non aligné</span>' : ''}
       <span class="market-date-match ${escapeHtml(obs.dateMatch || 'month')}">${escapeHtml(DATE_MATCH_LABELS[obs.dateMatch] || obs.dateMatch || '—')}</span>
+      <span>${escapeHtml(BUDGET_USE_LABELS[obs.budgetUse] || obs.budgetUse || '—')}</span>
       <span>${escapeHtml(observedDates)}</span>
+      ${dateGap ? `<span>${escapeHtml(dateGap)}</span>` : ''}
       ${accessBits.length ? `<span>Reims : ${escapeHtml(accessBits.join(' · '))}</span>` : ''}
     </div>
     ${obs.note ? `<p>${escapeHtml(obs.note)}</p>` : ''}
@@ -142,17 +152,18 @@ function buildParetoComparison(leader, challenger, airports, travelers) {
   const leaderRail = railMinutes(airports.get(leader.origin));
   const challengerRail = railMinutes(airports.get(challenger.origin));
   const sameCurrency = leader.price?.currency && leader.price.currency === challenger.price?.currency;
-  const fareDeltaParty = sameCurrency
-    ? (Number(leader.price?.value) - Number(challenger.price?.value)) * travelers
+  const validFares = finiteNonNegative(leader.price?.value) && finiteNonNegative(challenger.price?.value);
+  const fareDeltaParty = sameCurrency && validFares
+    ? (leader.price.value - challenger.price.value) * travelers
     : null;
-  const extraRailRoundTripMin = Number.isFinite(leaderRail) && Number.isFinite(challengerRail)
+  const extraRailRoundTripMin = finitePositive(leaderRail) && finitePositive(challengerRail)
     ? 2 * (challengerRail - leaderRail)
     : null;
-  const stopDelta = Number.isFinite(Number(leader.stops)) && Number.isFinite(Number(challenger.stops))
-    ? Number(challenger.stops) - Number(leader.stops)
+  const stopDelta = Number.isInteger(leader.stops) && Number.isInteger(challenger.stops)
+    ? challenger.stops - leader.stops
     : null;
   const strictDates = leader.dateMatch === 'exact' && challenger.dateMatch === 'exact';
-  const status = paretoStatus(fareDeltaParty, extraRailRoundTripMin, stopDelta);
+  const status = strictDates ? paretoStatus(fareDeltaParty, extraRailRoundTripMin, stopDelta) : 'non_strict';
   return {
     origin: challenger.origin,
     fareDeltaParty,
@@ -175,11 +186,17 @@ function paretoStatus(fareDeltaParty, extraRailRoundTripMin, stopDelta) {
 function renderPareto(item) {
   const money = !Number.isFinite(item.fareDeltaParty)
     ? 'écart tarifaire indisponible'
-    : item.fareDeltaParty > 0
-      ? `${formatEUR(item.fareDeltaParty)} économisés pour 2`
-      : item.fareDeltaParty < 0
-        ? `${formatEUR(Math.abs(item.fareDeltaParty))} plus cher pour 2`
-        : 'même tarif brut';
+    : item.strictDates
+      ? item.fareDeltaParty > 0
+        ? `${formatEUR(item.fareDeltaParty)} économisés pour 2`
+        : item.fareDeltaParty < 0
+          ? `${formatEUR(Math.abs(item.fareDeltaParty))} plus cher pour 2`
+          : 'même tarif brut'
+      : item.fareDeltaParty > 0
+        ? `écart brut observé : ${formatEUR(item.fareDeltaParty)} en faveur de ${escapeHtml(item.origin)}`
+        : item.fareDeltaParty < 0
+          ? `écart brut observé : ${formatEUR(Math.abs(item.fareDeltaParty))} en défaveur de ${escapeHtml(item.origin)}`
+          : 'même tarif brut observé';
   const rail = !Number.isFinite(item.extraRailRoundTripMin)
     ? 'temps rail incomplet'
     : item.extraRailRoundTripMin > 0
@@ -194,18 +211,55 @@ function renderPareto(item) {
       : `${Math.abs(item.stopDelta)} escale${Math.abs(item.stopDelta) > 1 ? 's' : ''} en moins`;
   return `<div class="market-pareto-row ${escapeHtml(item.status)}">
     <div><span class="market-pareto-status">${escapeHtml(PARETO_LABELS[item.status] || item.status)}</span><strong>${escapeHtml(item.origin)}</strong></div>
-    <ul><li>${escapeHtml(money)}</li><li>${escapeHtml(rail)}</li><li>${escapeHtml(stops)}</li></ul>
-    <small>${item.strictDates ? 'Comparaison sur dates strictement identiques.' : 'Signal non strict : les dates tarifaires diffèrent.'}</small>
+    <ul><li>${money}</li><li>${escapeHtml(rail)}</li><li>${escapeHtml(stops)}</li></ul>
+    <small>${item.strictDates ? 'Comparaison sur dates strictement identiques.' : 'Pas de dominance calculée : les dates tarifaires ne sont pas strictement identiques.'}</small>
   </div>`;
 }
 
 function railMinutes(airport) {
-  const value = Number(airport?.accessModes?.find(mode => mode.id === 'rail')?.durationMin);
-  return Number.isFinite(value) ? value : NaN;
+  const value = airport?.accessModes?.find(mode => mode.id === 'rail')?.durationMin;
+  return finitePositive(value) ? value : NaN;
+}
+
+function dateGapLabel(obs, targetWindow) {
+  if (obs.dateMatch === 'exact') return 'écart cible : 0 j';
+  if (obs.dateMatch === 'month' || !obs.observedDates) return 'écart cible : non calculable';
+  const departureDelta = signedDays(targetWindow?.departure, obs.observedDates.departure);
+  const returnDelta = signedDays(targetWindow?.return, obs.observedDates.return);
+  if (!Number.isFinite(departureDelta) || !Number.isFinite(returnDelta)) return '';
+  return `écart cible : départ ${formatSignedDays(departureDelta)} · retour ${formatSignedDays(returnDelta)}`;
+}
+
+function signedDays(target, observed) {
+  const targetMs = Date.parse(`${target}T00:00:00Z`);
+  const observedMs = Date.parse(`${observed}T00:00:00Z`);
+  if (!Number.isFinite(targetMs) || !Number.isFinite(observedMs)) return NaN;
+  return Math.round((observedMs - targetMs) / 86400000);
+}
+
+function formatSignedDays(value) {
+  if (value === 0) return '0 j';
+  return `${value > 0 ? '+' : ''}${value} j`;
+}
+
+function formatFare(price) {
+  if (!finiteNonNegative(price?.value)) return 'Indisponible';
+  return price.currency === 'EUR'
+    ? formatEUR(price.value)
+    : `${price.value.toLocaleString('fr-FR')} ${escapeHtml(price.currency || '')}`;
+}
+
+function finitePositive(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0;
+}
+
+function finiteNonNegative(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
 }
 
 function formatDuration(minutes) {
-  const total = Math.max(0, Math.round(Number(minutes) || 0));
+  if (!finiteNonNegative(minutes)) return 'Indisponible';
+  const total = Math.round(minutes);
   const h = Math.floor(total / 60);
   const m = total % 60;
   return h ? `${h} h${m ? ` ${String(m).padStart(2, '0')}` : ''}` : `${m} min`;
