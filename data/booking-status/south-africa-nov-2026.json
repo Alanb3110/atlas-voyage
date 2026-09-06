@@ -1,14 +1,29 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "tripId": "south-africa-nov-2026",
-  "updatedAt": "2026-09-05",
+  "checkedAt": "2026-09-06",
+  "status": "research",
+  "intro": "La destination est suffisamment documentée pour rester en shortlist, mais pas encore réservable : le produit aérien open-jaw exact, les hébergements et plusieurs transferts restent à fermer.",
+  "readiness": {
+    "state": "blocked",
+    "blockerIds": ["destination-choice","exact-openjaw-flight","cape-town-lodging","kruger-lodging","coast-base","internal-transport","formalities","card-coverage"],
+    "nextAction": "Rechercher en priorité un billet exact 05–24/11 aligné sur la géométrie CDG→CPT / DUR→CDG, puis chiffrer les trois hébergements Confort sur ces mêmes dates."
+  },
+  "references": [
+    "data/shortlist-market-scan.json",
+    "data/shortlist-gateway-geometry.json",
+    "data/shortlist-door-to-door.json",
+    "data/trips/south-africa-nov-2026.json"
+  ],
   "items": [
-    {"category":"Voyage","label":"Choisir la destination et figer les dates","status":"research"},
-    {"category":"Vols","label":"Optimiser billet international / open-jaw Cape Town–Johannesburg–Durban","status":"shortlisted","checkedAt":"2026-09-05"},
-    {"category":"Safari","label":"Comparer SANParks vs lodge de réserve privée au Greater Kruger","status":"research"},
-    {"category":"Côte","label":"Choisir base iSimangaliso / Sodwana / Kosi et opérateur turtle tracking","status":"research"},
-    {"category":"Transport","label":"Optimiser vols intérieurs et transferts sans conduite nocturne","status":"research"},
-    {"category":"Formalités","label":"Revérifier entrée, douanes et recommandations sanitaires avant réservation","status":"recheck","checkedAt":"2026-09-05"},
-    {"category":"Assurance","label":"Vérifier garanties carte Boursobank noire et lacunes éventuelles","status":"research"}
+    {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},
+    {"id":"exact-openjaw-flight","category":"Vols","label":"Trouver et ouvrir le produit exact CDG→CPT / DUR→CDG pour deux","status":"research","blocking":true,"checkedAt":"2026-09-06","note":"Le scan actuel contient des signaux vers JNB/CPT/DUR, mais pas le billet open-jaw exact aligné sur l'itinéraire."},
+    {"id":"cape-town-lodging","category":"Hébergements","label":"Comparer 2–3 hôtels Confort à Cape Town pour 4 nuits","status":"research","blocking":true},
+    {"id":"kruger-lodging","category":"Hébergements","label":"Comparer lodge de réserve privée vs SANParks pour 5 nuits","status":"research","blocking":true},
+    {"id":"coast-base","category":"Hébergements","label":"Choisir la base iSimangaliso / Sodwana / Kosi et l'hébergement de fin de séjour","status":"research","blocking":true},
+    {"id":"internal-transport","category":"Transport","label":"Fermer vols intérieurs et transferts CPT → Kruger → KwaZulu-Natal sans conduite nocturne","status":"research","blocking":true},
+    {"id":"turtle-operator","category":"Activités","label":"Identifier un opérateur autorisé de turtle tracking compatible avec la base choisie","status":"research","blocking":false},
+    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé et recommandations locales avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-06"},
+    {"id":"card-coverage","category":"Assurance","label":"Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles","status":"research","blocking":true}
   ]
 }

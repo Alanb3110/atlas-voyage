@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "tripId": "komodo-flores-nov-2026",
+  "checkedAt": "2026-09-06",
+  "status": "research",
+  "intro": "Le circuit Ubud → Labuan Bajo/Komodo → plage Bali reste très attractif, mais les vols internationaux ne sont pas encore observés sur les dates exactes et la base finale Sanur/Lembongan n'est pas figée.",
+  "readiness": {
+    "state": "blocked",
+    "blockerIds": ["destination-choice","exact-flight","final-base","ubud-lodging","komodo-lodging","beach-lodging","domestic-flight","formalities","card-coverage"],
+    "nextAction": "Rechercher CDG et FRA vers DPS sur 05–24/11 exact, puis arbitrer Sanur vs Lembongan avant de chiffrer les trois étapes Confort et le segment Bali↔Labuan Bajo."
+  },
+  "references": [
+    "data/shortlist-market-scan.json",
+    "data/shortlist-gateway-geometry.json",
+    "data/shortlist-door-to-door.json",
+    "data/trips/komodo-flores-nov-2026.json"
+  ],
+  "items": [
+    {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},
+    {"id":"exact-flight","category":"Vols","label":"Trouver et comparer CDG/FRA↔DPS exact 05–24/11 pour deux","status":"research","blocking":true,"checkedAt":"2026-09-06","note":"Les signaux actuels sont CDG minimum mensuel et FRA 10–24/11 ; aucun n'est encore éligible au budget final."},
+    {"id":"final-base","category":"Itinéraire","label":"Arbitrer Sanur vs Nusa Lembongan pour les 7 dernières nuits","status":"research","blocking":true},
+    {"id":"ubud-lodging","category":"Hébergements","label":"Comparer 2–3 boutique-hôtels avec piscine à Ubud pour 4 nuits","status":"research","blocking":true},
+    {"id":"komodo-lodging","category":"Hébergements","label":"Comparer hôtel vue mer + croisière Komodo confortable pour 6 nuits","status":"research","blocking":true},
+    {"id":"beach-lodging","category":"Hébergements","label":"Comparer 2–3 resorts de fin de séjour une fois Sanur/Lembongan choisi","status":"research","blocking":true},
+    {"id":"domestic-flight","category":"Transport","label":"Chiffrer DPS↔Labuan Bajo et les transferts terrestres/maritimes associés","status":"research","blocking":true},
+    {"id":"komodo-provider","category":"Activités","label":"Présélectionner 2–3 opérateurs Komodo avec permis, programme et annulation comparables","status":"research","blocking":false},
+    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé, taxes et règles des parcs avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-06"},
+    {"id":"card-coverage","category":"Assurance","label":"Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles","status":"research","blocking":true}
+  ]
+}

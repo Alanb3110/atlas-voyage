@@ -14,7 +14,7 @@
     "validate:privacy": "node scripts/validate-public-privacy.mjs",
     "validate:booking": "node scripts/validate-booking.mjs",
     "validate:js": "node --check assets/js/store.js && node --check assets/js/home.js && node --check assets/js/trip.js && node --check assets/js/airport-access.js && node --check assets/js/destination-data-contract.js && node --check assets/js/destination-compare.js && node --check assets/js/destination-rank-robustness.js && node --check assets/js/shortlist-market-scan.js && node --check assets/js/shortlist-door-to-door.js && node --check assets/js/booking-readiness.js && node --check assets/js/theme.js && node --check sw.js",
-    "test:regressions": "node scripts/test-adversarial-regressions.mjs",
+    "test:regressions": "node scripts/test-adversarial-regressions.mjs && node scripts/test-readiness-regressions.mjs",
     "validate": "npm run validate:data && npm run validate:airports && npm run validate:ground && npm run validate:evidence && npm run validate:market && npm run validate:geometry && npm run validate:door && npm run validate:pwa && npm run validate:privacy && npm run validate:booking && npm run validate:js && npm run test:regressions"
   }
 }
