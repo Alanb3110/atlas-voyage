@@ -14,8 +14,9 @@ const dateRe = /^\d{4}-\d{2}-\d{2}$/;
 const dateMatches = new Set(['exact','nearby','month']);
 const confidences = new Set(['high','medium','low']);
 const priceStatuses = new Set(['observed','estimated','hypothesis','to_recheck','confirmed']);
-const catalogIds = new Set((catalog.trips || []).map(x => x.id));
+const catalogById = new Map((catalog.trips || []).map(x => [x.id, x]));
 const airportCodes = new Set((access.airports || []).map(x => x.code));
+const researchedStages = new Set(['shortlist','selected','detailed','bookable','booked']);
 
 if (!dateRe.test(data.checkedAt || '')) fail('checkedAt invalide');
 if (!dateRe.test(data.targetWindow?.departure || '')) fail('targetWindow.departure invalide');
@@ -28,7 +29,9 @@ for (const destination of data.destinations || []) {
   if (!destination.tripId) { fail('destination sans tripId'); continue; }
   if (seenTrips.has(destination.tripId)) fail(`${destination.tripId}: destination dupliquée`);
   seenTrips.add(destination.tripId);
-  if (!catalogIds.has(destination.tripId)) fail(`${destination.tripId}: absent du catalogue`);
+  const catalogTrip = catalogById.get(destination.tripId);
+  if (!catalogTrip) fail(`${destination.tripId}: absent du catalogue`);
+  else if (!researchedStages.has(catalogTrip.status)) fail(`${destination.tripId}: scan marché exige maturité shortlist ou supérieure, statut catalogue=${catalogTrip.status}`);
   if (!destination.arrivalAirport) fail(`${destination.tripId}: arrivalAirport manquant`);
   if (!destination.currentLeader) fail(`${destination.tripId}: currentLeader manquant`);
   if (!confidences.has(destination.leaderConfidence)) fail(`${destination.tripId}: leaderConfidence invalide`);
@@ -74,11 +77,15 @@ for (const destination of data.destinations || []) {
   if (!origins.has(destination.currentLeader)) fail(`${destination.tripId}: currentLeader absent des observations`);
 }
 
-if (seenTrips.size !== 3) fail(`attendu 3 destinations shortlist, trouvé ${seenTrips.size}`);
+// Every candidate explicitly promoted to shortlist must already have the targeted
+// market scan. A later promotion to selected/detailed does not invalidate the scan.
+const shortlistIds = new Set((catalog.trips || []).filter(x => x.status === 'shortlist').map(x => x.id));
+for (const id of shortlistIds) if (!seenTrips.has(id)) fail(`${id}: shortlist catalogue absente du scan marché`);
+if (seenTrips.size !== 3) fail(`scan actuel attendu sur 3 destinations approfondies, trouvé ${seenTrips.size}`);
 
 if (errors.length) {
   console.error(`\nErreurs scan marché (${errors.length})`);
   errors.forEach(x => console.error(`- ${x}`));
   process.exit(1);
 }
-console.log(`\nValidation scan marché OK: ${seenTrips.size} destinations, ${seenObs.size} observations tarifaires.`);
+console.log(`\nValidation scan marché OK: ${seenTrips.size} destinations approfondies, ${seenObs.size} observations tarifaires.`);

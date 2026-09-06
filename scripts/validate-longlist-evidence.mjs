@@ -17,12 +17,15 @@ const statuses = new Set(['verified','supported','to_recheck','unresolved']);
 const confidences = new Set(['high','medium','low']);
 const evidenceGrades = new Set(['A','B','C','D']);
 const dimensions = ['season','wildlife','safety','formalities','health'];
+const activeResearchStages = new Set(['longlist','shortlist','selected','detailed','bookable','booked']);
 
 if (!validDate(data.checkedAt)) fail('checkedAt doit être YYYY-MM-DD');
 if (!data.wildlifeCaveat) fail('wildlifeCaveat manquant');
 if (!Array.isArray(data.destinations)) fail('destinations doit être un tableau');
 
-const expected = new Set((catalog.trips ?? []).filter(t => t.status === 'longlist').map(t => t.id));
+// This registry was born at longlist stage but remains the common evidence base as
+// a candidate matures. Archived demo dossiers are intentionally excluded.
+const expected = new Set((catalog.trips ?? []).filter(t => activeResearchStages.has(t.status)).map(t => t.id));
 const seen = new Set();
 
 for (const [index, destination] of (data.destinations ?? []).entries()) {
@@ -30,7 +33,7 @@ for (const [index, destination] of (data.destinations ?? []).entries()) {
   if (!destination.tripId) { fail(`${id}: tripId manquant`); continue; }
   if (seen.has(destination.tripId)) fail(`${id}: tripId dupliqué`);
   seen.add(destination.tripId);
-  if (!expected.has(destination.tripId)) fail(`${id}: absent de la longlist du catalogue`);
+  if (!expected.has(destination.tripId)) fail(`${id}: absent des candidates actives du catalogue`);
   if (!evidenceGrades.has(destination.evidenceConfidence)) fail(`${id}: evidenceConfidence doit être A, B, C ou D`);
 
   for (const dimension of dimensions) {
@@ -61,16 +64,16 @@ for (const [index, destination] of (data.destinations ?? []).entries()) {
   }
 }
 
-for (const id of expected) if (!seen.has(id)) fail(`${id}: dossier de preuve longlist absent`);
-for (const id of seen) if (!expected.has(id)) fail(`${id}: dossier de preuve sans candidate longlist`);
+for (const id of expected) if (!seen.has(id)) fail(`${id}: dossier de preuve candidate absent`);
+for (const id of seen) if (!expected.has(id)) fail(`${id}: dossier de preuve sans candidate active`);
 
 if (warnings.length) {
-  console.log(`\nAvertissements preuves longlist (${warnings.length})`);
+  console.log(`\nAvertissements preuves candidates (${warnings.length})`);
   warnings.forEach(w => console.log(`- ${w}`));
 }
 if (errors.length) {
-  console.error(`\nErreurs preuves longlist (${errors.length})`);
+  console.error(`\nErreurs preuves candidates (${errors.length})`);
   errors.forEach(e => console.error(`- ${e}`));
   process.exit(1);
 }
-console.log(`\nValidation preuves longlist OK: ${seen.size}/${expected.size} destinations, ${dimensions.length} dimensions chacune.`);
+console.log(`\nValidation preuves candidates OK: ${seen.size}/${expected.size} destinations actives, ${dimensions.length} dimensions chacune.`);
