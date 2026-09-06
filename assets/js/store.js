@@ -16,7 +16,16 @@ export function buildTripUrl(trip, variant = '', budget = '') {
   return `./trip.html?${p.toString()}`;
 }
 export function statusLabel(status) {
-  return ({ research:'À l’étude', selected:'Sélectionné', bookable:'Réservable', archived:'Archivé' })[status] || status || '—';
+  return ({
+    longlist:'Longlist',
+    shortlist:'Shortlist',
+    selected:'Sélectionné',
+    detailed:'Itinéraire détaillé',
+    bookable:'Réservable',
+    booked:'Réservé',
+    archived:'Archivé',
+    research:'À l’étude'
+  })[status] || status || '—';
 }
 export function formatEUR(value) {
   if (value == null || Number.isNaN(Number(value))) return '—';
@@ -28,5 +37,5 @@ export function formatDateFR(value) {
   return Number.isNaN(d.getTime()) ? value : new Intl.DateTimeFormat('fr-FR',{dateStyle:'long'}).format(d);
 }
 export function escapeHtml(value='') {
-  return String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return String(value).replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
 }
