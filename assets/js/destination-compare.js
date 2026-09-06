@@ -69,6 +69,13 @@ async function init() {
   rows = (data.destinations || []).map(row => ({ ...row, trip: byId.get(row.tripId) })).filter(row => row.trip);
   if (!rows.length) throw new Error('aucune destination comparable');
 
+  const validIds = new Set(rows.map(row => row.tripId));
+  const prunedShortlist = new Set([...shortlist].filter(id => validIds.has(id)));
+  if (prunedShortlist.size !== shortlist.size) {
+    shortlist = prunedShortlist;
+    saveShortlist();
+  }
+
   weights = data.weights || {};
   renderWeights(weights);
   renderMethod(data.method || {});
@@ -96,8 +103,8 @@ function loadFilters() {
     const parsed = JSON.parse(localStorage.getItem(FILTER_KEY) || 'null');
     if (!parsed || typeof parsed !== 'object') return defaults;
     return {
-      maxBudget: Math.max(4000, Math.min(20000, Number(parsed.maxBudget) || defaults.maxBudget)),
-      maxDoorHours: Math.max(10, Math.min(40, Number(parsed.maxDoorHours) || defaults.maxDoorHours)),
+      maxBudget: Math.max(4000, Math.min(16000, Number(parsed.maxBudget) || defaults.maxBudget)),
+      maxDoorHours: Math.max(10, Math.min(36, Number(parsed.maxDoorHours) || defaults.maxDoorHours)),
       facets: Array.isArray(parsed.facets) ? parsed.facets.filter(key => FACETS.some(([facet]) => facet === key)) : [],
       shortlistOnly: Boolean(parsed.shortlistOnly)
     };
@@ -188,11 +195,11 @@ function renderFilterControls() {
   if (!node) return;
   node.innerHTML = `
     <div class="destination-filter-range">
-      <label><span>Budget Confort max</span><strong id="destinationBudgetValue">${formatEUR(filters.maxBudget)}</strong></label>
+      <label for="destinationBudgetFilter"><span>Budget Confort max</span><strong id="destinationBudgetValue">${formatEUR(filters.maxBudget)}</strong></label>
       <input id="destinationBudgetFilter" type="range" min="4000" max="16000" step="500" value="${filters.maxBudget}">
     </div>
     <div class="destination-filter-range">
-      <label><span>Porte-à-porte max</span><strong id="destinationTimeValue">${Math.round(filters.maxDoorHours)} h</strong></label>
+      <label for="destinationTimeFilter"><span>Porte-à-porte max</span><strong id="destinationTimeValue">${Math.round(filters.maxDoorHours)} h</strong></label>
       <input id="destinationTimeFilter" type="range" min="10" max="36" step="1" value="${filters.maxDoorHours}">
     </div>
     <div class="destination-filter-facets" aria-label="Filtres qualitatifs">
