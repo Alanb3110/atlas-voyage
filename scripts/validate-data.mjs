@@ -10,8 +10,9 @@ const warnings = [];
 const fail = (file, msg) => errors.push(`${file}: ${msg}`);
 const warn = (file, msg) => warnings.push(`${file}: ${msg}`);
 const readJson = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
-const validCoord = c => Array.isArray(c) && c.length === 2 && Number.isFinite(Number(c[0])) && Number.isFinite(Number(c[1])) && Math.abs(Number(c[0])) <= 90 && Math.abs(Number(c[1])) <= 180;
-const finiteNonNegative = v => Number.isFinite(Number(v)) && Number(v) >= 0;
+const finiteNumber = v => v !== null && v !== undefined && v !== '' && Number.isFinite(Number(v));
+const finiteNonNegative = v => finiteNumber(v) && Number(v) >= 0;
+const validCoord = c => Array.isArray(c) && c.length === 2 && finiteNumber(c[0]) && finiteNumber(c[1]) && Math.abs(Number(c[0])) <= 90 && Math.abs(Number(c[1])) <= 180;
 const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
 const allowedLifecycle = new Set(['longlist','shortlist','selected','detailed','bookable','booked','archived']);
 const allowedResearchDepth = new Set(['high','medium','low','legacy']);
@@ -58,11 +59,18 @@ for (const entry of catalog.trips ?? []) {
   const budgetIds = new Set((trip.budgets ?? []).map(b => b.id));
   for (const budget of trip.budgets ?? []) {
     if (!budget.id) fail(file, 'budget sans id');
-    if (!Number.isFinite(Number(budget.total))) fail(file, `budget ${budget.id}: total non numérique`);
+    if (!finiteNonNegative(budget.total)) fail(file, `budget ${budget.id}: total non numérique ou négatif`);
     const rows = budget.breakdown ?? [];
     if (rows.length) {
-      const sum = rows.reduce((a, r) => a + (Number(r.amount) || 0), 0);
-      if (Math.abs(sum - Number(budget.total)) > 1) fail(file, `budget ${budget.id}: somme des postes ${sum} ≠ total ${budget.total}`);
+      let sum = 0;
+      for (const [rowIndex, row] of rows.entries()) {
+        if (!finiteNumber(row.amount)) {
+          fail(file, `budget ${budget.id}: poste ${rowIndex + 1} amount invalide`);
+          continue;
+        }
+        sum += Number(row.amount);
+      }
+      if (finiteNumber(budget.total) && Math.abs(sum - Number(budget.total)) > 1) fail(file, `budget ${budget.id}: somme des postes ${sum} ≠ total ${budget.total}`);
     } else warn(file, `budget ${budget.id}: breakdown vide`);
   }
 
@@ -93,7 +101,7 @@ for (const entry of catalog.trips ?? []) {
   const weights = airportData.defaultWeights ?? {};
   const weightKeys = ['cost','time','flight','fatigue'];
   for (const key of weightKeys) if (!finiteNonNegative(weights[key])) fail(airportFile, `pondération ${key} invalide`);
-  const weightSum = weightKeys.reduce((a, key) => a + (Number(weights[key]) || 0), 0);
+  const weightSum = weightKeys.reduce((a, key) => a + (finiteNumber(weights[key]) ? Number(weights[key]) : 0), 0);
   if (Math.abs(weightSum - 100) > 0.01) warn(airportFile, `somme des pondérations=${weightSum}, attendu 100`);
 
   const airportIds = new Set();
@@ -108,10 +116,10 @@ for (const entry of catalog.trips ?? []) {
     if (!finiteNonNegative(option.flight?.priceEUR)) fail(airportFile, `${label}: flight.priceEUR invalide`);
     if (!finiteNonNegative(option.flight?.durationMin)) fail(airportFile, `${label}: flight.durationMin invalide`);
     if (!finiteNonNegative(option.doorToDoorMin)) fail(airportFile, `${label}: doorToDoorMin invalide`);
-    const quality = Number(option.flight?.quality);
-    if (!Number.isFinite(quality) || quality < 0 || quality > 5) fail(airportFile, `${label}: flight.quality doit être entre 0 et 5`);
-    const fatigue = Number(option.fatigue);
-    if (!Number.isFinite(fatigue) || fatigue < 1 || fatigue > 5) fail(airportFile, `${label}: fatigue doit être entre 1 et 5`);
+    const quality = option.flight?.quality;
+    if (!finiteNumber(quality) || Number(quality) < 0 || Number(quality) > 5) fail(airportFile, `${label}: flight.quality doit être entre 0 et 5`);
+    const fatigue = option.fatigue;
+    if (!finiteNumber(fatigue) || Number(fatigue) < 1 || Number(fatigue) > 5) fail(airportFile, `${label}: fatigue doit être entre 1 et 5`);
   }
   if (!(airportData.options ?? []).length) warn(airportFile, 'aucun aéroport comparé');
 }
@@ -122,7 +130,7 @@ try {
   const criteria = ['wildlife','season','relaxation','beach','culture','food','safety','logistics'];
   const weights = comparison.weights ?? {};
   for (const key of criteria) if (!finiteNonNegative(weights[key])) fail(destinationFile, `pondération ${key} invalide`);
-  const totalWeight = criteria.reduce((a, key) => a + (Number(weights[key]) || 0), 0);
+  const totalWeight = criteria.reduce((a, key) => a + (finiteNumber(weights[key]) ? Number(weights[key]) : 0), 0);
   if (Math.abs(totalWeight - 100) > 0.01) warn(destinationFile, `somme des pondérations=${totalWeight}, attendu 100`);
 
   const seenTrips = new Set();
@@ -136,8 +144,8 @@ try {
     // legacy schema baggage until destination-comparison v4 removes it entirely.
     if (row.stage != null && !allowedLifecycle.has(row.stage)) fail(destinationFile, `${label}: stage legacy inconnu ${row.stage}`);
     if (!allowedConfidence.has(row.evidenceConfidence)) fail(destinationFile, `${label}: evidenceConfidence doit être A, B, C ou D`);
-    const defaultHalf = Number(row.uncertaintyHalfWidth);
-    if (!Number.isFinite(defaultHalf) || defaultHalf < 0 || defaultHalf > 2) fail(destinationFile, `${label}: uncertaintyHalfWidth doit être entre 0 et 2`);
+    const defaultHalf = row.uncertaintyHalfWidth;
+    if (!finiteNumber(defaultHalf) || Number(defaultHalf) < 0 || Number(defaultHalf) > 2) fail(destinationFile, `${label}: uncertaintyHalfWidth doit être entre 0 et 2`);
 
     validateTraceableValue(destinationFile, `${label}.comfortBudget`, row.comfortBudget);
     if (row.comfortBudget?.currency !== 'EUR') fail(destinationFile, `${label}.comfortBudget: currency doit être EUR pour le comparateur actuel`);
@@ -148,11 +156,11 @@ try {
     }
 
     for (const key of criteria) {
-      const score = Number(row.scores?.[key]);
-      if (!Number.isFinite(score) || score < 0 || score > 5) fail(destinationFile, `${label}: score ${key} doit être entre 0 et 5`);
+      const score = row.scores?.[key];
+      if (!finiteNumber(score) || Number(score) < 0 || Number(score) > 5) fail(destinationFile, `${label}: score ${key} doit être entre 0 et 5`);
       if (row.uncertaintyOverrides?.[key] != null) {
-        const override = Number(row.uncertaintyOverrides[key]);
-        if (!Number.isFinite(override) || override < 0 || override > 2) fail(destinationFile, `${label}: incertitude ${key} doit être entre 0 et 2`);
+        const override = row.uncertaintyOverrides[key];
+        if (!finiteNumber(override) || Number(override) < 0 || Number(override) > 2) fail(destinationFile, `${label}: incertitude ${key} doit être entre 0 et 2`);
       }
     }
     for (const [gateIndex, gate] of (row.gates ?? []).entries()) {
