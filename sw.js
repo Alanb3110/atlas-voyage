@@ -1,9 +1,11 @@
-const CACHE = 'atlas-v15-shell';
+const CACHE = 'atlas-v16-shell';
 
 const SHELL = [
   './index.html',
   './trip.html',
   './manifest.webmanifest',
+  './assets/icons/icon-192.png',
+  './assets/icons/icon-512.png',
   './assets/css/styles.css',
   './assets/css/trip-v2.css',
   './assets/css/airport-access.css',
