@@ -2,7 +2,7 @@ const grid = document.querySelector('#destinationCompareGrid');
 const top3 = document.querySelector('#destinationTop3');
 
 if (grid) {
-  init().catch(error => console.warn('Groupes de robustesse indisponibles:', error));
+  init().catch(error => console.warn('Indicateur de robustesse des rangs indisponible:', error));
 }
 
 async function init() {
@@ -71,22 +71,18 @@ function tripIdFromCard(card) {
   catch { return null; }
 }
 
-function robustGroups(items) {
-  const groups = [];
-  let current = null;
-  for (const item of items) {
-    if (!current || item.range.high < current.leaderLow) {
-      current = { leaderLow: item.range.low, items: [item] };
-      groups.push(current);
-    } else {
-      current.items.push(item);
-    }
-  }
-  return groups;
+function overlaps(a, b) {
+  return a.low <= b.high && b.low <= a.high;
 }
 
-function groupName(index) {
-  return String.fromCharCode(65 + Math.min(index, 25));
+function rankIsRobust(items, index) {
+  const current = items[index]?.range;
+  if (!current) return false;
+  const previous = items[index - 1]?.range;
+  const next = items[index + 1]?.range;
+  const separatedFromPrevious = !previous || !overlaps(previous, current);
+  const separatedFromNext = !next || !overlaps(current, next);
+  return separatedFromPrevious && separatedFromNext;
 }
 
 function annotateCards(container, ranges) {
@@ -97,19 +93,15 @@ function annotateCards(container, ranges) {
     return { card, tripId, info, index, range: info?.range };
   }).filter(item => item.info && !['hold','fail'].includes(item.info.gate));
 
-  const groups = robustGroups(ranked);
-  groups.forEach((group, groupIndex) => {
-    const letter = groupName(groupIndex);
-    const ambiguous = group.items.length > 1;
-    group.items.forEach(item => {
-      const pill = item.card.querySelector('.destination-rank');
-      if (!pill) return;
-      const centralRank = item.index + 1;
-      pill.textContent = ambiguous ? `Groupe ${letter} · #${centralRank} central` : `#${centralRank} robuste`;
-      pill.title = ambiguous
-        ? `Les plages d'incertitude de ce groupe se recouvrent ; l'ordre interne n'est pas robuste.`
-        : `Cette position est séparée du groupe suivant par les plages d'incertitude actuelles.`;
-    });
+  ranked.forEach((item, index) => {
+    const pill = item.card.querySelector('.destination-rank');
+    if (!pill) return;
+    const robust = rankIsRobust(ranked, index);
+    const centralRank = index + 1;
+    pill.textContent = robust ? `#${centralRank} central · séparé` : `#${centralRank} central · non robuste`;
+    pill.title = robust
+      ? `La plage actuelle ne recouvre pas celles des rangs voisins.`
+      : `La plage actuelle recouvre au moins un rang voisin : l'ordre exact n'est pas robuste.`;
   });
 }
 
@@ -118,12 +110,12 @@ function annotateTop3(container, ranges) {
     const tripId = tripIdFromCard(card);
     return { card, index, range: ranges.get(tripId)?.range };
   }).filter(item => item.range);
-  const groups = robustGroups(cards);
-  groups.forEach((group, groupIndex) => {
-    const letter = groupName(groupIndex);
-    group.items.forEach(item => {
-      const rank = item.card.querySelector('.destination-top-rank');
-      if (rank) rank.textContent = `${letter} · #${item.index + 1}`;
-    });
+
+  cards.forEach((item, index) => {
+    const rank = item.card.querySelector('.destination-top-rank');
+    if (!rank) return;
+    const robust = rankIsRobust(cards, index);
+    rank.textContent = robust ? `#${index + 1} · séparé` : `#${index + 1} · ≈`;
+    rank.title = robust ? 'Rang central séparé des voisins visibles.' : 'Rang central non robuste : plages d’incertitude recouvrantes.';
   });
 }
