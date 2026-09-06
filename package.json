@@ -8,8 +8,9 @@
     "validate:ground": "node scripts/validate-ground-access-costs.mjs",
     "validate:evidence": "node scripts/validate-longlist-evidence.mjs",
     "validate:market": "node scripts/validate-shortlist-market-scan.mjs",
+    "validate:geometry": "node scripts/validate-shortlist-gateway-geometry.mjs",
     "validate:booking": "node scripts/validate-booking.mjs",
     "validate:js": "node --check assets/js/store.js && node --check assets/js/home.js && node --check assets/js/trip.js && node --check assets/js/airport-access.js && node --check assets/js/destination-compare.js && node --check assets/js/destination-rank-robustness.js && node --check assets/js/shortlist-market-scan.js && node --check assets/js/booking-readiness.js && node --check assets/js/theme.js && node --check sw.js",
-    "validate": "npm run validate:data && npm run validate:airports && npm run validate:ground && npm run validate:evidence && npm run validate:market && npm run validate:booking && npm run validate:js"
+    "validate": "npm run validate:data && npm run validate:airports && npm run validate:ground && npm run validate:evidence && npm run validate:market && npm run validate:geometry && npm run validate:booking && npm run validate:js"
   }
 }

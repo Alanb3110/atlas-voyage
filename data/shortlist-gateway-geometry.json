@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-06",
+  "status": "research",
+  "airportMarginMin": {
+    "value": 180,
+    "status": "hypothesis",
+    "note": "Marge commune de comparaison avant départ long-courrier. À remplacer par l'horaire réel et les recommandations du transporteur/aéroport au stade bookable."
+  },
+  "warning": "Le porte-à-porte doit suivre la géométrie réelle de l'itinéraire. Un tarif vers un hub différent de la première ou dernière base peut rester un signal de marché, mais ne doit pas être comparé comme un voyage équivalent sans ajouter les segments intérieurs nécessaires.",
+  "destinations": [
+    {
+      "tripId": "south-africa-nov-2026",
+      "firstBase": "Cape Town",
+      "finalBase": "iSimangaliso / Sodwana / Kosi",
+      "alignment": "mismatch_in_current_market_scan",
+      "preferredGeometry": {
+        "type": "open_jaw",
+        "inboundGateway": "CPT",
+        "outboundGateway": "DUR",
+        "status": "to_research",
+        "note": "Le circuit commence au Cap et se termine au KwaZulu-Natal. Un open-jaw CDG→CPT / DUR→CDG évite de revenir artificiellement à Johannesburg ou au Cap en fin de voyage."
+      },
+      "currentMarketScan": {
+        "gateway": "JNB",
+        "role": "price_signal_only",
+        "missingSegments": ["JNB→CPT au début", "DUR/RCB→JNB à la fin"],
+        "note": "Le tarif JNB reste utile comme signal de prix Afrique du Sud mais n'est pas aligné avec le mini-circuit actuel."
+      },
+      "evidence": [
+        {
+          "label": "Air France — Paris vers Le Cap",
+          "url": "https://wwws.airfrance.fr/fr-fr/vols-de-paris-a-le-cap",
+          "checkedAt": "2026-09-06",
+          "supports": "CPT est commercialisé depuis CDG ; tarifs novembre observés autour de 748 € A/R sur certaines dates proches."
+        },
+        {
+          "label": "Horaire direct CDG–CPT",
+          "url": "https://www.flightconnections.com/flights-from-cdg-to-cpt",
+          "checkedAt": "2026-09-06",
+          "supports": "Route Air France sans escale en saison 2026/27 ; durée publiée ~11 h 45."
+        },
+        {
+          "label": "Air France — Paris vers Durban",
+          "url": "https://wwws.airfrance.fr/fr-fr/vols-de-paris-a-durban",
+          "checkedAt": "2026-09-06",
+          "supports": "DUR est commercialisé depuis Paris via correspondance ; l'open-jaw exact reste à tarifer."
+        }
+      ],
+      "nextResearch": [
+        "Tarifer exactement CDG→CPT le 05/11/2026 et DUR→CDG le 24/11/2026 sur un billet multi-destinations.",
+        "Comparer une variante de sortie via Richards Bay (RCB) si elle réduit fortement le transfert final.",
+        "N'utiliser l'A/R JNB qu'après ajout explicite des deux vols intérieurs nécessaires."
+      ]
+    },
+    {
+      "tripId": "seychelles-nov-2026",
+      "firstBase": "Praslin",
+      "finalBase": "Mahé",
+      "alignment": "aligned_with_internal_inbound_transfer",
+      "preferredGeometry": {
+        "type": "roundtrip_gateway",
+        "inboundGateway": "SEZ",
+        "outboundGateway": "SEZ",
+        "status": "supported",
+        "note": "L'arrivée et le départ internationaux se font à Mahé. Comme le circuit commence à Praslin et finit à Mahé, seul l'aller nécessite un transfert inter-îles immédiat."
+      },
+      "internalInbound": {
+        "segment": "SEZ→PRI",
+        "mode": "Air Seychelles ou ferry",
+        "flightDurationMin": {"low":15,"high":20,"status":"confirmed"},
+        "connectionBufferMin": {"value":90,"status":"hypothesis"},
+        "fare": {"status":"to_recheck"},
+        "note": "Le vol intérieur dure environ 15–20 min, mais le temps total dépend de l'heure d'arrivée internationale, de la récupération bagages et de la correspondance."
+      },
+      "evidence": [
+        {
+          "label": "Air Seychelles — services domestiques",
+          "url": "https://fly.airseychelles.com/fr/domestic/services-domestiques",
+          "checkedAt": "2026-09-06",
+          "supports": "Vol Mahé–Praslin annoncé autour de 15 minutes."
+        },
+        {
+          "label": "Air Seychelles — horaires domestiques",
+          "url": "https://fly.airseychelles.com/en/domestic-flight-schedule",
+          "checkedAt": "2026-09-06",
+          "supports": "Plusieurs rotations quotidiennes, généralement ~20 minutes bloc-à-bloc."
+        }
+      ],
+      "nextResearch": [
+        "Ouvrir le vol international retenu puis sélectionner une correspondance SEZ→PRI réellement compatible.",
+        "Comparer vol intérieur et Cat Cocos en coût total, temps et risque de correspondance."
+      ]
+    },
+    {
+      "tripId": "komodo-flores-nov-2026",
+      "firstBase": "Ubud",
+      "finalBase": "Nusa Lembongan / Sanur",
+      "alignment": "aligned_with_ground_transfer",
+      "preferredGeometry": {
+        "type": "roundtrip_gateway",
+        "inboundGateway": "DPS",
+        "outboundGateway": "DPS",
+        "status": "supported",
+        "note": "DPS est le gateway naturel du circuit. Le début à Ubud nécessite uniquement un transfert routier ; la fin Sanur est proche de DPS, tandis qu'une fin Lembongan ajoute un bateau."
+      },
+      "internalInbound": {
+        "segment": "DPS→Ubud",
+        "mode": "route",
+        "durationMin": {"low":75,"high":120,"status":"hypothesis"},
+        "fare": {"status":"to_recheck"},
+        "note": "Temps dépendant fortement du trafic ; à recalculer sur l'heure réelle d'arrivée."
+      },
+      "finalTransfer": {
+        "status": "variant_dependent",
+        "note": "Sanur simplifie nettement le départ international. Lembongan exige bateau + transfert terminal/port et doit être intégré au porte-à-porte du retour."
+      },
+      "evidence": [
+        {
+          "label": "Indonesia Travel — Bali / Ubud",
+          "url": "https://www.indonesia.travel/gb/en/destination/bali-nusa-tenggara/bali/ubud/",
+          "checkedAt": "2026-09-06",
+          "supports": "Ubud est une base intérieure de Bali desservie depuis le sud de l'île ; le temps routier exact reste une hypothèse de planification."
+        }
+      ],
+      "nextResearch": [
+        "Choisir définitivement Sanur ou Lembongan comme dernière base avant de calculer le retour porte-à-porte.",
+        "Recalculer DPS→Ubud et dernière base→DPS sur les horaires exacts des vols internationaux."
+      ]
+    }
+  ]
+}

@@ -16,31 +16,47 @@ const PARETO_LABELS = {
   incomplete: 'Comparaison incomplète'
 };
 
+const GEOMETRY_LABELS = {
+  mismatch_in_current_market_scan: 'Gateway à corriger',
+  aligned_with_internal_inbound_transfer: 'Gateway aligné + transfert intérieur',
+  aligned_with_ground_transfer: 'Gateway aligné + transfert terrestre'
+};
+
 init().catch(error => {
   console.warn('Scan marché shortlist indisponible:', error);
   section.hidden = true;
 });
 
 async function init() {
-  const [catalog, marketResponse, accessResponse] = await Promise.all([
+  const [catalog, marketResponse, accessResponse, geometryResponse] = await Promise.all([
     loadCatalog(),
     fetch('./data/shortlist-market-scan.json', { cache: 'no-store' }),
-    fetch('./data/airport-access/reims-airports.json', { cache: 'no-store' })
+    fetch('./data/airport-access/reims-airports.json', { cache: 'no-store' }),
+    fetch('./data/shortlist-gateway-geometry.json', { cache: 'no-store' })
   ]);
   if (!marketResponse.ok) throw new Error(`market HTTP ${marketResponse.status}`);
   if (!accessResponse.ok) throw new Error(`access HTTP ${accessResponse.status}`);
+  if (!geometryResponse.ok) throw new Error(`geometry HTTP ${geometryResponse.status}`);
 
   const market = await marketResponse.json();
   const access = await accessResponse.json();
+  const geometry = await geometryResponse.json();
   const trips = new Map((catalog.trips || []).map(t => [t.id, t]));
   const airports = new Map((access.airports || []).map(a => [a.code, a]));
+  const geometryByTrip = new Map((geometry.destinations || []).map(item => [item.tripId, item]));
 
   renderHeader(market);
   const grid = document.querySelector('#shortlistMarketGrid');
   grid.innerHTML = (market.destinations || [])
-    .map(destination => renderDestination(destination, trips.get(destination.tripId), airports, Number(market.travelers) || 2))
+    .map(destination => renderDestination(
+      destination,
+      trips.get(destination.tripId),
+      airports,
+      Number(market.travelers) || 2,
+      geometryByTrip.get(destination.tripId)
+    ))
     .join('');
-  document.querySelector('#shortlistMarketTrace').textContent = `Scan vérifié ${formatDateFR(market.checkedAt)} · ${market.warning || ''}`;
+  document.querySelector('#shortlistMarketTrace').textContent = `Scan vérifié ${formatDateFR(market.checkedAt)} · géométrie vérifiée ${formatDateFR(geometry.checkedAt)} · ${market.warning || ''}`;
 }
 
 function renderHeader(market) {
@@ -50,7 +66,7 @@ function renderHeader(market) {
   node.textContent = `Cible commune : ${formatDateFR(target.departure)} → ${formatDateFR(target.return)} (~${target.approxTripDays || '—'} jours). Les tarifs sur dates proches restent des signaux de marché, pas des devis.`;
 }
 
-function renderDestination(destination, trip, airports, travelers) {
+function renderDestination(destination, trip, airports, travelers, geometry) {
   const title = trip?.title || destination.tripId;
   const observations = destination.observations || [];
   const leader = observations.find(obs => obs.origin === destination.currentLeader) || observations[0];
@@ -64,15 +80,34 @@ function renderDestination(destination, trip, airports, travelers) {
       <span class="market-confidence">Confiance ${escapeHtml(destination.leaderConfidence || '—')}</span>
     </div>
     <p class="market-read">${escapeHtml(destination.marketRead || '')}</p>
+    ${renderGeometry(geometry)}
     <div class="market-observations">
-      ${observations.map(obs => renderObservation(obs, airports.get(obs.origin), obs.id === leader?.id)).join('')}
+      ${observations.map(obs => renderObservation(obs, airports.get(obs.origin), obs.id === leader?.id, geometry)).join('')}
     </div>
     ${comparisons.length ? `<div class="market-pareto"><strong>Compromis vs ${escapeHtml(leader?.origin || 'leader')}</strong>${comparisons.map(renderPareto).join('')}</div>` : ''}
     ${(destination.notYetComparable || []).length ? `<p class="market-missing">À rechercher sur dates comparables : ${destination.notYetComparable.map(escapeHtml).join(', ')}.</p>` : ''}
   </article>`;
 }
 
-function renderObservation(obs, airport, isLeader) {
+function renderGeometry(geometry) {
+  if (!geometry) return '<div class="market-geometry unknown"><strong>Géométrie non documentée</strong></div>';
+  const preferred = geometry.preferredGeometry || {};
+  const path = preferred.type === 'open_jaw'
+    ? `${preferred.inboundGateway || '—'} à l’arrivée · ${preferred.outboundGateway || '—'} au retour`
+    : `${preferred.inboundGateway || '—'} A/R`;
+  const label = GEOMETRY_LABELS[geometry.alignment] || geometry.alignment || 'Géométrie';
+  const extra = geometry.currentMarketScan?.role === 'price_signal_only'
+    ? `Le scan actuel via ${geometry.currentMarketScan.gateway || 'un autre hub'} reste un signal de prix seulement.`
+    : geometry.internalInbound?.segment
+      ? `Segment intérieur initial : ${geometry.internalInbound.segment}.`
+      : geometry.finalTransfer?.note || '';
+  return `<div class="market-geometry ${escapeHtml(geometry.alignment || 'unknown')}">
+    <div><span>${escapeHtml(label)}</span><strong>${escapeHtml(path)}</strong></div>
+    <p>${escapeHtml(preferred.note || '')}${extra ? ` ${escapeHtml(extra)}` : ''}</p>
+  </div>`;
+}
+
+function renderObservation(obs, airport, isLeader, geometry) {
   const rail = airport?.accessModes?.find(mode => mode.id === 'rail');
   const car = airport?.accessModes?.find(mode => mode.id === 'car');
   const accessBits = [];
@@ -85,13 +120,16 @@ function renderObservation(obs, airport, isLeader) {
     ? formatEUR(obs.price.value)
     : `${Number(obs.price?.value || 0).toLocaleString('fr-FR')} ${escapeHtml(obs.price?.currency || '')}`;
   const duration = obs.flightDurationMin ? ` · vol/référence ${formatDuration(obs.flightDurationMin)}` : '';
-  return `<div class="market-observation ${isLeader ? 'leader' : ''}">
+  const geometryMismatch = geometry?.currentMarketScan?.role === 'price_signal_only'
+    && obs.destination === geometry.currentMarketScan.gateway;
+  return `<div class="market-observation ${isLeader ? 'leader' : ''} ${geometryMismatch ? 'gateway-mismatch' : ''}">
     <div class="market-observation-main">
       <div><strong>${escapeHtml(obs.origin)} → ${escapeHtml(obs.destination)}</strong><span>${escapeHtml(obs.airline || '')} · ${escapeHtml(obs.routing || '')}${duration}</span></div>
       <div class="market-fare"><strong>${fare}</strong><span>/ pers. A/R</span></div>
     </div>
     <div class="market-meta">
       ${isLeader ? '<span class="market-leader-chip">Référence actuelle</span>' : ''}
+      ${geometryMismatch ? '<span class="market-gateway-warning">Signal prix · gateway non aligné</span>' : ''}
       <span class="market-date-match ${escapeHtml(obs.dateMatch || 'month')}">${escapeHtml(DATE_MATCH_LABELS[obs.dateMatch] || obs.dateMatch || '—')}</span>
       <span>${escapeHtml(observedDates)}</span>
       ${accessBits.length ? `<span>Reims : ${escapeHtml(accessBits.join(' · '))}</span>` : ''}
