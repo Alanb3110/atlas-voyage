@@ -6,7 +6,7 @@
     "country": "France"
   },
   "status": "research",
-  "note": "Benchmarks d'accès terrestre destinés au choix initial de l'aéroport. Les durées et distances sont observées/estimées à partir de planificateurs publics consultés le 06/09/2026. Les prix de billets, péages, carburant, parking et éventuelle nuit d'hôtel doivent être recalculés pour les dates et horaires exacts du vol avant décision.",
+  "note": "Benchmarks d'accès terrestre destinés au choix initial de l'aéroport. Les temps ferroviaires utilisent désormais en priorité des horaires/opérateurs officiels consultés le 06/09/2026. Ils restent des benchmarks, pas les horaires garantis de novembre. Les billets, péages, carburant, parking et éventuelle nuit d'hôtel doivent être recalculés pour le vol exact avant décision.",
   "airports": [
     {
       "code": "CDG",
@@ -26,12 +26,15 @@
         },
         {
           "id": "rail",
-          "mode": "Train",
-          "durationMin": 103,
+          "mode": "TER + TGV vers CDG 2",
+          "durationMin": 85,
+          "durationRangeMin": {"low":53,"high":92},
           "status": "estimated",
           "checkedAt": "2026-09-06",
-          "source": "https://www.rome2rio.com/s/Reims/Paris-Charles-de-Gaulle-Airport-CDG",
-          "confidence": "medium",
+          "source": "https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle",
+          "secondarySource": "https://www.sncf-connect.com/train/trajet/reims/roissy-charles-de-gaulle",
+          "confidence": "high",
+          "note": "Horaire du 06/09 : 1 h 21 à 1 h 32 selon le départ ; la page trajet affiche un minimum théorique de 53 min. Retenir ~1 h 25 comme benchmark prudent tant que l'horaire du vol n'est pas fixé.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -54,12 +57,14 @@
         },
         {
           "id": "rail",
-          "mode": "Train + métro 14",
-          "durationMin": 84,
-          "status": "estimated",
+          "mode": "TGV vers Paris + métro 14",
+          "durationMin": 105,
+          "status": "hypothesis",
           "checkedAt": "2026-09-06",
-          "source": "https://www.rome2rio.com/s/Reims/Paris-Orly-Airport-ORY",
-          "confidence": "medium",
+          "source": "https://www.sncf-connect.com/train/trajet/reims/paris",
+          "secondarySource": "https://www.iledefrance-mobilites.fr/en/acceder-aux-aeroports",
+          "confidence": "low",
+          "note": "Hypothèse de pré-comparaison : Reims–Paris dès ~45–46 min, transfert urbain puis ligne 14. Le temps exact gare-à-aéroport doit être recalculé avec l'horaire du vol.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -82,12 +87,14 @@
         },
         {
           "id": "rail",
-          "mode": "Train via Paris",
-          "durationMin": 176,
+          "mode": "TGV/Eurostar via Bruxelles-Midi + train aéroport",
+          "durationMin": 187,
           "status": "estimated",
           "checkedAt": "2026-09-06",
-          "source": "https://www.rome2rio.com/s/Reims/Brussels-Airport-BRU",
-          "confidence": "medium",
+          "source": "https://www.sncf-connect.com/train/horaires/reims/bruxelles",
+          "secondarySource": "https://www.brusselsairport.be/fr/passenger/mobility/public-transport/train",
+          "confidence": "high",
+          "note": "SNCF affiche 2 h 44 comme meilleur Reims–Bruxelles ; Brussels Airport annonce environ 23 min depuis Bruxelles-Midi. Les correspondances réelles peuvent allonger le total.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -110,12 +117,14 @@
         },
         {
           "id": "rail",
-          "mode": "Train + tram",
-          "durationMin": 243,
+          "mode": "TER/TGV + tram T1 vers Findel",
+          "durationMin": 155,
           "status": "estimated",
           "checkedAt": "2026-09-06",
-          "source": "https://www.rome2rio.com/s/Carnegie-Library-of-Reims/Luxembourg-Airport-LUX",
-          "confidence": "low",
+          "source": "https://www.sncf-connect.com/train/horaires/reims/luxembourg",
+          "secondarySource": "https://www.luxtram.lu/fr/la-ligne/horaires-et-frequences-de-circulation-du-tramway-2/",
+          "confidence": "medium",
+          "note": "SNCF affiche un meilleur Reims–Luxembourg de 2 h 09 ; le tram T1 dessert directement Findel depuis 2025. Le temps de correspondance gare–tram–aéroport reste à recalculer sur l'horaire choisi.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -138,12 +147,13 @@
         },
         {
           "id": "rail",
-          "mode": "Train via Paris",
-          "durationMin": 275,
+          "mode": "TGV + Eurostar jusqu'à Schiphol",
+          "durationMin": 285,
           "status": "estimated",
           "checkedAt": "2026-09-06",
-          "source": "https://www.rome2rio.com/s/Reims/Schiphol-Airport",
-          "confidence": "medium",
+          "source": "https://www.sncf-connect.com/en-en/train/timetables/reims/amsterdam",
+          "confidence": "high",
+          "note": "Exemple officiel du 07/09 : départ Reims 06:45, passage à Schiphol 11:30, soit 4 h 45 avant même la marge aéroport.",
           "costs": {"tickets":"to_recheck"}
         }
       ]
@@ -166,12 +176,13 @@
         },
         {
           "id": "rail",
-          "mode": "Train via Strasbourg/Mannheim",
-          "durationMin": 297,
+          "mode": "Train vers Frankfurt + liaison aéroport",
+          "durationMin": 310,
           "status": "estimated",
           "checkedAt": "2026-09-06",
-          "source": "https://www.rome2rio.com/s/Reims/Frankfurt-Airport-FRA",
-          "confidence": "medium",
+          "source": "https://www.sncf-connect.com/train/horaires/reims/francfort-sur-le-main",
+          "confidence": "low",
+          "note": "SNCF affiche un meilleur temps vers Frankfurt Hbf autour de 4 h 54 ; le segment vers FRA et la correspondance doivent encore être ajoutés précisément au vol retenu.",
           "costs": {"tickets":"to_recheck"}
         }
       ]

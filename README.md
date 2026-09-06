@@ -23,52 +23,53 @@ Longlist
 → Voyage réservé
 ```
 
-Les 12 destinations de novembre 2026 sont actuellement en **longlist**, même lorsque des anciens fichiers `data/trips/*.json` contiennent déjà beaucoup de détails. Cela évite de donner l'impression que toutes les candidates ont été recherchées avec la même profondeur.
+Les 12 destinations de novembre 2026 restent en **longlist** tant qu'elles n'ont pas été explicitement retenues. Les anciens fichiers riches `data/trips/*.json` ne suffisent pas à promouvoir automatiquement leur maturité.
 
-Le comparateur de longlist affiche score central, plage d'incertitude méthodologique, confiance A–D, gates `pass / watch / hold / fail`, budget Confort estimé et traçable, porte-à-porte estimé depuis Reims, avantages et compromis.
-
-Un gate bloquant suspend le classement normal ; le score ne peut pas compenser un critère éliminatoire.
+Le comparateur affiche score central, plage d'incertitude méthodologique, confiance A–D, gates `pass / watch / hold / fail`, budget Confort estimé, porte-à-porte indicatif depuis Reims, avantages et compromis. Les rangs sont marqués non robustes lorsque les plages de voisins se recouvrent.
 
 ### Filtres et shortlist
 
 La longlist peut être filtrée sans modifier le score par budget Confort maximal, porte-à-porte maximal, nature, faune terrestre, faune marine, plage, culture et météo robuste.
 
-Le **top 3** est recalculé après ces contraintes. Une shortlist locale peut être créée sur l'appareil ; elle est stockée dans `localStorage` et ne modifie pas le lifecycle Git.
+Le top 3 central est recalculé après ces contraintes. Une shortlist locale peut être créée sur l'appareil ; elle est stockée dans `localStorage` et ne modifie pas le lifecycle Git.
 
 Voir `docs/data-lifecycle-v3.md`.
 
 ## Revue homogène des preuves longlist
 
-`data/longlist-evidence.json` constitue le registre de preuves commun aux 12 candidates. Chaque destination doit désormais documenter les cinq mêmes dimensions :
-
-- saison / météo ;
-- faune ;
-- sécurité ;
-- formalités ;
-- santé.
+`data/longlist-evidence.json` constitue le registre de preuves commun aux 12 candidates. Chaque destination documente les cinq mêmes dimensions : saison/météo, faune, sécurité, formalités et santé.
 
 Chaque dimension porte un statut (`verified`, `supported`, `to_recheck`, `unresolved`), une confiance, une synthèse et au moins une source datée. Les sujets évolutifs comportent une échéance de revérification lorsque nécessaire.
 
-La qualité des preuves est volontairement séparée du score : une destination mieux documentée ne gagne pas automatiquement des points. Les observations d'animaux sauvages ne sont jamais garanties.
+La qualité des preuves est séparée du score : une destination mieux documentée ne gagne pas automatiquement des points. Les observations d'animaux sauvages ne sont jamais garanties.
 
 ## Comparateur aéroports depuis Reims
 
 L'accès terrestre et la recherche de vols sont séparés.
 
-`data/airport-access/reims-airports.json` couvre systématiquement :
+`data/airport-access/reims-airports.json` couvre systématiquement CDG, ORY, BRU, LUX, AMS et FRA, avec benchmarks voiture et rail. Les temps ferroviaires privilégient désormais des horaires/opérateurs officiels lorsqu'ils sont disponibles ; ils restent des benchmarks tant que l'horaire du vol de novembre n'est pas fixé.
 
-- CDG ;
-- ORY ;
-- BRU ;
-- LUX ;
-- AMS ;
-- FRA.
+Carburant, péages, parking, billets de train et hôtel éventuel restent `to_recheck` jusqu'à ce que le vol exact permette un calcul porte-à-porte honnête.
 
-Pour chaque aéroport, le site affiche les benchmarks voiture et rail depuis Reims. Les durées/distances sont datées et sourcées ; carburant, péages, parking, billets de train et hôtel éventuel restent `to_recheck` jusqu'à ce que les horaires et la durée réelle du voyage permettent un calcul honnête.
+Une destination sans recherche de vols affiche tout de même les six accès avec **Vol à rechercher**. Pour les dossiers déjà étudiés, le comparateur n'affiche plus de score aéroport `/100` artificiellement précis.
 
-Une destination sans recherche de vols affiche tout de même ces six accès avec **Vol à rechercher**. Pour les destinations déjà étudiées, le classement ne porte que sur les vols effectivement recherchés et n'affiche plus de score `/100` artificiellement précis.
+## Scan marché de la shortlist provisoire
 
-Les anciens `access.costEUR` des trois dossiers historiques restent temporairement visibles comme enveloppes comparatives agrégées et sont explicitement signalés comme tels.
+`data/shortlist-market-scan.json` suit les signaux tarifaires actuels pour le top 3 central provisoire :
+
+- Komodo + Flores + Bali ;
+- Afrique du Sud ;
+- Seychelles.
+
+La fenêtre de travail commune est actuellement **05/11/2026 → 24/11/2026**. Chaque observation tarifaire distingue strictement :
+
+- `exact` : mêmes dates que la cible ;
+- `nearby` : dates proches mais différentes ;
+- `month` : minimum/signal mensuel sans couple de dates cible vérifié.
+
+Un prix `observed` doit porter sa compagnie, sa source HTTPS et sa date de contrôle. Un prix `nearby` ou `month` n'est jamais injecté automatiquement dans un budget détaillé.
+
+L'accueil expose une synthèse compacte : prix aérien observé, qualité temporelle de l'observation et benchmarks d'accès depuis Reims. Tant que les billets terrestres/parking et l'horaire précis du vol ne sont pas ouverts, Atlas Voyage ne présente pas de faux total porte-à-porte.
 
 ## Fonctionnalités
 
@@ -90,11 +91,11 @@ L'état reste encodé dans l'URL :
 
 ## Données longlist traçables
 
-Les valeurs évolutives de la longlist utilisent un objet structuré plutôt qu'un simple nombre : `value`, unité/devise, `status`, `checkedAt`, `source` et `confidence`.
+Les valeurs évolutives utilisent des objets structurés avec valeur, unité/devise, statut, `checkedAt`, source et confiance.
 
 Statuts prévus : `confirmed`, `observed`, `estimated`, `hypothesis`, `to_recheck`.
 
-Les valeurs actuelles restent des **estimations de comparaison**, pas des offres réservables.
+Les valeurs longlist et scan marché restent des données de comparaison, pas des prestations réservées.
 
 ## Validation
 
@@ -102,7 +103,7 @@ Les valeurs actuelles restent des **estimations de comparaison**, pas des offres
 npm run validate
 ```
 
-La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores et incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, anciens comparateurs aéroports, base commune des six accès depuis Reims, **12 dossiers de preuves longlist × 5 dimensions obligatoires**, préparation et syntaxe JavaScript/service worker.
+La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores/incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, base des six accès Reims, 12 dossiers de preuves × 5 dimensions, provenance/dateMatch du scan tarifaire, préparation et syntaxe JavaScript/service worker.
 
 ## PWA / cache
 
@@ -111,7 +112,7 @@ Le service worker met en cache uniquement le shell applicatif local, le manifest
 - `data/catalog.json` ;
 - `data/destination-comparison.json`.
 
-Le registre de preuves, les dossiers détaillés, données `airport-access`, états de réservation, tuiles OpenStreetMap, images et CDN externes ne sont pas mis automatiquement en cache. Lors de l'activation, le service worker ne supprime que les anciens caches `atlas-*`.
+Le registre de preuves, le scan tarifaire, les dossiers détaillés, données `airport-access`, états de réservation, tuiles OpenStreetMap, images et CDN externes ne sont pas mis automatiquement en cache. Les tarifs périssables restent donc network-only au niveau du service worker applicatif.
 
 Le mode hors-ligne est volontairement limité tant que la future politique de confidentialité n'est pas finalisée.
 
@@ -122,9 +123,10 @@ Voir :
 - `docs/data-lifecycle-v3.md` ;
 - `docs/data-model-v2.md` pour le renderer détaillé hérité ;
 - `docs/architecture.md` ;
+- `docs/score-review-2026-09-06.md` ;
 - `instructions_projet_atlas_voyage.md`.
 
-Les prochains chantiers de fond sont l'ajustement contradictoire des scores à partir du registre de preuves puis, sur les destinations réellement short-listées, la recherche de vols sur des dates identiques et le chiffrage exact train/voiture + péages + carburant + parking + hôtel éventuel.
+Le prochain niveau de précision consiste à ouvrir les **mêmes dates exactes** sur les options aériennes les plus prometteuses, puis à chiffrer le pré-acheminement réel correspondant : billets de train ou voiture + carburant + péages + parking + hôtel éventuel + marge aéroport.
 
 ## Démonstrations
 

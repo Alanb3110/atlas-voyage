@@ -16,6 +16,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./assets/css/styles.css">
   <link rel="stylesheet" href="./assets/css/destination-compare.css">
+  <link rel="stylesheet" href="./assets/css/shortlist-market.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
 </head>
 <body data-page="home">
@@ -81,6 +82,15 @@
       <p id="destinationCompareTrace" class="destination-compare-trace"></p>
     </section>
 
+    <section id="shortlistMarketSection" class="shortlist-market-section">
+      <div class="section-head">
+        <div><p class="eyebrow">Marché aérien</p><h2>Shortlist provisoire — signaux tarifaires</h2></div>
+        <p id="shortlistMarketIntro" class="muted"></p>
+      </div>
+      <div id="shortlistMarketGrid" class="market-grid"></div>
+      <p id="shortlistMarketTrace" class="market-trace"></p>
+    </section>
+
     <section>
       <div class="section-head">
         <div><p class="eyebrow">Dossiers</p><h2>Destinations et voyages</h2></div>
@@ -96,5 +106,6 @@
   <script type="module" src="./assets/js/home.js"></script>
   <script type="module" src="./assets/js/destination-compare.js"></script>
   <script type="module" src="./assets/js/destination-rank-robustness.js"></script>
+  <script type="module" src="./assets/js/shortlist-market-scan.js"></script>
 </body>
 </html>

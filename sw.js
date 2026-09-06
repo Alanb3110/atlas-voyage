@@ -1,4 +1,4 @@
-const CACHE = 'atlas-v10-shell';
+const CACHE = 'atlas-v11-shell';
 
 const SHELL = [
   './index.html',
@@ -8,6 +8,7 @@ const SHELL = [
   './assets/css/trip-v2.css',
   './assets/css/airport-access.css',
   './assets/css/destination-compare.css',
+  './assets/css/shortlist-market.css',
   './assets/css/booking-readiness.css',
   './assets/css/theme.css',
   './assets/js/store.js',
@@ -16,13 +17,14 @@ const SHELL = [
   './assets/js/airport-access.js',
   './assets/js/destination-compare.js',
   './assets/js/destination-rank-robustness.js',
+  './assets/js/shortlist-market-scan.js',
   './assets/js/booking-readiness.js',
   './assets/js/theme.js'
 ];
 
-// Explicitly public, non-sensitive longlist data only. Detailed trip, airport
-// access and booking files are intentionally excluded so future protected data
-// is never persisted by the application service worker by default.
+// Explicitly public, non-sensitive longlist data only. Detailed trip, airport,
+// market-scan and booking files are intentionally excluded so future protected
+// data is never persisted by the application service worker by default.
 const PUBLIC_DATA = [
   './data/catalog.json',
   './data/destination-comparison.json'
