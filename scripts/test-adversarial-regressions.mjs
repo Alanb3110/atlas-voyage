@@ -82,6 +82,29 @@ const cases = [
     mutate: data => { data.destinations[0].uncertaintyHalfWidth = '   '; }
   },
   {
+    label: 'destination: override d’incertitude null est rejeté',
+    file: 'data/destination-comparison.json',
+    validator: 'scripts/validate-destination-numeric-contract.mjs',
+    expected: 'incertitude season doit être un nombre réel',
+    mutate: data => { data.destinations[0].uncertaintyOverrides.season = null; }
+  },
+  {
+    label: 'destination: override d’incertitude en chaîne est rejeté',
+    file: 'data/destination-comparison.json',
+    validator: 'scripts/validate-destination-numeric-contract.mjs',
+    expected: 'incertitude season doit être un nombre réel',
+    mutate: data => { data.destinations[0].uncertaintyOverrides.season = '0.5'; }
+  },
+  {
+    label: 'destination: pondérations nulles ne fabriquent pas un score 0',
+    file: 'data/destination-comparison.json',
+    validator: 'scripts/validate-destination-numeric-contract.mjs',
+    expected: 'somme des pondérations=0, attendu 100',
+    mutate: data => {
+      for (const key of Object.keys(data.weights)) data.weights[key] = 0;
+    }
+  },
+  {
     label: 'budget détaillé: amount=null est rejeté',
     file: 'data/trips/south-africa-nov-2026.json',
     validator: 'scripts/validate-data.mjs',
@@ -157,6 +180,7 @@ const sandboxRoot = await mkdtemp(resolve(tmpdir(), 'atlas-voyage-regression-'))
 try {
   await cp(resolve(root, 'data'), resolve(sandboxRoot, 'data'), { recursive: true });
   await cp(resolve(root, 'scripts'), resolve(sandboxRoot, 'scripts'), { recursive: true });
+  await cp(resolve(root, 'assets/js'), resolve(sandboxRoot, 'assets/js'), { recursive: true });
 
   for (const testCase of cases) {
     await expectValidatorRejects(sandboxRoot, testCase);
@@ -165,24 +189,42 @@ try {
   await rm(sandboxRoot, { recursive: true, force: true });
 }
 
-const rendererPath = resolve(root, 'assets/js/destination-compare.js');
-const renderer = await readFile(rendererPath, 'utf8');
+const rendererPaths = [
+  'assets/js/destination-compare.js',
+  'assets/js/destination-rank-robustness.js'
+];
 const forbiddenRendererPatterns = [
+  'Number(row.scores',
+  'Number(row.uncertaintyOverrides',
+  'Number(row.uncertaintyHalfWidth)',
+  'Number(weights[key])',
+  'Number(currentWeights[key])',
   'Number(row.comfortBudget?.value) || 0',
   'Number(row.doorToDoor?.value) || 0',
   'Math.round(Number(mins) || 0)'
 ];
 
-for (const pattern of forbiddenRendererPatterns) {
-  if (renderer.includes(pattern)) {
-    fail('renderer destinations: absence de faux zéro', `pattern interdit retrouvé: ${pattern}`);
+for (const rendererPath of rendererPaths) {
+  const renderer = await readFile(resolve(root, rendererPath), 'utf8');
+  if (!renderer.includes("assertDestinationComparisonNumericContract(data);")) {
+    fail(`${rendererPath}: contrat numérique runtime`, 'le contrôle strict du dataset a disparu');
   } else {
     passed += 1;
-    console.log(`✓ renderer sans fallback interdit: ${pattern}`);
+    console.log(`✓ ${rendererPath}: contrat numérique runtime actif`);
+  }
+
+  for (const pattern of forbiddenRendererPatterns) {
+    if (renderer.includes(pattern)) {
+      fail(`${rendererPath}: absence de coercion silencieuse`, `pattern interdit retrouvé: ${pattern}`);
+    } else {
+      passed += 1;
+      console.log(`✓ ${rendererPath}: sans pattern interdit ${pattern}`);
+    }
   }
 }
 
-if (!renderer.includes("return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;")) {
+const mainRenderer = await readFile(resolve(root, 'assets/js/destination-compare.js'), 'utf8');
+if (!mainRenderer.includes("return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;")) {
   fail('renderer destinations: garde numérique stricte', 'la garde traceableNumber attendue a disparu');
 } else {
   passed += 1;
