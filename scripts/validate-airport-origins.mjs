@@ -34,6 +34,11 @@ for (const airport of data.airports ?? []) {
     modeIds.add(mode.id);
     if (!mode.mode) fail(`${code}/${mode.id}: libellé mode manquant`);
     if (!finiteNumber(mode.durationMin) || mode.durationMin <= 0) fail(`${code}/${mode.id}: durationMin invalide`);
+    if (mode.durationRangeMin != null) {
+      const { low, high } = mode.durationRangeMin || {};
+      if (!finiteNumber(low) || !finiteNumber(high) || low <= 0 || high < low) fail(`${code}/${mode.id}: durationRangeMin invalide`);
+      else if (finiteNumber(mode.durationMin) && (mode.durationMin < low || mode.durationMin > high)) fail(`${code}/${mode.id}: durationMin hors durationRangeMin`);
+    }
     if (mode.id === 'car' && (!finiteNumber(mode.distanceKm) || mode.distanceKm <= 0)) fail(`${code}/car: distanceKm invalide`);
     if (!statuses.has(mode.status)) fail(`${code}/${mode.id}: status inconnu ${mode.status}`);
     if (!validDate(mode.checkedAt)) fail(`${code}/${mode.id}: checkedAt invalide`);
