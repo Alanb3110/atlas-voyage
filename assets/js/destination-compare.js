@@ -3,6 +3,8 @@ import { loadCatalog, buildTripUrl, formatEUR, formatDateFR, escapeHtml } from '
 const section = document.querySelector('#destinationCompareSection');
 if (!section) throw new Error('destinationCompareSection absent du DOM');
 
+// Legacy storage key retained to preserve existing user choices. In the UI this
+// is a personal/local selection, distinct from the versioned lifecycle `shortlist`.
 const SHORTLIST_KEY = 'atlas-destination-shortlist:v1';
 const FILTER_KEY = 'atlas-destination-filters:v1';
 
@@ -204,7 +206,7 @@ function renderFilterControls() {
     </div>
     <div class="destination-filter-facets" aria-label="Filtres qualitatifs">
       ${FACETS.map(([key, label]) => `<label class="destination-filter-chip"><input type="checkbox" data-destination-facet="${escapeHtml(key)}" ${filters.facets.includes(key) ? 'checked' : ''}><span>${escapeHtml(label)}</span></label>`).join('')}
-      <label class="destination-filter-chip shortlist"><input id="destinationShortlistOnly" type="checkbox" ${filters.shortlistOnly ? 'checked' : ''}><span>Shortlist uniquement</span></label>
+      <label class="destination-filter-chip shortlist"><input id="destinationShortlistOnly" type="checkbox" ${filters.shortlistOnly ? 'checked' : ''}><span>Ma sélection locale uniquement</span></label>
       <button class="button secondary destination-filter-reset" type="button" id="destinationFilterReset">Réinitialiser</button>
     </div>`;
 
@@ -263,7 +265,7 @@ function renderCounts(filteredCount) {
   const result = document.querySelector('#destinationFilterCount');
   const shortlistCount = document.querySelector('#destinationShortlistCount');
   if (result) result.textContent = `${filteredCount} / ${rows.length} destinations affichées`;
-  if (shortlistCount) shortlistCount.textContent = `${shortlist.size} en shortlist locale`;
+  if (shortlistCount) shortlistCount.textContent = `${shortlist.size} sélection${shortlist.size > 1 ? 's' : ''} locale${shortlist.size > 1 ? 's' : ''}`;
 }
 
 function renderSummary(topRows) {
@@ -334,7 +336,7 @@ function renderDestinationCard(row, rank) {
       <div class="destination-advantages"><strong>Points forts</strong><ul>${(row.advantages || []).map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
       <div class="destination-tradeoff"><strong>Compromis :</strong> ${escapeHtml(row.tradeoff || '—')}</div>
       <div class="destination-card-actions">
-        <button class="button secondary destination-shortlist-button" type="button" data-shortlist-trip="${escapeHtml(row.tripId)}" aria-pressed="${shortlisted}">${shortlisted ? '★ Retirer de la shortlist' : '☆ Ajouter à la shortlist'}</button>
+        <button class="button secondary destination-shortlist-button" type="button" data-shortlist-trip="${escapeHtml(row.tripId)}" aria-pressed="${shortlisted}">${shortlisted ? '★ Retirer de ma sélection' : '☆ Ajouter à ma sélection'}</button>
         <a class="button" href="${buildTripUrl(trip.id, trip.defaultVariant, trip.defaultBudget)}">Ouvrir le dossier actuel</a>
       </div>
     </div>
