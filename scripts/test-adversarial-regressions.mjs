@@ -207,6 +207,36 @@ const cases = [
     validator: 'scripts/validate-shortlist-door-to-door.mjs',
     expected: 'sa-cdg-openjaw/reims-cdg-rail: durée partiellement numérique',
     mutate: data => { data.scenarios[0].outbound.segments[0].durationMin.low = '85'; }
+  },
+  {
+    label: 'porte-à-porte: durée BRU désynchronisée de la base aéroport est rejetée',
+    file: 'data/shortlist-door-to-door.json',
+    validator: 'scripts/validate-shortlist-door-to-door.mjs',
+    expected: 'sey-bru-sez-pri/reims-bru-rail: durée ground_access désynchronisée de BRU',
+    mutate: data => {
+      const scenario = data.scenarios.find(item => item.id === 'sey-bru-sez-pri');
+      scenario.outbound.segments.find(item => item.id === 'reims-bru-rail').durationMin = { low: 187, high: 187, status: 'estimated' };
+    }
+  },
+  {
+    label: 'porte-à-porte: tarif FRA désynchronisé du scan marché est rejeté',
+    file: 'data/shortlist-door-to-door.json',
+    validator: 'scripts/validate-shortlist-door-to-door.mjs',
+    expected: 'komodo-fra-dps-ubud/international-airfare: partyValueEUR désynchronisé du scan marché',
+    mutate: data => {
+      const scenario = data.scenarios.find(item => item.id === 'komodo-fra-dps-ubud');
+      scenario.costs.find(item => item.id === 'international-airfare').partyValueEUR = 1390;
+    }
+  },
+  {
+    label: 'porte-à-porte: budgetUse désynchronisé du scan marché est rejeté',
+    file: 'data/shortlist-door-to-door.json',
+    validator: 'scripts/validate-shortlist-door-to-door.mjs',
+    expected: 'sey-cdg-sez-pri/international-airfare: budgetUse désynchronisé du scan marché',
+    mutate: data => {
+      const scenario = data.scenarios.find(item => item.id === 'sey-cdg-sez-pri');
+      scenario.costs.find(item => item.id === 'international-airfare').budgetUse = 'exact_budget_candidate';
+    }
   }
 ];
 
@@ -271,6 +301,22 @@ if (!marketRenderer.includes("const status = strictDates ? paretoStatus(fareDelt
 } else {
   passed += 1;
   console.log('✓ renderer marché: aucune dominance sur dates non strictes');
+}
+
+const doorRenderer = await readFile(resolve(root, 'assets/js/shortlist-door-to-door.js'), 'utf8');
+for (const pattern of ['Number(cost.partyValueEUR)', 'Number(cost.valueEUR)', 'Number(duration.value)', 'Math.round(Number(minutes) || 0)']) {
+  if (doorRenderer.includes(pattern)) {
+    fail('renderer porte-à-porte: absence de coercion silencieuse', `pattern interdit retrouvé: ${pattern}`);
+  } else {
+    passed += 1;
+    console.log(`✓ renderer porte-à-porte: sans pattern interdit ${pattern}`);
+  }
+}
+if (!doorRenderer.includes('Signaux chiffrés non stricts')) {
+  fail('renderer porte-à-porte: séparation signaux/budget', 'le libellé de séparation des signaux non stricts a disparu');
+} else {
+  passed += 1;
+  console.log('✓ renderer porte-à-porte: signaux non stricts séparés du budget');
 }
 
 if (failures.length) {
