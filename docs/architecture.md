@@ -6,9 +6,7 @@ Application statique, mobile-first, sans framework ni étape de build obligatoir
 
 ## Lifecycle v3
 
-La hiérarchie de décision n'est plus seulement `Voyage → Variante → Budget`.
-
-Le cycle de maturité est désormais :
+Le cycle de maturité est :
 
 ```text
 Longlist
@@ -39,14 +37,12 @@ Les trois sélections sont encodées dans l'URL :
 
 `trip.html?trip=bali-komodo-demo&variant=balanced&budget=comfort`
 
-Cela permet de partager exactement le voyage, l'option et le niveau de budget affichés.
-
 ## Séparation données / interface
 
 - `index.html` : catalogue et comparateur de longlist ;
 - `trip.html` : renderer générique des dossiers détaillés/hérités ;
 - `data/catalog.json` : index et maturité des dossiers ;
-- `data/destination-comparison.json` : longlist, scores, incertitudes et gates ;
+- `data/destination-comparison.json` : longlist, scores, incertitudes, gates, facettes et valeurs traçables ;
 - `data/trips/*.json` : données détaillées/héritées ;
 - `data/airport-access/*.json` : comparateurs porte-à-porte lorsqu'ils existent ;
 - `data/booking-status/*.json` : états abstraits de préparation, sans références personnelles ;
@@ -59,21 +55,50 @@ Aucune donnée de voyage ne doit être codée en dur dans `trip.html`.
 
 ## Comparateur de destinations
 
-Le comparateur utilise huit critères pondérés et affiche désormais :
+Le comparateur utilise huit critères pondérés et affiche :
 
 - score central ;
 - plage d'incertitude méthodologique ;
 - niveau de confiance A–D ;
 - gates de décision ;
-- budget Confort estimé ;
-- porte-à-porte estimé depuis Reims ;
+- budget Confort traçable ;
+- porte-à-porte traçable depuis Reims ;
 - avantages et compromis.
 
 Un gate bloquant en `hold` ou `fail` suspend le rang normal de la destination.
 
 Les plages affichées ne sont pas des intervalles de confiance statistiques.
 
-Le coût et le porte-à-porte restent visibles séparément tant qu'aucune cible utilisateur explicite ne permet de les transformer honnêtement en contrainte ou critère pondéré.
+### Filtres et shortlist
+
+Les préférences suivantes agissent comme contraintes explicites et ne réécrivent pas le score :
+
+- budget Confort maximal ;
+- porte-à-porte maximal ;
+- nature ;
+- faune terrestre ;
+- faune marine ;
+- plage ;
+- culture ;
+- météo robuste.
+
+Les facettes sont qualitatives : `high / medium / low / none`. Un filtre qualitatif sélectionné demande actuellement `high`.
+
+La shortlist de l'interface est locale à l'appareil via `localStorage`. Elle n'altère pas le lifecycle versionné. Le top 3 compact est recalculé après les filtres et exclut les candidates en `hold` ou `fail`.
+
+## Valeurs traçables longlist
+
+Le budget Confort et le porte-à-porte utilisent des objets contenant au minimum :
+
+- `value` ;
+- `status` (`confirmed`, `observed`, `estimated`, `hypothesis`, `to_recheck`) ;
+- `checkedAt` ;
+- `source` ;
+- `confidence` (`high`, `medium`, `low`).
+
+Le budget porte en plus `currency: EUR` et le porte-à-porte `unit: min`.
+
+Les budgets actuels restent des **estimations** ; aucune valeur longlist n'est présentée comme réservable.
 
 ## Renderer détaillé V2
 
@@ -104,7 +129,7 @@ Chaque variante peut porter `routes[]` avec :
 - `points` ;
 - `real`.
 
-`real:false` signifie que la liaison est schématique ; elle est affichée en pointillé. Un tracé schématique ne doit jamais être décrit comme un vrai itinéraire routier ou maritime.
+`real:false` signifie que la liaison est schématique ; elle est affichée en pointillé.
 
 ## Validation
 
@@ -120,24 +145,26 @@ Le contrôle couvre notamment :
 - lifecycle ;
 - profondeur de recherche ;
 - variantes/budgets par défaut ;
-- coordonnées ;
-- routes ;
+- coordonnées et routes ;
 - cohérence des totaux ;
 - comparateur aéroports ;
 - scores longlist ;
 - incertitudes ;
 - confiance ;
 - gates ;
+- facettes ;
+- valeurs traçables ;
 - statuts de préparation ;
 - syntaxe JavaScript et service worker.
 
 ## PWA et cache
 
-Le service worker utilise un cache versionné `atlas-v7-shell` avec une politique restrictive.
+Le service worker utilise un cache versionné `atlas-v8-shell` avec une politique restrictive.
 
 Il ne met en cache par défaut que :
 
 - le shell HTML/CSS/JS local ;
+- le manifest ;
 - `data/catalog.json` ;
 - `data/destination-comparison.json`.
 
@@ -151,7 +178,7 @@ Il n'intercepte pas les ressources externes et ne met pas automatiquement en cac
 
 Lors de l'activation, il ne purge que les caches dont le nom commence par `atlas-`, afin de ne pas supprimer les caches d'autres projets hébergés sur la même origine GitHub Pages.
 
-Le mode hors-ligne est donc volontairement limité au shell et à la longlist tant que la politique de confidentialité n'est pas finalisée.
+Le mode hors-ligne reste volontairement limité au shell et à la longlist tant que la politique de confidentialité n'est pas finalisée.
 
 ## Confidentialité
 
@@ -168,15 +195,12 @@ GitHub privé
 
 Aucun secret ni donnée personnelle sensible ne doit être stocké dans les JSON versionnés.
 
-Le stade `booked` doit rester abstrait dans Git : `booked: true` est acceptable, un PNR ou numéro de billet nominatif ne l'est pas.
-
 ## Migration suivante
 
 La prochaine phase doit :
 
-1. homogénéiser les 12 candidates au niveau longlist ;
-2. séparer faune terrestre et marine ;
-3. introduire le modèle tarifaire `confirmed / observed / estimated / hypothesis / to_recheck` ;
-4. refondre le porte-à-porte Reims avec ORY/FRA et décomposition train/voiture/péages/carburant/parking/hôtel ;
-5. ajouter shortlist, filtres et top 3 compact sur iPhone ;
-6. n'approfondir ensuite que les destinations réellement short-listées.
+1. homogénéiser factuellement les 12 candidates au niveau longlist ;
+2. refondre le vrai porte-à-porte Reims avec ORY/FRA et décomposition train/voiture/péages/carburant/parking/hôtel ;
+3. propager le modèle tarifaire structuré aux budgets détaillés ;
+4. rendre les pondérations ajustables si utile ;
+5. n'approfondir ensuite que les destinations réellement short-listées.
