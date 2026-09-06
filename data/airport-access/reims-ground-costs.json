@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-06",
+  "tripDurationDays": 20,
+  "status": "research",
+  "method": {
+    "road": "Les coûts route sont des plages aller simple publiées par Mappy puis doublées pour l'aller-retour. Mappy utilise un profil véhicule/carburant par défaut ; ces montants sont donc des benchmarks observés, pas le coût exact de la voiture de l'utilisateur.",
+    "parking": "Le parking est séparé du coût route. Un total 20 jours n'est calculé que lorsqu'un barème public permet une dérivation reproductible ; sinon le tarif reste dynamique/to_recheck avec son benchmark publié.",
+    "rail": "Les billets ferroviaires restent dynamiques. Un tarif 'à partir de' n'est conservé que s'il est exposé publiquement par l'opérateur et n'est jamais présenté comme le prix des dates cibles.",
+    "noSilentZero": "Un poste inconnu vaut null/to_recheck, jamais zéro."
+  },
+  "airports": [
+    {
+      "code": "CDG",
+      "road": {
+        "status": "observed_range",
+        "confidence": "medium",
+        "source": "https://fr.mappy.com/itineraire/reims/roissy-aeroport",
+        "oneWay": {"fuelEUR":{"low":15.27,"high":16.78},"tollEUR":{"low":0,"high":10.20}},
+        "roundTripRouteEUR": {"low":30.54,"high":53.96},
+        "note": "Itinéraires Reims–Aéroport Charles-de-Gaulle ; hors parking."
+      },
+      "parking20Days": {
+        "status": "to_recheck",
+        "valueEUR": null,
+        "source": "https://www.parisaeroport.fr/passagers/parking/paris-charles-de-gaulle",
+        "confidence": "low",
+        "note": "Tarif passager longue durée dépendant de la réservation ; aucun prix 20 jours suffisamment traçable trouvé dans les pages publiques indexées."
+      },
+      "railFare": {
+        "status": "to_recheck",
+        "source": "https://www.sncf-connect.com/train/trajet/reims/roissy-charles-de-gaulle",
+        "confidence": "medium",
+        "note": "SNCF confirme la liaison et les durées mais n'expose pas de tarif fixe pour novembre sur la page publique."
+      }
+    },
+    {
+      "code": "ORY",
+      "road": {
+        "status": "observed_range",
+        "confidence": "medium",
+        "source": "https://fr.mappy.com/itineraire/reims/orly-aeroport",
+        "oneWay": {"fuelEUR":{"low":17.53,"high":21.10},"tollEUR":{"low":0,"high":12.60}},
+        "roundTripRouteEUR": {"low":35.06,"high":67.40},
+        "note": "Itinéraires Reims–Aéroport Paris-Orly ; hors parking."
+      },
+      "parking20Days": {
+        "status": "to_recheck",
+        "valueEUR": null,
+        "source": "https://www.parisaeroport.fr/passagers/parking/paris-orly",
+        "confidence": "low",
+        "note": "Tarif réservation longue durée non figé publiquement dans le scan."
+      },
+      "railFare": {
+        "status": "to_recheck",
+        "source": "https://www.sncf-connect.com/train/trajet/reims/paris",
+        "confidence": "low",
+        "note": "Train Reims–Paris + ligne 14 ; billet exact dépend du train et le ticket aéroport Île-de-France doit être ajouté."
+      }
+    },
+    {
+      "code": "BRU",
+      "road": {
+        "status": "observed_range",
+        "confidence": "medium",
+        "source": "https://fr.mappy.com/itineraire/51100-reims/1000-bruxelles",
+        "oneWay": {"fuelEUR":{"low":24.63,"high":28.19},"tollEUR":{"low":0,"high":0}},
+        "roundTripRouteEUR": {"low":49.26,"high":56.38},
+        "note": "Benchmark Mappy vers Bruxelles ville ; l'aéroport est proche mais le coût final doit être recalculé pour BRU précisément."
+      },
+      "parking20Days": {
+        "status": "dynamic",
+        "valueEUR": null,
+        "publishedBenchmark": {"durationDays":7,"fromEUR":74},
+        "source": "https://www.brusselsairport.be/fr/passenger/mobility/parking/discount-parking",
+        "confidence": "high",
+        "note": "Discount 1/2 : 1 semaine à partir de 74 €, réservation en ligne obligatoire. Le prix 20 jours est dynamique."
+      },
+      "railFare": {
+        "status": "published_from",
+        "oneWayPerPersonFromEUR": 51,
+        "source": "https://www.sncf-connect.com/train/trajet/reims/bruxelles",
+        "confidence": "medium",
+        "note": "À partir de 51 € Reims–Bruxelles-Midi pour une personne et un aller ; segment Bruxelles-Midi–BRU et dates exactes à ajouter."
+      }
+    },
+    {
+      "code": "LUX",
+      "road": {
+        "status": "observed_range",
+        "confidence": "medium",
+        "source": "https://fr.mappy.com/itineraire/51100-reims/1712-luxembourg",
+        "oneWay": {"fuelEUR":{"low":21.22,"high":27.07},"tollEUR":{"low":0,"high":17}},
+        "roundTripRouteEUR": {"low":42.44,"high":88.14},
+        "note": "Benchmark vers Luxembourg ville ; hors parking, à recalculer jusqu'à Findel."
+      },
+      "parking20Days": {
+        "status": "calculated_from_published_rates",
+        "valueEUR": 178,
+        "parking": "E",
+        "formula": "57.50 + 51.50 + 6 × 11.50",
+        "source": "https://www.lux-airport.lu/fr/parking-transport/acces-direct/",
+        "confidence": "medium",
+        "note": "20 jours estimés à partir du barème drive-up Parking E : première semaine 57,50 €, semaine supplémentaire 51,50 €, puis 6 jours à 11,50 €. À confirmer sur le moteur de réservation avant départ."
+      },
+      "railFare": {
+        "status": "to_recheck",
+        "source": "https://www.sncf-connect.com/train/trajet/reims/luxembourg",
+        "confidence": "medium",
+        "note": "Tarif transfrontalier dynamique ; le tram jusqu'à Findel est inclus dans le réseau luxembourgeois gratuit mais le billet Reims–Luxembourg reste à rechercher."
+      }
+    },
+    {
+      "code": "AMS",
+      "road": {
+        "status": "observed_range",
+        "confidence": "medium",
+        "source": "https://fr.mappy.com/itineraire/reims/amsterdam",
+        "oneWay": {"fuelEUR":{"low":47.85,"high":52.62},"tollEUR":{"low":0,"high":0}},
+        "roundTripRouteEUR": {"low":95.70,"high":105.24},
+        "note": "Benchmark Mappy vers Amsterdam ; Schiphol est au sud-ouest de la ville, donc recalcul exact conseillé."
+      },
+      "parking20Days": {
+        "status": "calculated_from_published_rates",
+        "valueEUR": 365,
+        "parking": "P3 Long Term Unsheltered",
+        "formula": "95 + 18 × 15",
+        "source": "https://www.schiphol.nl/en/parking/parking-rates-without-a-reservation",
+        "confidence": "high",
+        "note": "Drive-up : 95 € pour 24–48 h puis 15 € par jour supplémentaire ; 20 jours = 365 €. Réserver peut être moins cher."
+      },
+      "railFare": {
+        "status": "to_recheck",
+        "source": "https://www.sncf-connect.com/train/trajet/reims/amsterdam",
+        "confidence": "medium",
+        "note": "SNCF confirme la liaison mais pas de prix fixe public pour les dates cibles dans le scan."
+      }
+    },
+    {
+      "code": "FRA",
+      "road": {
+        "status": "observed_range",
+        "confidence": "low",
+        "source": "https://fr.mappy.com/itineraire/reims/francfort",
+        "oneWay": {"fuelEUR":{"low":75.43,"high":85.36},"tollEUR":{"low":0,"high":72.90}},
+        "roundTripRouteEUR": {"low":150.86,"high":316.52},
+        "note": "Benchmark vers Francfort ville avec forte dispersion selon itinéraire ; à recalculer spécifiquement jusqu'à FRA."
+      },
+      "parking20Days": {
+        "status": "dynamic",
+        "valueEUR": null,
+        "publishedBenchmark": {"durationDays":14,"fromEUR":98},
+        "secondaryBenchmark": {"durationDays":7,"fromEUR":64},
+        "source": "https://www.frankfurt-airport.com/en/transport-and-parking/parking-offers/holiday-parking.html",
+        "confidence": "high",
+        "note": "Holiday Parking : 7 jours à partir de 64 €, 14 jours à partir de 98 € ; prix exact 20 jours via réservation."
+      },
+      "railFare": {
+        "status": "to_recheck",
+        "source": "https://www.sncf-connect.com/train/trajet/reims/francfort-sur-le-main",
+        "confidence": "low",
+        "note": "Tarif dynamique ; le segment final vers Frankfurt Airport doit être inclus dans la recherche exacte."
+      }
+    }
+  ]
+}
