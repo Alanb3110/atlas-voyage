@@ -10,11 +10,11 @@ const access = JSON.parse(await readFile(resolve(root, 'data/airport-access/reim
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
-const finite = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+const finite = value => typeof value === 'number' && Number.isFinite(value);
 const requiredCodes = new Set((access.airports || []).map(item => item.code));
 
 if (!validDate(data.checkedAt)) fail('checkedAt invalide');
-if (!finite(data.tripDurationDays) || Number(data.tripDurationDays) <= 0) fail('tripDurationDays invalide');
+if (!finite(data.tripDurationDays) || data.tripDurationDays <= 0) fail('tripDurationDays invalide');
 if (!Array.isArray(data.airports)) fail('airports doit être un tableau');
 
 const seen = new Set();
@@ -29,18 +29,18 @@ for (const airport of data.airports || []) {
   if (!/^https:\/\//.test(road.source || '')) fail(`${code}: source route HTTPS manquante`);
   for (const key of ['fuelEUR','tollEUR']) {
     const range = road.oneWay?.[key];
-    if (!range || !finite(range.low) || !finite(range.high) || Number(range.low) < 0 || Number(range.high) < Number(range.low)) {
+    if (!range || !finite(range.low) || !finite(range.high) || range.low < 0 || range.high < range.low) {
       fail(`${code}: plage ${key} invalide`);
     }
   }
   const round = road.roundTripRouteEUR;
-  if (!round || !finite(round.low) || !finite(round.high) || Number(round.low) < 0 || Number(round.high) < Number(round.low)) {
+  if (!round || !finite(round.low) || !finite(round.high) || round.low < 0 || round.high < round.low) {
     fail(`${code}: roundTripRouteEUR invalide`);
   } else if (road.oneWay?.fuelEUR && road.oneWay?.tollEUR) {
-    const expectedLow = 2 * (Number(road.oneWay.fuelEUR.low) + Number(road.oneWay.tollEUR.low));
-    const expectedHigh = 2 * (Number(road.oneWay.fuelEUR.high) + Number(road.oneWay.tollEUR.high));
-    if (Math.abs(Number(round.low) - expectedLow) > 0.02) fail(`${code}: roundTripRouteEUR.low ${round.low} ≠ ${expectedLow.toFixed(2)}`);
-    if (Math.abs(Number(round.high) - expectedHigh) > 0.02) fail(`${code}: roundTripRouteEUR.high ${round.high} ≠ ${expectedHigh.toFixed(2)}`);
+    const expectedLow = 2 * (road.oneWay.fuelEUR.low + road.oneWay.tollEUR.low);
+    const expectedHigh = 2 * (road.oneWay.fuelEUR.high + road.oneWay.tollEUR.high);
+    if (Math.abs(round.low - expectedLow) > 0.02) fail(`${code}: roundTripRouteEUR.low ${round.low} ≠ ${expectedLow.toFixed(2)}`);
+    if (Math.abs(round.high - expectedHigh) > 0.02) fail(`${code}: roundTripRouteEUR.high ${round.high} ≠ ${expectedHigh.toFixed(2)}`);
   }
 
   const parking = airport.parking20Days;
@@ -49,7 +49,7 @@ for (const airport of data.airports || []) {
     if (!/^https:\/\//.test(parking.source || '')) fail(`${code}: source parking HTTPS manquante`);
     const hasValue = finite(parking.valueEUR);
     if (['to_recheck','dynamic'].includes(parking.status) && hasValue) fail(`${code}: parking ${parking.status} ne doit pas avoir de valueEUR numérique`);
-    if (parking.status === 'calculated_from_published_rates' && (!hasValue || Number(parking.valueEUR) < 0)) fail(`${code}: parking calculé sans valueEUR valide`);
+    if (parking.status === 'calculated_from_published_rates' && (!hasValue || parking.valueEUR < 0)) fail(`${code}: parking calculé sans valueEUR valide`);
     if (parking.publishedBenchmark) {
       if (!finite(parking.publishedBenchmark.durationDays) || !finite(parking.publishedBenchmark.fromEUR)) fail(`${code}: publishedBenchmark parking invalide`);
     }
@@ -59,7 +59,7 @@ for (const airport of data.airports || []) {
   if (!rail || typeof rail !== 'object') fail(`${code}: railFare manquant`);
   else {
     if (!/^https:\/\//.test(rail.source || '')) fail(`${code}: source rail HTTPS manquante`);
-    if (rail.oneWayPerPersonFromEUR != null && (!finite(rail.oneWayPerPersonFromEUR) || Number(rail.oneWayPerPersonFromEUR) < 0)) fail(`${code}: oneWayPerPersonFromEUR invalide`);
+    if (rail.oneWayPerPersonFromEUR != null && (!finite(rail.oneWayPerPersonFromEUR) || rail.oneWayPerPersonFromEUR < 0)) fail(`${code}: oneWayPerPersonFromEUR invalide`);
   }
 }
 

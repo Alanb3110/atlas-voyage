@@ -11,6 +11,7 @@ const access = JSON.parse(await readFile(resolve(root, 'data/airport-access/reim
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+const finiteNumber = value => typeof value === 'number' && Number.isFinite(value);
 const dateMatches = new Set(['exact','nearby','month']);
 const confidences = new Set(['high','medium','low']);
 const priceStatuses = new Set(['observed','estimated','hypothesis','to_recheck','confirmed']);
@@ -21,7 +22,7 @@ const researchedStages = new Set(['shortlist','selected','detailed','bookable','
 if (!dateRe.test(data.checkedAt || '')) fail('checkedAt invalide');
 if (!dateRe.test(data.targetWindow?.departure || '')) fail('targetWindow.departure invalide');
 if (!dateRe.test(data.targetWindow?.return || '')) fail('targetWindow.return invalide');
-if (!Number.isFinite(Number(data.travelers)) || Number(data.travelers) < 1) fail('travelers invalide');
+if (!finiteNumber(data.travelers) || data.travelers < 1) fail('travelers invalide');
 
 const seenTrips = new Set();
 const seenObs = new Set();
@@ -50,7 +51,7 @@ for (const destination of data.destinations || []) {
     if (!dateRe.test(obs.checkedAt || '')) fail(`${obs.id}: checkedAt invalide`);
     if (!/^https:\/\//.test(obs.source || '')) fail(`${obs.id}: source HTTPS manquante`);
     if (!confidences.has(obs.confidence)) fail(`${obs.id}: confidence invalide`);
-    if (!Number.isFinite(Number(obs.price?.value)) || Number(obs.price.value) < 0) fail(`${obs.id}: price.value invalide`);
+    if (!finiteNumber(obs.price?.value) || obs.price.value < 0) fail(`${obs.id}: price.value invalide`);
     if (!obs.price?.currency) fail(`${obs.id}: price.currency manquante`);
     if (!priceStatuses.has(obs.price?.status)) fail(`${obs.id}: price.status invalide`);
     if (obs.price?.status === 'observed' && !obs.source) fail(`${obs.id}: prix observé sans source`);

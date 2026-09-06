@@ -10,12 +10,13 @@ const market = JSON.parse(await readFile(resolve(root, 'data/shortlist-market-sc
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+const finiteNumber = value => typeof value === 'number' && Number.isFinite(value);
 const alignments = new Set(['mismatch_in_current_market_scan','aligned_with_internal_inbound_transfer','aligned_with_ground_transfer']);
 const geometryTypes = new Set(['open_jaw','roundtrip_gateway']);
 const marketByTrip = new Map((market.destinations || []).map(item => [item.tripId, item]));
 
 if (!dateRe.test(data.checkedAt || '')) fail('checkedAt invalide');
-if (!Number.isFinite(Number(data.airportMarginMin?.value)) || Number(data.airportMarginMin.value) < 0) fail('airportMarginMin.value invalide');
+if (!finiteNumber(data.airportMarginMin?.value) || data.airportMarginMin.value < 0) fail('airportMarginMin.value invalide');
 if (data.airportMarginMin?.status !== 'hypothesis') fail('airportMarginMin doit rester hypothesis tant qu’aucun vol exact n’est figé');
 
 const seen = new Set();

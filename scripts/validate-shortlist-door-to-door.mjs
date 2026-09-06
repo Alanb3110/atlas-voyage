@@ -10,13 +10,13 @@ const geometry = JSON.parse(await readFile(resolve(root, 'data/shortlist-gateway
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
-const numeric = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+const numeric = value => typeof value === 'number' && Number.isFinite(value);
 const geometryTrips = new Set((geometry.destinations || []).map(item => item.tripId));
 const confidence = new Set(['high','medium','low']);
 
 if (!dateRe.test(data.checkedAt || '')) fail('checkedAt invalide');
 if (!dateRe.test(data.targetWindow?.departure || '') || !dateRe.test(data.targetWindow?.return || '')) fail('targetWindow invalide');
-if (!numeric(data.travelers) || Number(data.travelers) !== 2) fail('travelers doit valoir 2 pour ce brief');
+if (!numeric(data.travelers) || data.travelers !== 2) fail('travelers doit valoir 2 pour ce brief');
 
 const seen = new Set();
 const scenarioCountByTrip = new Map();
@@ -41,7 +41,7 @@ for (const scenario of data.scenarios || []) {
       segmentIds.add(segment.id);
       const duration = segment.durationMin || {};
       const hasRange = numeric(duration.low) && numeric(duration.high);
-      if (hasRange && (Number(duration.low) < 0 || Number(duration.high) < Number(duration.low))) fail(`${id}/${segment.id}: plage durée invalide`);
+      if (hasRange && (duration.low < 0 || duration.high < duration.low)) fail(`${id}/${segment.id}: plage durée invalide`);
       if ((numeric(duration.low) && !numeric(duration.high)) || (!numeric(duration.low) && numeric(duration.high))) fail(`${id}/${segment.id}: durée partiellement numérique`);
       if (hasRange && ['to_recheck','to_research','variant_dependent'].includes(duration.status)) fail(`${id}/${segment.id}: statut ${duration.status} avec durée numérique`);
       if (!hasRange && segment.required !== false && !duration.status) fail(`${id}/${segment.id}: durée manquante sans statut`);

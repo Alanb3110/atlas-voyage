@@ -157,12 +157,30 @@ function gateState(row) {
   return 'pass';
 }
 
+function traceableNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
+}
+
 function budgetValue(row) {
-  return Math.max(0, Number(row.comfortBudget?.value) || 0);
+  return traceableNumber(row.comfortBudget?.value);
 }
 
 function doorMinutes(row) {
-  return Math.max(0, Number(row.doorToDoor?.value) || 0);
+  return traceableNumber(row.doorToDoor?.value);
+}
+
+function unavailableLabel(item) {
+  return item?.status === 'to_recheck' ? 'À revérifier' : 'Indisponible';
+}
+
+function budgetLabel(row) {
+  const value = budgetValue(row);
+  return value == null ? unavailableLabel(row.comfortBudget) : formatEUR(value);
+}
+
+function doorLabel(row) {
+  const value = doorMinutes(row);
+  return value == null ? unavailableLabel(row.doorToDoor) : formatDuration(value);
 }
 
 function priceMeta(price) {
@@ -173,8 +191,10 @@ function priceMeta(price) {
 }
 
 function rowMatchesFilters(row) {
-  if (budgetValue(row) > filters.maxBudget) return false;
-  if (doorMinutes(row) / 60 > filters.maxDoorHours) return false;
+  const budget = budgetValue(row);
+  const door = doorMinutes(row);
+  if (budget != null && budget > filters.maxBudget) return false;
+  if (door != null && door / 60 > filters.maxDoorHours) return false;
   if (filters.shortlistOnly && !shortlist.has(row.tripId)) return false;
   return filters.facets.every(key => row.facets?.[key] === 'high');
 }
@@ -282,8 +302,8 @@ function renderSummary(topRows) {
         <h3>${escapeHtml(row.trip.title)}</h3>
         <p>${escapeHtml(row.advantages?.[0] || row.tradeoff || '')}</p>
         <div class="destination-top-meta">
-          <span>${formatEUR(budgetValue(row))}</span>
-          <span>${formatDuration(doorMinutes(row))}</span>
+          <span>${escapeHtml(budgetLabel(row))}</span>
+          <span>${escapeHtml(doorLabel(row))}</span>
           <span>${Math.round(row.range.central)} [${Math.round(row.range.low)}–${Math.round(row.range.high)}]</span>
           <span>Confiance ${escapeHtml(row.evidenceConfidence || '—')}</span>
         </div>
@@ -327,8 +347,8 @@ function renderDestinationCard(row, rank) {
         <span class="destination-gate-pill ${gateClass}">${escapeHtml(gateLabel)}</span>
       </div>
       <div class="destination-kpis">
-        <div><span>Confort</span><strong>${formatEUR(budgetValue(row))}</strong><small>${escapeHtml(priceMeta(row.comfortBudget))}</small></div>
-        <div><span>Porte-à-porte</span><strong>${formatDuration(doorMinutes(row))}</strong><small>${escapeHtml(priceMeta(row.doorToDoor))}</small></div>
+        <div><span>Confort</span><strong>${escapeHtml(budgetLabel(row))}</strong><small>${escapeHtml(priceMeta(row.comfortBudget))}</small></div>
+        <div><span>Porte-à-porte</span><strong>${escapeHtml(doorLabel(row))}</strong><small>${escapeHtml(priceMeta(row.doorToDoor))}</small></div>
         <div><span>Saison</span><strong>${escapeHtml(row.climate || '—')}</strong></div>
       </div>
       <div class="destination-score-list">${bars}</div>
@@ -353,7 +373,9 @@ function bindShortlistButtons() {
 }
 
 function formatDuration(mins) {
-  const m = Math.max(0, Math.round(Number(mins) || 0));
+  const value = traceableNumber(mins);
+  if (value == null) return 'Indisponible';
+  const m = Math.round(value);
   const h = Math.floor(m / 60);
   const r = m % 60;
   return h ? `${h} h${r ? ` ${String(r).padStart(2, '0')}` : ''}` : `${r} min`;
