@@ -1,4 +1,4 @@
-const CACHE = 'atlas-v16-shell';
+const CACHE = 'atlas-v17-shell';
 
 const SHELL = [
   './index.html',
@@ -26,7 +26,7 @@ const SHELL = [
   './assets/js/theme.js'
 ];
 
-// Explicitly public, non-sensitive longlist data only. Detailed trip, airport,
+// Explicitly public, non-sensitive comparison data only. Detailed trip, airport,
 // ground-cost, gateway-geometry, market-scan, door-to-door and booking files are
 // intentionally excluded so future protected data is never persisted by the
 // application service worker by default.
