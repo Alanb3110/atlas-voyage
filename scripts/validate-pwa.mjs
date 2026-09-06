@@ -10,6 +10,7 @@ const fail = message => errors.push(message);
 const manifestPath = resolve(root, 'manifest.webmanifest');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 
+if (manifest.id !== './') fail(`manifest: id inattendu (${manifest.id})`);
 if (manifest.start_url !== './index.html') fail(`manifest: start_url inattendu (${manifest.start_url})`);
 if (manifest.scope !== './') fail(`manifest: scope inattendu (${manifest.scope})`);
 if (manifest.display !== 'standalone') fail(`manifest: display inattendu (${manifest.display})`);
@@ -28,6 +29,7 @@ for (const [size, expected] of expectedIcons) {
   }
   if (icon.src !== expected.path) fail(`manifest: ${size} src ${icon.src} ≠ ${expected.path}`);
   if (icon.type !== 'image/png') fail(`manifest: ${size} type doit être image/png`);
+  if (icon.purpose !== 'any') fail(`manifest: ${size} purpose doit rester "any" tant qu'aucune zone maskable n'est validée`);
   const diskPath = resolve(root, icon.src.replace(/^\.\//, ''));
   try {
     await access(diskPath);
@@ -81,4 +83,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log('\nValidation PWA OK: manifest, icônes PNG, touch icons, Leaflet SRI et shell cache cohérents.');
+console.log('\nValidation PWA OK: identité manifest, icônes PNG, touch icons, Leaflet SRI et shell cache cohérents.');
