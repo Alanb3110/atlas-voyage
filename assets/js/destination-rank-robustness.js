@@ -1,3 +1,5 @@
+import { assertDestinationComparisonNumericContract } from './destination-data-contract.js';
+
 const grid = document.querySelector('#destinationCompareGrid');
 const top3 = document.querySelector('#destinationTop3');
 
@@ -9,6 +11,7 @@ async function init() {
   const response = await fetch('./data/destination-comparison.json', { cache: 'no-store' });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
+  assertDestinationComparisonNumericContract(data);
   const ranges = new Map((data.destinations || []).map(row => [row.tripId, {
     range: weightedScoreRange(row, data.weights || {}),
     gate: gateState(row)
@@ -26,14 +29,15 @@ async function init() {
 }
 
 function clamp5(value) {
-  return Math.max(0, Math.min(5, Number(value) || 0));
+  return Math.max(0, Math.min(5, value));
 }
 
 function criterionRange(row, key) {
-  const central = clamp5(row.scores?.[key]);
-  const override = Number(row.uncertaintyOverrides?.[key]);
-  const fallback = Number(row.uncertaintyHalfWidth);
-  const half = Number.isFinite(override) ? Math.max(0, override) : (Number.isFinite(fallback) ? Math.max(0, fallback) : 0);
+  const central = clamp5(row.scores[key]);
+  const overrides = row.uncertaintyOverrides || {};
+  const half = Object.prototype.hasOwnProperty.call(overrides, key)
+    ? overrides[key]
+    : row.uncertaintyHalfWidth;
   return { low: clamp5(central - half), central, high: clamp5(central + half) };
 }
 
@@ -44,16 +48,15 @@ function weightedScoreRange(row, weights) {
   let high = 0;
   let totalWeight = 0;
   for (const key of keys) {
-    const weight = Number(weights[key]) || 0;
+    const weight = weights[key];
     const range = criterionRange(row, key);
     low += range.low / 5 * weight;
     central += range.central / 5 * weight;
     high += range.high / 5 * weight;
     totalWeight += weight;
   }
-  if (!totalWeight) return { low: 0, central: 0, high: 0 };
-  const factor = 100 / totalWeight;
-  return { low: low * factor, central: central * factor, high: high * factor };
+  if (Math.abs(totalWeight - 100) > 0.01) throw new RangeError(`somme des pondérations=${totalWeight}, attendu 100`);
+  return { low, central, high };
 }
 
 function gateState(row) {
