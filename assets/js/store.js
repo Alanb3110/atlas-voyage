@@ -37,5 +37,5 @@ export function formatDateFR(value) {
   return Number.isNaN(d.getTime()) ? value : new Intl.DateTimeFormat('fr-FR',{dateStyle:'long'}).format(d);
 }
 export function escapeHtml(value='') {
-  return String(value).replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+  return String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 }
