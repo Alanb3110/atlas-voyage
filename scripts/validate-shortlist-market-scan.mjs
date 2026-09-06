@@ -77,14 +77,15 @@ for (const destination of data.destinations || []) {
   if (!origins.has(destination.currentLeader)) fail(`${destination.tripId}: currentLeader absent des observations`);
 }
 
+// Every candidate explicitly promoted to shortlist must already have the targeted
+// market scan. A later promotion to selected/detailed does not invalidate the scan.
 const shortlistIds = new Set((catalog.trips || []).filter(x => x.status === 'shortlist').map(x => x.id));
-if (shortlistIds.size !== 3) fail(`attendu 3 destinations au statut shortlist dans le catalogue, trouvé ${shortlistIds.size}`);
 for (const id of shortlistIds) if (!seenTrips.has(id)) fail(`${id}: shortlist catalogue absente du scan marché`);
-if (seenTrips.size !== 3) fail(`attendu 3 destinations shortlist, trouvé ${seenTrips.size}`);
+if (seenTrips.size !== 3) fail(`scan actuel attendu sur 3 destinations approfondies, trouvé ${seenTrips.size}`);
 
 if (errors.length) {
   console.error(`\nErreurs scan marché (${errors.length})`);
   errors.forEach(x => console.error(`- ${x}`));
   process.exit(1);
 }
-console.log(`\nValidation scan marché OK: ${seenTrips.size} destinations shortlist, ${seenObs.size} observations tarifaires.`);
+console.log(`\nValidation scan marché OK: ${seenTrips.size} destinations approfondies, ${seenObs.size} observations tarifaires.`);
