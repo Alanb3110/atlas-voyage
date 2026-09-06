@@ -25,63 +25,42 @@ Longlist
 
 Les 12 destinations de novembre 2026 sont actuellement en **longlist**, même lorsque des anciens fichiers `data/trips/*.json` contiennent déjà beaucoup de détails. Cela évite de donner l'impression que toutes les candidates ont été recherchées avec la même profondeur.
 
-Le comparateur de longlist affiche :
-
-- score central ;
-- plage d'incertitude méthodologique ;
-- confiance A–D ;
-- gates `pass / watch / hold / fail` ;
-- budget Confort estimé et traçable ;
-- temps porte-à-porte estimé et traçable depuis Reims ;
-- avantages et compromis.
+Le comparateur de longlist affiche score central, plage d'incertitude méthodologique, confiance A–D, gates `pass / watch / hold / fail`, budget Confort estimé et traçable, porte-à-porte estimé depuis Reims, avantages et compromis.
 
 Un gate bloquant suspend le classement normal ; le score ne peut pas compenser un critère éliminatoire.
 
 ### Filtres et shortlist
 
-La longlist peut être filtrée sans modifier le score par :
-
-- budget Confort maximal ;
-- porte-à-porte maximal ;
-- nature ;
-- faune terrestre ;
-- faune marine ;
-- plage ;
-- culture ;
-- météo robuste.
+La longlist peut être filtrée sans modifier le score par budget Confort maximal, porte-à-porte maximal, nature, faune terrestre, faune marine, plage, culture et météo robuste.
 
 Le **top 3** est recalculé après ces contraintes. Une shortlist locale peut être créée sur l'appareil ; elle est stockée dans `localStorage` et ne modifie pas le lifecycle Git.
 
 Voir `docs/data-lifecycle-v3.md`.
 
+## Comparateur aéroports depuis Reims
+
+L'accès terrestre et la recherche de vols sont séparés.
+
+`data/airport-access/reims-airports.json` couvre systématiquement :
+
+- CDG ;
+- ORY ;
+- BRU ;
+- LUX ;
+- AMS ;
+- FRA.
+
+Pour chaque aéroport, le site affiche les benchmarks voiture et rail depuis Reims. Les durées/distances sont datées et sourcées ; carburant, péages, parking, billets de train et hôtel éventuel restent `to_recheck` jusqu'à ce que les horaires et la durée réelle du voyage permettent un calcul honnête.
+
+Une destination sans recherche de vols affiche tout de même ces six accès avec **Vol à rechercher**. Pour les destinations déjà étudiées, le classement ne porte que sur les vols effectivement recherchés et n'affiche plus de score `/100` artificiellement précis.
+
+Les anciens `access.costEUR` des trois dossiers historiques restent temporairement visibles comme enveloppes comparatives agrégées et sont explicitement signalés comme tels.
+
 ## Fonctionnalités
 
-Le renderer générique gère :
-
-- plusieurs dossiers ;
-- plusieurs variantes par voyage détaillé ;
-- Essentiel / Confort recommandé / Premium ;
-- partage d'une sélection précise via l'URL ;
-- comparateur de variantes avec scores relatifs ;
-- carte Leaflet, étapes cliquables et types de liaison ;
-- distinction tracé réel / schématique ;
-- fiches étapes avec hébergement dépendant du budget ;
-- faune ;
-- cuisine ;
-- météo ;
-- santé et sécurité ;
-- règles locales avec statut loi/réglementation/usage/à vérifier ;
-- budgets détaillés avec contrôle de cohérence ;
-- programme jour par jour ;
-- sources et traçabilité ;
-- comparateur aéroports lorsqu'un fichier existe ;
-- suivi abstrait de préparation/réservation ;
-- mode Auto / Clair / Sombre ;
-- PWA avec cache restrictif.
+Le renderer générique gère plusieurs dossiers et variantes, trois budgets, URL partageables, comparateurs, carte Leaflet, étapes, faune, cuisine, météo, santé/sécurité, règles locales, budgets détaillés, programme, sources/traçabilité, accès aéroports depuis Reims, préparation/réservation abstraite, mode Auto/Clair/Sombre et PWA à cache restrictif.
 
 ## Démarrage local
-
-Le navigateur ne doit pas ouvrir les fichiers directement en `file://` car l'application charge des JSON avec `fetch()`.
 
 ```bash
 python -m http.server 8000
@@ -97,22 +76,7 @@ L'état reste encodé dans l'URL :
 
 ## Données longlist traçables
 
-Les valeurs évolutives de la longlist utilisent un objet structuré plutôt qu'un simple nombre.
-
-Exemple budget :
-
-```json
-{
-  "value": 7900,
-  "currency": "EUR",
-  "status": "estimated",
-  "checkedAt": "2026-09-05",
-  "source": "internal-estimate:south-africa-nov-2026",
-  "confidence": "medium"
-}
-```
-
-Le porte-à-porte suit le même principe avec `unit: "min"`.
+Les valeurs évolutives de la longlist utilisent un objet structuré plutôt qu'un simple nombre : `value`, unité/devise, `status`, `checkedAt`, `source` et `confidence`.
 
 Statuts prévus : `confirmed`, `observed`, `estimated`, `hypothesis`, `to_recheck`.
 
@@ -124,23 +88,7 @@ Les valeurs actuelles restent des **estimations de comparaison**, pas des offres
 npm run validate
 ```
 
-La validation est lancée automatiquement par GitHub Actions sur `main` et sur les pull requests.
-
-Elle contrôle notamment :
-
-- cohérence catalogue/fichiers ;
-- lifecycle ;
-- scores et pondérations ;
-- plages d'incertitude ;
-- confiance A–D ;
-- gates ;
-- facettes qualitatives ;
-- valeurs longlist traçables ;
-- variantes, coordonnées et routes ;
-- cohérence des budgets ;
-- comparateurs aéroports lorsqu'ils existent ;
-- états de préparation ;
-- syntaxe JavaScript et service worker.
+La validation GitHub Actions contrôle notamment catalogue/lifecycle, scores et incertitudes, confiance/gates/facettes, valeurs traçables, variantes/routes/budgets, anciens comparateurs aéroports, base commune des six accès depuis Reims, préparation et syntaxe JavaScript/service worker.
 
 ## PWA / cache
 
@@ -149,11 +97,9 @@ Le service worker met en cache uniquement le shell applicatif local, le manifest
 - `data/catalog.json` ;
 - `data/destination-comparison.json`.
 
-Il ne met pas automatiquement en cache les dossiers détaillés, comparateurs aéroports, états de réservation, tuiles OpenStreetMap, images ou CDN externes.
+Il ne met pas automatiquement en cache les dossiers détaillés, données `airport-access`, états de réservation, tuiles OpenStreetMap, images ou CDN externes. Lors de l'activation, il ne supprime que les anciens caches `atlas-*`.
 
-Lors de l'activation, il ne supprime que les anciens caches `atlas-*`, sans toucher aux caches d'autres projets partageant l'origine `alanb3110.github.io`.
-
-Le mode hors-ligne est donc volontairement limité tant que la future politique de confidentialité n'est pas finalisée.
+Le mode hors-ligne est volontairement limité tant que la future politique de confidentialité n'est pas finalisée.
 
 ## Modèle de données
 
@@ -164,7 +110,7 @@ Voir :
 - `docs/architecture.md` ;
 - `instructions_projet_atlas_voyage.md`.
 
-Le prochain chantier de fond est l'homogénéisation factuelle des 12 candidates puis la refonte du vrai porte-à-porte Reims avec ORY/FRA et une décomposition explicite train/voiture/péages/carburant/parking/hôtel.
+Les prochains chantiers de fond sont l'homogénéisation factuelle des 12 candidates puis, sur les destinations réellement short-listées, la recherche de vols sur des dates identiques et le chiffrage exact train/voiture + péages + carburant + parking + hôtel éventuel.
 
 ## Démonstrations
 
@@ -172,7 +118,7 @@ Le prochain chantier de fond est l'homogénéisation factuelle des 12 candidates
 
 ## Confidentialité
 
-Le code reste portable vers une architecture protégée ultérieure :
+Architecture cible :
 
 ```text
 GitHub privé
