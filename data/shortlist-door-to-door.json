@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-06",
+  "status": "research",
+  "travelers": 2,
+  "targetWindow": {"departure":"2026-11-05","return":"2026-11-24"},
+  "method": {
+    "timeRule": "Un temps porte-à-porte n'est affiché comme complet que si tous les segments required=true de la direction ont une durée numérique. Sinon Atlas affiche la somme partielle connue et les segments manquants.",
+    "costRule": "Un coût porte-à-porte n'est affiché comme total que si tous les postes required=true ont un montant numérique compatible avec le scénario. Sinon Atlas affiche uniquement le sous-total connu et les postes manquants.",
+    "airportMargin": "180 min est une hypothèse commune de comparaison et non une recommandation confirmée pour un vol précis.",
+    "scope": "Le porte-à-porte couvre Reims → première base à l'aller et dernière base → Reims au retour. Les déplacements entre étapes du circuit sont traités séparément dans l'itinéraire."
+  },
+  "scenarios": [
+    {
+      "id": "sa-cdg-openjaw",
+      "tripId": "south-africa-nov-2026",
+      "label": "CDG · open-jaw CPT / DUR",
+      "originAirport": "CDG",
+      "geometry": "open_jaw",
+      "status": "to_research",
+      "confidence": "low",
+      "note": "Scénario aligné avec Cape Town en première base et KwaZulu-Natal en dernière base. Le prix du billet multi-destinations exact n'est pas publiquement exposé dans le scan actuel.",
+      "outbound": {
+        "label": "Reims → Cape Town",
+        "segments": [
+          {"id":"reims-cdg-rail","label":"Reims → CDG","type":"ground_access","required":true,"durationMin":{"low":85,"high":85,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle"},
+          {"id":"cdg-margin","label":"Marge aéroport CDG","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"cdg-cpt-flight","label":"CDG → CPT","type":"international_flight","required":true,"durationMin":{"low":705,"high":705,"status":"supported"},"cost":{"status":"to_research"},"source":"https://www.flightconnections.com/flights-from-cdg-to-cpt"},
+          {"id":"cpt-first-base","label":"CPT → hébergement Cape Town","type":"arrival_transfer","required":true,"durationMin":{"status":"to_recheck"},"cost":{"status":"to_recheck"},"source":"https://www.airports.co.za/airports/cape-town-international-airport"}
+        ]
+      },
+      "return": {
+        "label": "KwaZulu-Natal → Reims",
+        "segments": [
+          {"id":"kzn-dur-transfer","label":"Dernière base → DUR","type":"departure_transfer","required":true,"durationMin":{"status":"to_recheck"},"cost":{"status":"to_recheck"}},
+          {"id":"dur-margin","label":"Marge aéroport DUR","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"dur-cdg-flight","label":"DUR → CDG","type":"international_flight","required":true,"durationMin":{"status":"to_research"},"cost":{"status":"included_in_openjaw_to_research"},"source":"https://wwws.airfrance.fr/fr-fr/vols-de-paris-a-durban"},
+          {"id":"cdg-reims-rail","label":"CDG → Reims","type":"ground_access","required":true,"durationMin":{"low":85,"high":85,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/roissy-charles-de-gaulle/reims"}
+        ]
+      },
+      "costs": [
+        {"id":"openjaw-airfare","label":"Billet CDG→CPT / DUR→CDG pour 2","required":true,"status":"to_research"},
+        {"id":"reims-cdg-roundtrip","label":"Pré/post-acheminement rail Reims↔CDG pour 2","required":true,"status":"to_recheck"},
+        {"id":"cpt-transfer","label":"Transfert CPT→Cape Town","required":true,"status":"to_recheck"},
+        {"id":"kzn-dur-transfer-cost","label":"Transfert dernière base→DUR","required":true,"status":"to_recheck"}
+      ]
+    },
+    {
+      "id": "sey-cdg-sez-pri",
+      "tripId": "seychelles-nov-2026",
+      "label": "CDG · SEZ + Praslin",
+      "originAirport": "CDG",
+      "geometry": "roundtrip_gateway",
+      "status": "partial",
+      "confidence": "medium",
+      "note": "Le temps jusqu'à Praslin est calculable comme enveloppe méthodologique ; le coût complet ne l'est pas encore. Le tarif Etihad est observé sur 10–24/11, pas sur 05–24/11.",
+      "outbound": {
+        "label": "Reims → Praslin",
+        "segments": [
+          {"id":"reims-cdg-rail","label":"Reims → CDG","type":"ground_access","required":true,"durationMin":{"low":85,"high":85,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle"},
+          {"id":"cdg-margin","label":"Marge aéroport CDG","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"cdg-sez-flight","label":"CDG → SEZ","type":"international_flight","required":true,"durationMin":{"low":720,"high":720,"status":"route_reference"},"cost":{"partyValueEUR":1252,"status":"observed_nearby","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-24"},"source":"https://www.etihad.com/fr-fr/flights/vols-de-paris-vers-mah%C3%A9"},
+          {"id":"sez-pri-buffer","label":"Arrivée + correspondance domestique","type":"connection_buffer","required":true,"durationMin":{"low":90,"high":90,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"sez-pri-flight","label":"SEZ → PRI","type":"domestic_flight","required":true,"durationMin":{"low":15,"high":20,"status":"supported"},"cost":{"status":"to_recheck"},"source":"https://fly.airseychelles.com/fr/domestic/services-domestiques"}
+        ]
+      },
+      "return": {
+        "label": "Mahé → Reims",
+        "segments": [
+          {"id":"mahe-sez-transfer","label":"Dernier hébergement Mahé → SEZ","type":"departure_transfer","required":true,"durationMin":{"status":"to_recheck"},"cost":{"status":"to_recheck"}},
+          {"id":"sez-margin","label":"Marge aéroport SEZ","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"sez-cdg-flight","label":"SEZ → CDG","type":"international_flight","required":true,"durationMin":{"low":720,"high":720,"status":"route_reference"},"cost":{"status":"included_in_roundtrip_airfare"},"source":"https://www.etihad.com/fr-fr/flights/vols-de-paris-vers-mah%C3%A9"},
+          {"id":"cdg-reims-rail","label":"CDG → Reims","type":"ground_access","required":true,"durationMin":{"low":85,"high":85,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/roissy-charles-de-gaulle/reims"}
+        ]
+      },
+      "costs": [
+        {"id":"international-airfare","label":"Etihad CDG↔SEZ pour 2","required":true,"partyValueEUR":1252,"status":"observed_nearby","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/fr-fr/flights/vols-de-paris-vers-mah%C3%A9"},
+        {"id":"reims-cdg-roundtrip","label":"Rail Reims↔CDG pour 2","required":true,"status":"to_recheck"},
+        {"id":"sez-pri-domestic","label":"Vol domestique SEZ→PRI pour 2","required":true,"status":"to_recheck"},
+        {"id":"mahe-sez-transfer-cost","label":"Transfert final Mahé→SEZ","required":true,"status":"to_recheck"}
+      ]
+    },
+    {
+      "id": "sey-bru-sez-pri",
+      "tripId": "seychelles-nov-2026",
+      "label": "BRU · SEZ + Praslin",
+      "originAirport": "BRU",
+      "geometry": "roundtrip_gateway",
+      "status": "partial",
+      "confidence": "medium",
+      "note": "Alternative destinée à quantifier le compromis BRU. Le tarif Etihad est observé sur 09–23/11 ; le temps de pré-acheminement est plus long depuis Reims.",
+      "outbound": {
+        "label": "Reims → Praslin",
+        "segments": [
+          {"id":"reims-bru-rail","label":"Reims → BRU","type":"ground_access","required":true,"durationMin":{"low":187,"high":187,"status":"estimated"},"cost":{"status":"published_floor_incomplete"},"source":"https://www.sncf-connect.com/train/horaires/reims/bruxelles"},
+          {"id":"bru-margin","label":"Marge aéroport BRU","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"bru-sez-flight","label":"BRU → SEZ","type":"international_flight","required":true,"durationMin":{"low":705,"high":705,"status":"route_reference"},"cost":{"partyValueEUR":1190,"status":"observed_nearby","checkedAt":"2026-09-06","dates":"2026-11-09/2026-11-23"},"source":"https://www.etihad.com/en/flights/flights-from-brussels-to-mahe"},
+          {"id":"sez-pri-buffer","label":"Arrivée + correspondance domestique","type":"connection_buffer","required":true,"durationMin":{"low":90,"high":90,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"sez-pri-flight","label":"SEZ → PRI","type":"domestic_flight","required":true,"durationMin":{"low":15,"high":20,"status":"supported"},"cost":{"status":"to_recheck"},"source":"https://fly.airseychelles.com/fr/domestic/services-domestiques"}
+        ]
+      },
+      "return": {
+        "label": "Mahé → Reims",
+        "segments": [
+          {"id":"mahe-sez-transfer","label":"Dernier hébergement Mahé → SEZ","type":"departure_transfer","required":true,"durationMin":{"status":"to_recheck"},"cost":{"status":"to_recheck"}},
+          {"id":"sez-margin","label":"Marge aéroport SEZ","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"sez-bru-flight","label":"SEZ → BRU","type":"international_flight","required":true,"durationMin":{"low":705,"high":705,"status":"route_reference"},"cost":{"status":"included_in_roundtrip_airfare"},"source":"https://www.etihad.com/en/flights/flights-from-brussels-to-mahe"},
+          {"id":"bru-reims-rail","label":"BRU → Reims","type":"ground_access","required":true,"durationMin":{"low":187,"high":187,"status":"estimated"},"cost":{"status":"published_floor_incomplete"},"source":"https://www.sncf-connect.com/train/horaires/bruxelles/reims"}
+        ]
+      },
+      "costs": [
+        {"id":"international-airfare","label":"Etihad BRU↔SEZ pour 2","required":true,"partyValueEUR":1190,"status":"observed_nearby","checkedAt":"2026-09-06","dates":"2026-11-09/2026-11-23","source":"https://www.etihad.com/en/flights/flights-from-brussels-to-mahe"},
+        {"id":"reims-bru-roundtrip-floor","label":"Rail Reims↔Bruxelles-Midi pour 2 (borne basse, hors BRU)","required":true,"partyValueEUR":204,"status":"published_floor_incomplete","source":"https://www.sncf-connect.com/train/trajet/reims/bruxelles"},
+        {"id":"bru-airport-segments","label":"Bruxelles-Midi↔BRU pour 2","required":true,"status":"to_recheck"},
+        {"id":"sez-pri-domestic","label":"Vol domestique SEZ→PRI pour 2","required":true,"status":"to_recheck"},
+        {"id":"mahe-sez-transfer-cost","label":"Transfert final Mahé→SEZ","required":true,"status":"to_recheck"}
+      ]
+    },
+    {
+      "id": "komodo-cdg-dps-ubud",
+      "tripId": "komodo-flores-nov-2026",
+      "label": "CDG · DPS + Ubud",
+      "originAirport": "CDG",
+      "geometry": "roundtrip_gateway",
+      "status": "partial",
+      "confidence": "low",
+      "note": "Le temps aller jusqu'à Ubud est calculable sous hypothèses ; le tarif Turkish est seulement un minimum mensuel novembre. Le retour dépend encore du choix Sanur ou Lembongan.",
+      "outbound": {
+        "label": "Reims → Ubud",
+        "segments": [
+          {"id":"reims-cdg-rail","label":"Reims → CDG","type":"ground_access","required":true,"durationMin":{"low":85,"high":85,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle"},
+          {"id":"cdg-margin","label":"Marge aéroport CDG","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"cdg-dps-flight","label":"CDG → DPS","type":"international_flight","required":true,"durationMin":{"low":1015,"high":1015,"status":"route_reference"},"cost":{"partyValueEUR":1522,"status":"observed_month","checkedAt":"2026-09-06"},"source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
+          {"id":"dps-ubud-transfer","label":"DPS → Ubud","type":"arrival_transfer","required":true,"durationMin":{"low":75,"high":120,"status":"hypothesis"},"cost":{"status":"to_recheck"},"source":"https://www.indonesia.travel/gb/en/destination/bali-nusa-tenggara/bali/ubud/"}
+        ]
+      },
+      "return": {
+        "label": "Dernière base Bali → Reims",
+        "segments": [
+          {"id":"final-base-dps","label":"Sanur/Lembongan → DPS","type":"departure_transfer","required":true,"durationMin":{"status":"variant_dependent"},"cost":{"status":"variant_dependent"}},
+          {"id":"dps-margin","label":"Marge aéroport DPS","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"dps-cdg-flight","label":"DPS → CDG","type":"international_flight","required":true,"durationMin":{"low":1015,"high":1015,"status":"route_reference"},"cost":{"status":"included_in_roundtrip_airfare"},"source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
+          {"id":"cdg-reims-rail","label":"CDG → Reims","type":"ground_access","required":true,"durationMin":{"low":85,"high":85,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/roissy-charles-de-gaulle/reims"}
+        ]
+      },
+      "costs": [
+        {"id":"international-airfare","label":"Turkish CDG↔DPS pour 2","required":true,"partyValueEUR":1522,"status":"observed_month","checkedAt":"2026-09-06","source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
+        {"id":"reims-cdg-roundtrip","label":"Rail Reims↔CDG pour 2","required":true,"status":"to_recheck"},
+        {"id":"dps-ubud-transfer-cost","label":"Transfert DPS→Ubud","required":true,"status":"to_recheck"},
+        {"id":"final-base-dps-cost","label":"Dernière base→DPS","required":true,"status":"variant_dependent"}
+      ]
+    },
+    {
+      "id": "komodo-fra-dps-ubud",
+      "tripId": "komodo-flores-nov-2026",
+      "label": "FRA · DPS + Ubud",
+      "originAirport": "FRA",
+      "geometry": "roundtrip_gateway",
+      "status": "partial",
+      "confidence": "low",
+      "note": "Alternative destinée à mesurer l'impact du pré-acheminement vers Francfort. Le tarif Etihad observé est sur des dates proches et le retour reste dépendant de Sanur/Lembongan.",
+      "outbound": {
+        "label": "Reims → Ubud",
+        "segments": [
+          {"id":"reims-fra-rail","label":"Reims → FRA","type":"ground_access","required":true,"durationMin":{"low":310,"high":310,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/francfort-sur-le-main"},
+          {"id":"fra-margin","label":"Marge aéroport FRA","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"fra-dps-flight","label":"FRA → DPS","type":"international_flight","required":true,"durationMin":{"low":995,"high":995,"status":"route_reference"},"cost":{"partyValueEUR":1390,"status":"observed_nearby","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-17"},"source":"https://www.etihad.com/en/flights/flights-from-frankfurt-to-denpasar"},
+          {"id":"dps-ubud-transfer","label":"DPS → Ubud","type":"arrival_transfer","required":true,"durationMin":{"low":75,"high":120,"status":"hypothesis"},"cost":{"status":"to_recheck"},"source":"https://www.indonesia.travel/gb/en/destination/bali-nusa-tenggara/bali/ubud/"}
+        ]
+      },
+      "return": {
+        "label": "Dernière base Bali → Reims",
+        "segments": [
+          {"id":"final-base-dps","label":"Sanur/Lembongan → DPS","type":"departure_transfer","required":true,"durationMin":{"status":"variant_dependent"},"cost":{"status":"variant_dependent"}},
+          {"id":"dps-margin","label":"Marge aéroport DPS","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
+          {"id":"dps-fra-flight","label":"DPS → FRA","type":"international_flight","required":true,"durationMin":{"low":995,"high":995,"status":"route_reference"},"cost":{"status":"included_in_roundtrip_airfare"},"source":"https://www.etihad.com/en/flights/flights-from-frankfurt-to-denpasar"},
+          {"id":"fra-reims-rail","label":"FRA → Reims","type":"ground_access","required":true,"durationMin":{"low":310,"high":310,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/francfort-sur-le-main/reims"}
+        ]
+      },
+      "costs": [
+        {"id":"international-airfare","label":"Etihad FRA↔DPS pour 2","required":true,"partyValueEUR":1390,"status":"observed_nearby","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-17","source":"https://www.etihad.com/en/flights/flights-from-frankfurt-to-denpasar"},
+        {"id":"reims-fra-roundtrip","label":"Rail Reims↔FRA pour 2","required":true,"status":"to_recheck"},
+        {"id":"dps-ubud-transfer-cost","label":"Transfert DPS→Ubud","required":true,"status":"to_recheck"},
+        {"id":"final-base-dps-cost","label":"Dernière base→DPS","required":true,"status":"variant_dependent"}
+      ]
+    }
+  ]
+}
