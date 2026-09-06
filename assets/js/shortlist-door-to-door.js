@@ -3,6 +3,8 @@ import { loadCatalog, escapeHtml, formatEUR, formatDateFR } from './store.js';
 const section = document.querySelector('#doorToDoorSection');
 if (!section) throw new Error('doorToDoorSection absent du DOM');
 
+const SIGNAL_STATUSES = new Set(['observed_nearby','observed_month','published_floor_incomplete']);
+
 init().catch(error => {
   console.warn('Porte-à-porte shortlist indisponible:', error);
   section.hidden = true;
@@ -27,7 +29,7 @@ async function init() {
 function renderIntro(data) {
   const node = document.querySelector('#doorToDoorIntro');
   if (!node) return;
-  node.textContent = `Cible ${formatDateFR(data.targetWindow?.departure)} → ${formatDateFR(data.targetWindow?.return)}. Un total n'est affiché comme complet que si tous les segments obligatoires sont renseignés.`;
+  node.textContent = `Cible ${formatDateFR(data.targetWindow?.departure)} → ${formatDateFR(data.targetWindow?.return)}. Un temps n'est complet que si tous les segments obligatoires sont renseignés ; un tarif sur dates proches ou mensuelles reste un signal chiffré, jamais un total de réservation.`;
 }
 
 function renderTripGroup(trip, scenarios) {
@@ -53,9 +55,11 @@ function renderScenario(scenario) {
       ${renderDirection('Retour', inbound)}
     </div>
     <div class="d2d-cost">
-      <div><span>Coûts connus</span><strong>${costs.knownSubtotalEUR > 0 ? formatEUR(costs.knownSubtotalEUR) : '—'}</strong></div>
-      <small>${costs.complete ? 'Coût complet selon les postes actuels.' : `${costs.missing.length} poste(s) obligatoire(s) encore incomplet(s).`}</small>
+      <div><span>Postes budget éligibles</span><strong>${costs.budgetSubtotalEUR > 0 ? formatEUR(costs.budgetSubtotalEUR) : '—'}</strong></div>
+      <div><span>Signaux chiffrés non stricts</span><strong>${costs.signalSubtotalEUR > 0 ? formatEUR(costs.signalSubtotalEUR) : '—'}</strong></div>
+      <small>${costs.complete ? 'Coût complet sur données compatibles avec les dates cibles.' : `${costs.missing.length} poste(s) obligatoire(s) incomplet(s) · ${costs.signalItems.length} poste(s) chiffré(s) non éligible(s) au budget final.`}</small>
     </div>
+    ${costs.signalItems.length ? `<details class="d2d-missing"><summary>Signaux non budgétaires</summary><ul>${costs.signalItems.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>` : ''}
     ${costs.missing.length ? `<details class="d2d-missing"><summary>Coûts manquants</summary><ul>${costs.missing.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>` : ''}
     ${outbound.missing.length || inbound.missing.length ? `<details class="d2d-missing"><summary>Temps manquants</summary><ul>${[...outbound.missing, ...inbound.missing].map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details>` : ''}
   </section>`;
@@ -85,20 +89,46 @@ function summarizeDirection(direction) {
 }
 
 function summarizeCosts(costs) {
-  let knownSubtotalEUR = 0;
+  let budgetSubtotalEUR = 0;
+  let signalSubtotalEUR = 0;
   const missing = [];
+  const signalItems = [];
   for (const cost of costs.filter(item => item.required !== false)) {
-    if (numeric(cost.partyValueEUR)) knownSubtotalEUR += Number(cost.partyValueEUR);
-    else if (numeric(cost.valueEUR)) knownSubtotalEUR += Number(cost.valueEUR);
-    else missing.push(cost.label || cost.id);
+    const amount = costAmount(cost);
+    if (amount == null) {
+      missing.push(cost.label || cost.id);
+      continue;
+    }
+    if (isSignalCost(cost)) {
+      signalSubtotalEUR += amount;
+      signalItems.push(`${cost.label || cost.id} · ${formatEUR(amount)} · ${cost.status}`);
+    } else {
+      budgetSubtotalEUR += amount;
+    }
   }
-  return { knownSubtotalEUR, complete: missing.length === 0, missing };
+  return {
+    budgetSubtotalEUR,
+    signalSubtotalEUR,
+    complete: missing.length === 0 && signalItems.length === 0,
+    missing,
+    signalItems
+  };
+}
+
+function costAmount(cost) {
+  if (numeric(cost.partyValueEUR)) return cost.partyValueEUR;
+  if (numeric(cost.valueEUR)) return cost.valueEUR;
+  return null;
+}
+
+function isSignalCost(cost) {
+  return cost.budgetUse === 'signal_only' || SIGNAL_STATUSES.has(cost.status);
 }
 
 function durationRange(duration) {
   if (!duration) return null;
-  if (numeric(duration.value)) return { low: Number(duration.value), high: Number(duration.value) };
-  if (numeric(duration.low) && numeric(duration.high)) return { low: Number(duration.low), high: Number(duration.high) };
+  if (numeric(duration.value)) return { low: duration.value, high: duration.value };
+  if (numeric(duration.low) && numeric(duration.high)) return { low: duration.low, high: duration.high };
   return null;
 }
 
@@ -114,15 +144,17 @@ function renderDirection(label, summary) {
 }
 
 function numeric(value) {
-  return value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+  return typeof value === 'number' && Number.isFinite(value);
 }
 
 function formatDurationRange(low, high) {
+  if (!numeric(low) || !numeric(high)) return 'Indisponible';
   return Math.abs(high - low) < 0.5 ? formatDuration(low) : `${formatDuration(low)}–${formatDuration(high)}`;
 }
 
 function formatDuration(minutes) {
-  const total = Math.max(0, Math.round(Number(minutes) || 0));
+  if (!numeric(minutes) || minutes < 0) return 'Indisponible';
+  const total = Math.round(minutes);
   const h = Math.floor(total / 60);
   const m = total % 60;
   return h ? `${h} h${m ? ` ${String(m).padStart(2, '0')}` : ''}` : `${m} min`;
