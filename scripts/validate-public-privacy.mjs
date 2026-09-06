@@ -120,10 +120,26 @@ for (const required of ['.env', '*.local.json', '*.private.json', 'data/private/
   if (!gitignore.split(/\r?\n/).includes(required)) fail(`.gitignore: règle manquante ${required}`);
 }
 
+// The public service worker may cache only explicitly public research data.
+const sw = await readFile(resolve(root, 'sw.js'), 'utf8');
+const allowedCachedData = new Set([
+  './data/catalog.json',
+  './data/destination-comparison.json'
+]);
+const cachedDataRefs = new Set(
+  [...sw.matchAll(/['"](\.\/data\/[^'"]+)['"]/g)].map(match => match[1])
+);
+for (const ref of cachedDataRefs) {
+  if (!allowedCachedData.has(ref)) fail(`sw.js: donnée non publique ajoutée au cache ${ref}`);
+}
+for (const ref of allowedCachedData) {
+  if (!cachedDataRefs.has(ref)) fail(`sw.js: allowlist publique attendue absente ${ref}`);
+}
+
 if (errors.length) {
   console.error(`\nErreurs confidentialité dépôt public (${errors.length})`);
   errors.forEach(error => console.error(`- ${error}`));
   process.exit(1);
 }
 
-console.log('\nValidation confidentialité OK: aucun champ de réservation/identité interdit dans data/*.json et chemins privés ignorés.');
+console.log('\nValidation confidentialité OK: aucun champ de réservation/identité interdit dans data/*.json, chemins privés ignorés et cache limité aux données publiques.');
