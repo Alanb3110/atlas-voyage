@@ -1,4 +1,5 @@
 import { loadCatalog, buildTripUrl, formatEUR, formatDateFR, escapeHtml } from './store.js';
+import { assertDestinationComparisonNumericContract } from './destination-data-contract.js';
 
 const section = document.querySelector('#destinationCompareSection');
 if (!section) throw new Error('destinationCompareSection absent du DOM');
@@ -67,6 +68,7 @@ async function init() {
   ]);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
+  assertDestinationComparisonNumericContract(data);
   const byId = new Map(catalog.trips.map(t => [t.id, t]));
   rows = (data.destinations || []).map(row => ({ ...row, trip: byId.get(row.tripId) })).filter(row => row.trip);
   if (!rows.length) throw new Error('aucune destination comparable');
@@ -120,14 +122,15 @@ function saveFilters() {
 }
 
 function clamp5(value) {
-  return Math.max(0, Math.min(5, Number(value) || 0));
+  return Math.max(0, Math.min(5, value));
 }
 
 function criterionRange(row, key) {
-  const central = clamp5(row.scores?.[key]);
-  const override = Number(row.uncertaintyOverrides?.[key]);
-  const fallback = Number(row.uncertaintyHalfWidth);
-  const half = Number.isFinite(override) ? Math.max(0, override) : (Number.isFinite(fallback) ? Math.max(0, fallback) : 0);
+  const central = clamp5(row.scores[key]);
+  const overrides = row.uncertaintyOverrides || {};
+  const half = Object.prototype.hasOwnProperty.call(overrides, key)
+    ? overrides[key]
+    : row.uncertaintyHalfWidth;
   return { low: clamp5(central - half), central, high: clamp5(central + half) };
 }
 
@@ -137,16 +140,15 @@ function weightedScoreRange(row) {
   let high = 0;
   let totalWeight = 0;
   for (const [key] of CRITERIA) {
-    const w = Number(weights[key]) || 0;
+    const w = weights[key];
     const range = criterionRange(row, key);
     low += (range.low / 5) * w;
     central += (range.central / 5) * w;
     high += (range.high / 5) * w;
     totalWeight += w;
   }
-  if (!totalWeight) return { low: 0, central: 0, high: 0 };
-  const factor = 100 / totalWeight;
-  return { low: low * factor, central: central * factor, high: high * factor };
+  if (Math.abs(totalWeight - 100) > 0.01) throw new RangeError(`somme des pondérations=${totalWeight}, attendu 100`);
+  return { low, central, high };
 }
 
 function gateState(row) {
@@ -201,8 +203,8 @@ function rowMatchesFilters(row) {
 
 function renderWeights(currentWeights) {
   document.querySelector('#destinationWeights').innerHTML = CRITERIA
-    .filter(([key]) => Number(currentWeights[key]) > 0)
-    .map(([key, label]) => `<span class="destination-weight-chip"><strong>${escapeHtml(label)}</strong>${Math.round(Number(currentWeights[key]))}%</span>`)
+    .filter(([key]) => currentWeights[key] > 0)
+    .map(([key, label]) => `<span class="destination-weight-chip"><strong>${escapeHtml(label)}</strong>${Math.round(currentWeights[key])}%</span>`)
     .join('');
 }
 
