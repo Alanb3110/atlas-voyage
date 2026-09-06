@@ -12,10 +12,25 @@ const warn = (file, msg) => warnings.push(`${file}: ${msg}`);
 const readJson = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
 const validCoord = c => Array.isArray(c) && c.length === 2 && Number.isFinite(Number(c[0])) && Number.isFinite(Number(c[1])) && Math.abs(Number(c[0])) <= 90 && Math.abs(Number(c[1])) <= 180;
 const finiteNonNegative = v => Number.isFinite(Number(v)) && Number(v) >= 0;
+const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
 const allowedLifecycle = new Set(['longlist','shortlist','selected','detailed','bookable','booked','archived']);
 const allowedResearchDepth = new Set(['high','medium','low','legacy']);
 const allowedConfidence = new Set(['A','B','C','D']);
 const allowedGateStates = new Set(['pass','watch','hold','fail']);
+const allowedPriceStatuses = new Set(['confirmed','observed','estimated','hypothesis','to_recheck']);
+const allowedPriceConfidence = new Set(['high','medium','low']);
+const allowedFacetValues = new Set(['high','medium','low','none']);
+const requiredFacets = ['nature','terrestrialWildlife','marineWildlife','beach','culture','weather'];
+
+function validateTraceableValue(file, label, item, expectedUnit = null) {
+  if (!item || typeof item !== 'object') { fail(file, `${label}: objet traçable manquant`); return; }
+  if (!finiteNonNegative(item.value)) fail(file, `${label}: value invalide`);
+  if (!allowedPriceStatuses.has(item.status)) fail(file, `${label}: status inconnu ${item.status}`);
+  if (!validDate(item.checkedAt)) fail(file, `${label}: checkedAt doit être YYYY-MM-DD`);
+  if (!item.source || typeof item.source !== 'string') fail(file, `${label}: source manquante`);
+  if (!allowedPriceConfidence.has(item.confidence)) fail(file, `${label}: confidence doit être high, medium ou low`);
+  if (expectedUnit && item.unit !== expectedUnit) fail(file, `${label}: unit doit être ${expectedUnit}`);
+}
 
 const catalog = await readJson('data/catalog.json');
 const ids = new Set();
@@ -119,8 +134,15 @@ try {
     if (!allowedConfidence.has(row.evidenceConfidence)) fail(destinationFile, `${label}: evidenceConfidence doit être A, B, C ou D`);
     const defaultHalf = Number(row.uncertaintyHalfWidth);
     if (!Number.isFinite(defaultHalf) || defaultHalf < 0 || defaultHalf > 2) fail(destinationFile, `${label}: uncertaintyHalfWidth doit être entre 0 et 2`);
-    if (!finiteNonNegative(row.comfortBudgetEUR)) fail(destinationFile, `${label}: comfortBudgetEUR invalide`);
-    if (!finiteNonNegative(row.doorToDoorMin)) fail(destinationFile, `${label}: doorToDoorMin invalide`);
+
+    validateTraceableValue(destinationFile, `${label}.comfortBudget`, row.comfortBudget);
+    if (row.comfortBudget?.currency !== 'EUR') fail(destinationFile, `${label}.comfortBudget: currency doit être EUR pour le comparateur actuel`);
+    validateTraceableValue(destinationFile, `${label}.doorToDoor`, row.doorToDoor, 'min');
+
+    for (const facet of requiredFacets) {
+      if (!allowedFacetValues.has(row.facets?.[facet])) fail(destinationFile, `${label}: facette ${facet} doit être high, medium, low ou none`);
+    }
+
     for (const key of criteria) {
       const score = Number(row.scores?.[key]);
       if (!Number.isFinite(score) || score < 0 || score > 5) fail(destinationFile, `${label}: score ${key} doit être entre 0 et 5`);
