@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -12,8 +13,8 @@ function fail(label, message, output = '') {
   failures.push({ label, message, output: output.trim() });
 }
 
-async function expectValidatorRejects({ label, file, validator, expected, mutate }) {
-  const absoluteFile = resolve(root, file);
+async function expectValidatorRejects(sandboxRoot, { label, file, validator, expected, mutate }) {
+  const absoluteFile = resolve(sandboxRoot, file);
   const original = await readFile(absoluteFile, 'utf8');
   let result;
 
@@ -21,8 +22,8 @@ async function expectValidatorRejects({ label, file, validator, expected, mutate
     const data = JSON.parse(original);
     mutate(data);
     await writeFile(absoluteFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
-    result = spawnSync(process.execPath, [resolve(root, validator)], {
-      cwd: root,
+    result = spawnSync(process.execPath, [resolve(sandboxRoot, validator)], {
+      cwd: sandboxRoot,
       encoding: 'utf8',
       env: process.env
     });
@@ -152,8 +153,16 @@ const cases = [
   }
 ];
 
-for (const testCase of cases) {
-  await expectValidatorRejects(testCase);
+const sandboxRoot = await mkdtemp(resolve(tmpdir(), 'atlas-voyage-regression-'));
+try {
+  await cp(resolve(root, 'data'), resolve(sandboxRoot, 'data'), { recursive: true });
+  await cp(resolve(root, 'scripts'), resolve(sandboxRoot, 'scripts'), { recursive: true });
+
+  for (const testCase of cases) {
+    await expectValidatorRejects(sandboxRoot, testCase);
+  }
+} finally {
+  await rm(sandboxRoot, { recursive: true, force: true });
 }
 
 const rendererPath = resolve(root, 'assets/js/destination-compare.js');
