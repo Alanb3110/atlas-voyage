@@ -41,7 +41,7 @@
       </aside>
     </section>
 
-    <section class="toolbar" aria-label="Filtres">
+    <section class="toolbar" aria-label="Filtres du catalogue">
       <label class="searchbox">
         <span>Rechercher</span>
         <input id="searchInput" type="search" placeholder="Destination, saison, thème…" autocomplete="off">
@@ -68,6 +68,15 @@
       </div>
       <div id="destinationWeights" class="destination-weight-list" aria-label="Pondérations du comparateur destinations"></div>
       <p id="destinationCompareMethod" class="destination-method"></p>
+
+      <div id="destinationFilterControls" class="destination-filter-panel" aria-label="Filtres de la longlist"></div>
+      <div class="destination-results-head">
+        <div><p class="eyebrow">Vue filtrée</p><h3>Top 3 actuel</h3></div>
+        <div class="destination-result-meta"><span id="destinationFilterCount">—</span><span id="destinationShortlistCount">—</span></div>
+      </div>
+      <div id="destinationTop3" class="destination-top3"></div>
+
+      <div class="destination-all-head"><h3>Toutes les destinations correspondantes</h3><p class="muted">La shortlist reste locale à cet appareil et ne change pas le statut du dossier dans Git.</p></div>
       <div id="destinationCompareGrid" class="destination-compare-grid"></div>
       <p id="destinationCompareTrace" class="destination-compare-trace"></p>
     </section>

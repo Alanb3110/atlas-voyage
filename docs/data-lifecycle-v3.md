@@ -33,8 +33,9 @@ Le comparateur de longlist utilise `data/destination-comparison.json`.
 
 Une candidate contient seulement les informations nécessaires à une décision initiale :
 
-- budget Confort indicatif ;
-- porte-à-porte indicatif depuis Reims ;
+- budget Confort indicatif et traçable ;
+- porte-à-porte indicatif depuis Reims et traçable ;
+- facettes qualitatives pour le filtrage ;
 - climat/saison ;
 - scores centraux ;
 - incertitude méthodologique ;
@@ -120,35 +121,64 @@ Si `blocking=true` et que l'état n'est pas `pass`, la destination ne reçoit pa
 
 Le score ne doit jamais compenser un critère réellement éliminatoire.
 
+## Filtres et shortlist locale
+
+Les contraintes de décision sont appliquées séparément du score :
+
+- budget Confort maximal ;
+- porte-à-porte maximal ;
+- nature ;
+- faune terrestre ;
+- faune marine ;
+- plage ;
+- culture ;
+- météo robuste.
+
+Les facettes qualitatives utilisent `high / medium / low / none`. Les filtres qualitatifs actuels retiennent les candidates `high` sur la facette demandée.
+
+La shortlist de l'interface est volontairement locale à l'appareil et stockée dans `localStorage`. Elle ne change pas le lifecycle Git : ajouter une destination à la shortlist visuelle ne la passe pas automatiquement de `longlist` à `shortlist` dans les données versionnées.
+
+Le top 3 est recalculé après application des filtres et exclut les destinations dont le classement est suspendu par un gate bloquant.
+
 ## Budget et porte-à-porte
 
 Tant que l'utilisateur n'a pas défini une cible ou une limite explicite, le budget et le temps porte-à-porte sont affichés séparément et ne sont pas convertis en préférence cachée.
 
-Lorsqu'une contrainte est définie, elle pourra être utilisée :
-
-1. comme filtre/gate ;
-2. ou comme critère pondéré explicite.
+Lorsqu'une contrainte est définie dans l'interface, elle agit comme filtre et ne modifie pas le score pondéré.
 
 Ne pas appliquer de normalisation min–max silencieuse entre les seules destinations présentes.
 
-## Modèle tarifaire cible
+## Valeurs traçables
 
-Les nouveaux prix évolutifs doivent tendre vers :
+Le budget Confort longlist et le porte-à-porte utilisent désormais des objets traçables.
+
+Budget :
 
 ```json
 {
-  "value": 747,
+  "value": 7900,
   "currency": "EUR",
-  "quantity": 2,
-  "unit": "person_roundtrip",
-  "status": "observed",
-  "checkedAt": "2026-09-05T14:30:00+02:00",
-  "source": "airfrance-cdg-jnb-2026-11-05",
-  "confidence": "high"
+  "status": "estimated",
+  "checkedAt": "2026-09-05",
+  "source": "internal-estimate:south-africa-nov-2026",
+  "confidence": "medium"
 }
 ```
 
-Statuts recommandés :
+Porte-à-porte :
+
+```json
+{
+  "value": 1000,
+  "unit": "min",
+  "status": "estimated",
+  "checkedAt": "2026-09-05",
+  "source": "airport-benchmark:south-africa-nov-2026",
+  "confidence": "medium"
+}
+```
+
+Statuts :
 
 - `confirmed` : prestation contractuellement confirmée ou tarif officiel fixe ;
 - `observed` : prix réellement observé pour les dates/conditions visées, non réservé ;
@@ -156,11 +186,15 @@ Statuts recommandés :
 - `hypothesis` : hypothèse de travail volontaire ;
 - `to_recheck` : information connue mais à revérifier.
 
-Pour une estimation, ajouter si possible :
+Confiance de la valeur : `high / medium / low`.
+
+Pour une future estimation structurée, ajouter si possible :
 
 ```json
 "range": {"low": 650, "central": 750, "high": 900}
 ```
+
+Le même schéma devra progressivement remplacer les anciens montants agrégés dans les dossiers détaillés.
 
 ## Données réservées
 
@@ -177,9 +211,10 @@ L'application peut stocker un état abstrait comme `booked: true` sans exposer l
 
 ## Cache PWA
 
-Depuis la v3, le service worker ne met en cache par défaut que :
+Le service worker ne met en cache par défaut que :
 
 - le shell HTML/CSS/JS local ;
+- le manifest ;
 - `data/catalog.json` ;
 - `data/destination-comparison.json`.
 

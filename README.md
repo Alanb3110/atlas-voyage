@@ -12,7 +12,7 @@ URL : `https://alanb3110.github.io/atlas-voyage/`
 
 ## Lifecycle v3
 
-Atlas Voyage distingue désormais la maturité réelle des dossiers :
+Atlas Voyage distingue la maturité réelle des dossiers :
 
 ```text
 Longlist
@@ -25,17 +25,32 @@ Longlist
 
 Les 12 destinations de novembre 2026 sont actuellement en **longlist**, même lorsque des anciens fichiers `data/trips/*.json` contiennent déjà beaucoup de détails. Cela évite de donner l'impression que toutes les candidates ont été recherchées avec la même profondeur.
 
-Le comparateur de longlist affiche maintenant :
+Le comparateur de longlist affiche :
 
 - score central ;
 - plage d'incertitude méthodologique ;
 - confiance A–D ;
 - gates `pass / watch / hold / fail` ;
-- budget Confort estimé ;
-- temps porte-à-porte estimé depuis Reims ;
+- budget Confort estimé et traçable ;
+- temps porte-à-porte estimé et traçable depuis Reims ;
 - avantages et compromis.
 
 Un gate bloquant suspend le classement normal ; le score ne peut pas compenser un critère éliminatoire.
+
+### Filtres et shortlist
+
+La longlist peut être filtrée sans modifier le score par :
+
+- budget Confort maximal ;
+- porte-à-porte maximal ;
+- nature ;
+- faune terrestre ;
+- faune marine ;
+- plage ;
+- culture ;
+- météo robuste.
+
+Le **top 3** est recalculé après ces contraintes. Une shortlist locale peut être créée sur l'appareil ; elle est stockée dans `localStorage` et ne modifie pas le lifecycle Git.
 
 Voir `docs/data-lifecycle-v3.md`.
 
@@ -80,6 +95,29 @@ L'état reste encodé dans l'URL :
 
 `trip.html?trip=bali-komodo-demo&variant=balanced&budget=comfort`
 
+## Données longlist traçables
+
+Les valeurs évolutives de la longlist utilisent un objet structuré plutôt qu'un simple nombre.
+
+Exemple budget :
+
+```json
+{
+  "value": 7900,
+  "currency": "EUR",
+  "status": "estimated",
+  "checkedAt": "2026-09-05",
+  "source": "internal-estimate:south-africa-nov-2026",
+  "confidence": "medium"
+}
+```
+
+Le porte-à-porte suit le même principe avec `unit: "min"`.
+
+Statuts prévus : `confirmed`, `observed`, `estimated`, `hypothesis`, `to_recheck`.
+
+Les valeurs actuelles restent des **estimations de comparaison**, pas des offres réservables.
+
 ## Validation
 
 ```bash
@@ -96,6 +134,8 @@ Elle contrôle notamment :
 - plages d'incertitude ;
 - confiance A–D ;
 - gates ;
+- facettes qualitatives ;
+- valeurs longlist traçables ;
 - variantes, coordonnées et routes ;
 - cohérence des budgets ;
 - comparateurs aéroports lorsqu'ils existent ;
@@ -104,12 +144,12 @@ Elle contrôle notamment :
 
 ## PWA / cache
 
-Le service worker met en cache uniquement le shell applicatif local et les deux fichiers explicitement publics nécessaires à la longlist :
+Le service worker met en cache uniquement le shell applicatif local, le manifest et les deux fichiers explicitement publics nécessaires à la longlist :
 
 - `data/catalog.json` ;
 - `data/destination-comparison.json`.
 
-Il ne met plus automatiquement en cache les dossiers détaillés, comparateurs aéroports, états de réservation, tuiles OpenStreetMap, images ou CDN externes.
+Il ne met pas automatiquement en cache les dossiers détaillés, comparateurs aéroports, états de réservation, tuiles OpenStreetMap, images ou CDN externes.
 
 Lors de l'activation, il ne supprime que les anciens caches `atlas-*`, sans toucher aux caches d'autres projets partageant l'origine `alanb3110.github.io`.
 
@@ -124,7 +164,7 @@ Voir :
 - `docs/architecture.md` ;
 - `instructions_projet_atlas_voyage.md`.
 
-Le prochain chantier de données est la migration des 12 candidates vers un niveau longlist homogène et l'introduction du modèle tarifaire structuré `confirmed / observed / estimated / hypothesis / to_recheck`.
+Le prochain chantier de fond est l'homogénéisation factuelle des 12 candidates puis la refonte du vrai porte-à-porte Reims avec ORY/FRA et une décomposition explicite train/voiture/péages/carburant/parking/hôtel.
 
 ## Démonstrations
 
