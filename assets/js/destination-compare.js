@@ -7,7 +7,7 @@ if (!section) throw new Error('destinationCompareSection absent du DOM');
 // Legacy storage key retained to preserve existing user choices. In the UI this
 // is a personal/local selection, distinct from the versioned lifecycle `shortlist`.
 const SHORTLIST_KEY = 'atlas-destination-shortlist:v1';
-const FILTER_KEY = 'atlas-destination-filters:v1';
+const FILTER_KEY = 'atlas-destination-filters:v2';
 
 const CRITERIA = [
   ['wildlife','Faune'],
@@ -102,7 +102,7 @@ function saveShortlist() {
 }
 
 function loadFilters() {
-  const defaults = { maxBudget: 16000, maxDoorHours: 36, facets: [], shortlistOnly: false };
+  const defaults = { maxBudget: 5000, maxDoorHours: 36, facets: [], shortlistOnly: false };
   try {
     const parsed = JSON.parse(localStorage.getItem(FILTER_KEY) || 'null');
     if (!parsed || typeof parsed !== 'object') return defaults;
@@ -255,7 +255,7 @@ function renderFilterControls() {
     renderDestinations();
   });
   document.querySelector('#destinationFilterReset').addEventListener('click', () => {
-    filters = { maxBudget: 16000, maxDoorHours: 36, facets: [], shortlistOnly: false };
+    filters = { maxBudget: 5000, maxDoorHours: 36, facets: [], shortlistOnly: false };
     saveFilters();
     renderFilterControls();
     renderDestinations();

@@ -1,0 +1,432 @@
+{
+  "schemaVersion": 2,
+  "id": "thailand-khao-sok-andaman-nov-2026",
+  "defaultVariant": "balanced",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Thaïlande — Bangkok + Khao Sok + Khao Lak",
+    "subtitle": "Jungle, faune sauvage, cuisine thaïe et longue fin plage sur l'Andaman.",
+    "travelers": "2 adultes",
+    "duration": "≈ 18–20 jours",
+    "dates": "Début novembre 2026",
+    "departure": "Départ réel : Reims",
+    "heroImage": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Khao_Sok_National_Park_Surat_Thani_Thailand.jpg?width=1600"
+  },
+  "traceability": {
+    "researchDate": "2026-09-24",
+    "priceDate": "2026-09-24",
+    "lastChecked": "2026-09-24",
+    "budgetConfidence": "moyenne — phase de comparaison"
+  },
+  "budgetIntro": "Objectif volontairement contenu autour de 5 000 € pour deux, avec hôtels milieu de gamme, une vraie séquence jungle et une longue fin plage.",
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Jungle + Andaman",
+      "subtitle": "Bangkok, Khao Sok puis Khao Lak.",
+      "rhythm": "Doux à modéré",
+      "tradeoff": "Très bon rapport saison/plage/prix ; faune sauvage moins spectaculaire que Komodo et observation d'éléphants non garantie.",
+      "scores": {
+        "wildlife": 3.8,
+        "relaxation": 4.8,
+        "culture": 4,
+        "beach": 4.8,
+        "logistics": 4.2
+      },
+      "overviewIntro": "Novembre ouvre la haute saison Andaman. Le circuit garde seulement trois bases et concentre la nature sur Khao Sok puis le repos sur Khao Lak.",
+      "summary": [
+        {
+          "value": "3",
+          "text": "bases"
+        },
+        {
+          "value": "Novembre",
+          "text": "début haute saison Andaman"
+        },
+        {
+          "value": "≈ 4,7 k€",
+          "text": "budget Confort estimé"
+        }
+      ],
+      "steps": [
+        {
+          "name": "Bangkok",
+          "nights": "3 nuits",
+          "coords": [
+            13.7563,
+            100.5018
+          ],
+          "summary": "Cuisine, temples et récupération après le vol.",
+          "transfer": "Vol long-courrier",
+          "fatigue": "Moyenne",
+          "tags": [
+            "Culture",
+            "Cuisine"
+          ],
+          "lodging": {
+            "essential": "Hôtel 3★ central",
+            "comfort": "Boutique-hôtel 4★",
+            "premium": "Hôtel 5★"
+          }
+        },
+        {
+          "name": "Khao Sok",
+          "nights": "3 nuits",
+          "coords": [
+            8.9105,
+            98.5306
+          ],
+          "summary": "Forêt tropicale, lac Cheow Lan, gibbons, oiseaux et éléphants sauvages possibles.",
+          "transfer": "Vol intérieur + route",
+          "fatigue": "Moyenne",
+          "tags": [
+            "Jungle",
+            "Faune"
+          ],
+          "lodging": {
+            "essential": "Bungalow jungle",
+            "comfort": "Lodge nature + 1 nuit lac",
+            "premium": "Eco-lodge premium"
+          }
+        },
+        {
+          "name": "Khao Lak",
+          "nights": "11 nuits",
+          "coords": [
+            8.6456,
+            98.2529
+          ],
+          "summary": "Longue fin plage avec une ou deux sorties Similan/Phang Nga au choix.",
+          "transfer": "Route courte",
+          "fatigue": "Faible",
+          "tags": [
+            "Plage",
+            "Snorkeling",
+            "Repos"
+          ],
+          "lodging": {
+            "essential": "Petit hôtel plage",
+            "comfort": "Resort 4★",
+            "premium": "Resort 5★"
+          }
+        }
+      ],
+      "daysIntro": "17 nuits environ, avec une fin très reposante.",
+      "days": [
+        {
+          "day": "J1–J3",
+          "title": "Bangkok",
+          "detail": "Récupération, gastronomie et culture."
+        },
+        {
+          "day": "J4–J6",
+          "title": "Khao Sok",
+          "detail": "Jungle et lac ; faune sauvage jamais garantie."
+        },
+        {
+          "day": "J7–J17",
+          "title": "Khao Lak",
+          "detail": "Plage, snorkeling et journées libres."
+        }
+      ]
+    }
+  ],
+  "budgets": [
+    {
+      "id": "essential",
+      "label": "Essentiel",
+      "total": 3900,
+      "items": [
+        "Hôtels simples",
+        "Vol intérieur économique",
+        "Sorties partagées"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "status": "estimated",
+          "amount": 150
+        },
+        {
+          "label": "Vols internationaux",
+          "status": "estimated",
+          "amount": 1150
+        },
+        {
+          "label": "Vol intérieur + transferts",
+          "status": "estimated",
+          "amount": 450
+        },
+        {
+          "label": "Hébergements",
+          "status": "estimated",
+          "amount": 900
+        },
+        {
+          "label": "Khao Sok + activités",
+          "status": "estimated",
+          "amount": 450
+        },
+        {
+          "label": "Repas",
+          "status": "estimated",
+          "amount": 400
+        },
+        {
+          "label": "Formalités",
+          "status": "estimated",
+          "amount": 0
+        },
+        {
+          "label": "Marge imprévus",
+          "status": "estimated",
+          "amount": 400
+        }
+      ]
+    },
+    {
+      "id": "comfort",
+      "label": "Confort recommandé",
+      "recommended": true,
+      "total": 4700,
+      "items": [
+        "Boutique-hôtel Bangkok",
+        "Lodge Khao Sok",
+        "Resort 4★ à Khao Lak"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "status": "estimated",
+          "amount": 160
+        },
+        {
+          "label": "Vols internationaux",
+          "status": "estimated",
+          "amount": 1200
+        },
+        {
+          "label": "Vol intérieur + transferts",
+          "status": "estimated",
+          "amount": 500
+        },
+        {
+          "label": "Hébergements",
+          "status": "estimated",
+          "amount": 1200
+        },
+        {
+          "label": "Khao Sok + Similan/activités",
+          "status": "estimated",
+          "amount": 650
+        },
+        {
+          "label": "Repas",
+          "status": "estimated",
+          "amount": 550
+        },
+        {
+          "label": "Formalités",
+          "status": "estimated",
+          "amount": 0
+        },
+        {
+          "label": "Marge imprévus",
+          "status": "estimated",
+          "amount": 440
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "label": "Premium",
+      "total": 6900,
+      "items": [
+        "Hôtels 5★ ciblés",
+        "Lodge flottant premium",
+        "Resort haut de gamme"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "status": "estimated",
+          "amount": 200
+        },
+        {
+          "label": "Vols internationaux",
+          "status": "estimated",
+          "amount": 1500
+        },
+        {
+          "label": "Vol intérieur + transferts",
+          "status": "estimated",
+          "amount": 700
+        },
+        {
+          "label": "Hébergements",
+          "status": "estimated",
+          "amount": 2600
+        },
+        {
+          "label": "Activités privées ciblées",
+          "status": "estimated",
+          "amount": 800
+        },
+        {
+          "label": "Repas",
+          "status": "estimated",
+          "amount": 750
+        },
+        {
+          "label": "Formalités",
+          "status": "estimated",
+          "amount": 0
+        },
+        {
+          "label": "Marge imprévus",
+          "status": "estimated",
+          "amount": 350
+        }
+      ]
+    }
+  ],
+  "wildlife": [
+    {
+      "title": "Khao Sok",
+      "note": "Forêt tropicale à forte biodiversité ; toute rencontre reste sauvage et aléatoire.",
+      "items": [
+        [
+          "Éléphants sauvages",
+          "Possibles, non garantis"
+        ],
+        [
+          "Gibbons / primates",
+          "Bon potentiel avec guide"
+        ],
+        [
+          "Calaos et oiseaux",
+          "Bon potentiel"
+        ]
+      ]
+    },
+    {
+      "title": "Andaman",
+      "note": "Les Similan rouvrent pour la saison et offrent snorkeling/plongée.",
+      "items": [
+        [
+          "Poissons récifaux",
+          "Très bon potentiel"
+        ],
+        [
+          "Tortues / raies",
+          "Possibles selon site et conditions"
+        ]
+      ]
+    }
+  ],
+  "food": {
+    "intro": "Très forte valeur gastronomique à Bangkok et dans le sud.",
+    "cards": [
+      {
+        "title": "À goûter",
+        "items": [
+          [
+            "Currys du Sud",
+            "Souvent plus relevés"
+          ],
+          [
+            "Fruits de mer",
+            "Très présents sur la côte"
+          ],
+          [
+            "Eau",
+            "Privilégier eau en bouteille/filtrée"
+          ]
+        ]
+      }
+    ]
+  },
+  "weather": {
+    "intro": "Novembre correspond au début de la haute saison de la côte Andaman ; les conditions restent à revalider près du départ.",
+    "cards": [
+      {
+        "title": "Andaman",
+        "items": [
+          [
+            "Novembre",
+            "Sortie progressive de mousson"
+          ],
+          [
+            "Mer",
+            "Généralement plus favorable qu'en septembre-octobre"
+          ],
+          [
+            "Conséquence",
+            "Bonne fenêtre pour plage et excursions marines"
+          ]
+        ]
+      }
+    ]
+  },
+  "practical": {
+    "intro": "Circuit hors des zones rouges de l'extrême sud et de la frontière cambodgienne.",
+    "cards": [
+      {
+        "title": "Entrée",
+        "items": [
+          [
+            "Français",
+            "Exemption de visa jusqu'à 30 jours depuis 15/09/2026"
+          ],
+          [
+            "TDAC",
+            "À remplir dans les 3 jours avant l'arrivée"
+          ]
+        ]
+      },
+      {
+        "title": "Transport",
+        "items": [
+          [
+            "Route",
+            "Éviter bus de nuit lorsque possible"
+          ],
+          [
+            "Mer",
+            "Choisir opérateurs reconnus"
+          ]
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "label": "Cannabis",
+        "value": "Ne pas transporter de cannabis au départ de Thaïlande ; contrôles renforcés.",
+        "level": "law"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "label": "Etihad — Paris vers Bangkok",
+      "url": "https://www.etihad.com/fr-fr/flights/vols-de-paris-a-tha%C3%AFlande",
+      "note": "Signal frais autour de 567 €/personne A/R sur 09–23/11 ; dates proches, pas devis 05–24/11.",
+      "type": "tarif compagnie",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "label": "Tourism Authority of Thailand — November",
+      "url": "https://www.tourismthailand.org/Articles/thailand-november",
+      "note": "Novembre marque l'entrée dans la saison fraîche et la reprise de l'Andaman.",
+      "type": "officiel tourisme",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "label": "France Diplomatie — Thaïlande",
+      "url": "https://www.diplomatie.gouv.fr/fr/information-par-pays/thailande/conseils-aux-voyageurs-securite",
+      "note": "Zones de vigilance et sécurité.",
+      "type": "officiel",
+      "checkedAt": "2026-09-24"
+    }
+  ]
+}

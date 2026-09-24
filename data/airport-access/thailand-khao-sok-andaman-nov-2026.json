@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "tripId": "thailand-khao-sok-andaman-nov-2026",
+  "status": "research",
+  "checkedAt": "2026-09-24",
+  "intro": "Comparaison porte-à-porte depuis Reims. CDG domine pour l'instant grâce à un signal Etihad bas et un pré-acheminement court.",
+  "note": "Le tarif CDG est observé sur 09–23/11, donc proche mais non identique à 05–24/11. Les autres aéroports restent estimés.",
+  "defaultWeights": {
+    "cost": 35,
+    "time": 25,
+    "flight": 20,
+    "fatigue": 20
+  },
+  "options": [
+    {
+      "id": "cdg",
+      "airport": {
+        "code": "CDG",
+        "name": "Paris-Charles-de-Gaulle"
+      },
+      "access": {
+        "mode": "Train/voiture selon horaire",
+        "durationMin": 85,
+        "costEUR": 160
+      },
+      "flight": {
+        "priceEUR": 1134,
+        "durationMin": 900,
+        "stops": 1,
+        "quality": 4
+      },
+      "doorToDoorMin": 1165,
+      "fatigue": 3,
+      "advantages": [
+        "Signal Etihad ~567 €/pers.",
+        "Accès Reims le plus simple"
+      ],
+      "compromises": [
+        "Dates observées 09–23/11, pas exactes"
+      ],
+      "recommendation": "Référence budgétaire actuelle.",
+      "status": "verified_benchmark",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "id": "bru",
+      "airport": {
+        "code": "BRU",
+        "name": "Brussels Airport"
+      },
+      "access": {
+        "mode": "Rail/voiture",
+        "durationMin": 234,
+        "costEUR": 240
+      },
+      "flight": {
+        "priceEUR": 1200,
+        "durationMin": 950,
+        "stops": 1,
+        "quality": 4
+      },
+      "doorToDoorMin": 1364,
+      "fatigue": 4,
+      "advantages": [
+        "À surveiller si forte promotion"
+      ],
+      "compromises": [
+        "Pré-acheminement beaucoup plus long"
+      ],
+      "status": "estimated",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "id": "fra",
+      "airport": {
+        "code": "FRA",
+        "name": "Frankfurt Airport"
+      },
+      "access": {
+        "mode": "Rail/voiture",
+        "durationMin": 310,
+        "costEUR": 280
+      },
+      "flight": {
+        "priceEUR": 1200,
+        "durationMin": 930,
+        "stops": 1,
+        "quality": 4
+      },
+      "doorToDoorMin": 1420,
+      "fatigue": 4,
+      "advantages": [
+        "Grand choix de connexions"
+      ],
+      "compromises": [
+        "Accès depuis Reims trop long sans économie nette"
+      ],
+      "status": "estimated",
+      "checkedAt": "2026-09-24"
+    }
+  ]
+}

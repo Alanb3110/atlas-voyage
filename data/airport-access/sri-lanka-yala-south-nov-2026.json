@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "tripId": "sri-lanka-yala-south-nov-2026",
+  "status": "research",
+  "checkedAt": "2026-09-24",
+  "intro": "Comparaison porte-à-porte depuis Reims. CDG est nettement le point de départ le plus cohérent au vu du signal Etihad actuel.",
+  "note": "Le tarif CDG de 574 €/personne est observé sur plusieurs paires de dates de novembre, mais pas exactement 05–24/11.",
+  "defaultWeights": {
+    "cost": 35,
+    "time": 25,
+    "flight": 20,
+    "fatigue": 20
+  },
+  "options": [
+    {
+      "id": "cdg",
+      "airport": {
+        "code": "CDG",
+        "name": "Paris-Charles-de-Gaulle"
+      },
+      "access": {
+        "mode": "Train/voiture selon horaire",
+        "durationMin": 85,
+        "costEUR": 160
+      },
+      "flight": {
+        "priceEUR": 1148,
+        "durationMin": 850,
+        "stops": 1,
+        "quality": 4
+      },
+      "doorToDoorMin": 1115,
+      "fatigue": 3,
+      "advantages": [
+        "Signal Etihad ~574 €/pers.",
+        "Pré-acheminement court"
+      ],
+      "compromises": [
+        "Dates exactes à ouvrir"
+      ],
+      "recommendation": "Référence actuelle.",
+      "status": "verified_benchmark",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "id": "bru",
+      "airport": {
+        "code": "BRU",
+        "name": "Brussels Airport"
+      },
+      "access": {
+        "mode": "Rail/voiture",
+        "durationMin": 234,
+        "costEUR": 240
+      },
+      "flight": {
+        "priceEUR": 1200,
+        "durationMin": 900,
+        "stops": 1,
+        "quality": 4
+      },
+      "doorToDoorMin": 1314,
+      "fatigue": 4,
+      "advantages": [
+        "Alternative seulement si promotion nette"
+      ],
+      "compromises": [
+        "Pré-acheminement long"
+      ],
+      "status": "estimated",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "id": "fra",
+      "airport": {
+        "code": "FRA",
+        "name": "Frankfurt Airport"
+      },
+      "access": {
+        "mode": "Rail/voiture",
+        "durationMin": 310,
+        "costEUR": 280
+      },
+      "flight": {
+        "priceEUR": 1180,
+        "durationMin": 850,
+        "stops": 1,
+        "quality": 4
+      },
+      "doorToDoorMin": 1340,
+      "fatigue": 4,
+      "advantages": [
+        "Bon hub"
+      ],
+      "compromises": [
+        "Aucun gain démontré face à CDG"
+      ],
+      "status": "estimated",
+      "checkedAt": "2026-09-24"
+    }
+  ]
+}
