@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "checkedAt": "2026-09-06",
+  "checkedAt": "2026-09-24",
   "status": "research",
   "travelers": 2,
   "targetWindow": {"departure":"2026-11-05","return":"2026-11-24"},
@@ -55,13 +55,13 @@
       "geometry": "roundtrip_gateway",
       "status": "partial",
       "confidence": "medium",
-      "note": "Le temps jusqu'à Praslin est calculable comme enveloppe méthodologique ; le coût complet ne l'est pas encore. Le tarif Etihad est observé sur 10–24/11, pas sur 05–24/11.",
+      "note": "Le temps jusqu'à Praslin est calculable comme enveloppe méthodologique ; le coût complet ne l'est pas encore. Le tarif Etihad frais est observé sur 10–24/11, pas sur 05–24/11.",
       "outbound": {
         "label": "Reims → Praslin",
         "segments": [
           {"id":"reims-cdg-rail","label":"Reims → CDG","type":"ground_access","required":true,"durationMin":{"low":81,"high":92,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle"},
           {"id":"cdg-margin","label":"Marge aéroport CDG","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
-          {"id":"cdg-sez-flight","label":"CDG → SEZ","type":"international_flight","required":true,"durationMin":{"low":720,"high":720,"status":"route_reference"},"cost":{"partyValueEUR":1252,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-cdg-ey-2026-11","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-24"},"source":"https://www.etihad.com/fr-fr/flights/vols-de-paris-a-seychelles"},
+          {"id":"cdg-sez-flight","label":"CDG → SEZ","type":"international_flight","required":true,"durationMin":{"low":720,"high":720,"status":"route_reference"},"cost":{"partyValueEUR":1250,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-cdg-ey-2026-11","checkedAt":"2026-09-24","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/fr-fr/flights/vols-de-france-vers-seychelles"},"source":"https://www.etihad.com/fr-fr/flights/vols-de-paris-a-seychelles"},
           {"id":"sez-pri-buffer","label":"Arrivée + correspondance domestique","type":"connection_buffer","required":true,"durationMin":{"low":90,"high":90,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
           {"id":"sez-pri-flight","label":"SEZ → PRI","type":"domestic_flight","required":true,"durationMin":{"low":15,"high":20,"status":"supported"},"cost":{"status":"to_recheck"},"source":"https://fly.airseychelles.com/fr/domestic/services-domestiques"}
         ]
@@ -76,7 +76,7 @@
         ]
       },
       "costs": [
-        {"id":"international-airfare","label":"Etihad CDG↔SEZ pour 2","required":true,"partyValueEUR":1252,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-cdg-ey-2026-11","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/fr-fr/flights/vols-de-paris-a-seychelles"},
+        {"id":"international-airfare","label":"Etihad CDG↔SEZ pour 2","required":true,"partyValueEUR":1250,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-cdg-ey-2026-11","checkedAt":"2026-09-24","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/fr-fr/flights/vols-de-france-vers-seychelles"},
         {"id":"reims-cdg-roundtrip","label":"Rail Reims↔CDG pour 2","required":true,"status":"to_recheck"},
         {"id":"sez-pri-domestic","label":"Vol domestique SEZ→PRI pour 2","required":true,"status":"to_recheck"},
         {"id":"mahe-sez-transfer-cost","label":"Transfert final Mahé→SEZ","required":true,"status":"to_recheck"}
@@ -90,13 +90,13 @@
       "geometry": "roundtrip_gateway",
       "status": "partial",
       "confidence": "medium",
-      "note": "Alternative destinée à quantifier le compromis BRU. Le tarif Etihad est observé sur 09–23/11 ; le benchmark ferroviaire Reims→BRU inclut désormais le segment Bruxelles-Midi→aéroport.",
+      "note": "Alternative destinée à quantifier le compromis BRU. Turkish est observé à 599 €/personne sur 10–24/11 ; l'écart brut avec CDG reste faible face au pré-acheminement plus long depuis Reims.",
       "outbound": {
         "label": "Reims → Praslin",
         "segments": [
           {"id":"reims-bru-rail","label":"Reims → BRU","type":"ground_access","required":true,"durationMin":{"low":187,"high":291,"status":"estimated"},"cost":{"status":"published_floor_incomplete"},"source":"https://www.sncf-connect.com/train/horaires/reims/bruxelles"},
           {"id":"bru-margin","label":"Marge aéroport BRU","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
-          {"id":"bru-sez-flight","label":"BRU → SEZ","type":"international_flight","required":true,"durationMin":{"low":705,"high":705,"status":"route_reference"},"cost":{"partyValueEUR":1190,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-bru-ey-2026-11","checkedAt":"2026-09-06","dates":"2026-11-09/2026-11-23"},"source":"https://www.etihad.com/en/flights/flights-from-brussels-to-mahe"},
+          {"id":"bru-sez-flight","label":"BRU → SEZ","type":"international_flight","required":true,"durationMin":{"low":705,"high":705,"status":"route_reference"},"cost":{"partyValueEUR":1198,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-bru-tk-2026-11","checkedAt":"2026-09-24","dates":"2026-11-10/2026-11-24","source":"https://www.turkishairlines.com/en-be/book-flights-from-brussels-to-seychelles-1"},"source":"https://www.etihad.com/en/flights/flights-from-brussels-to-mahe"},
           {"id":"sez-pri-buffer","label":"Arrivée + correspondance domestique","type":"connection_buffer","required":true,"durationMin":{"low":90,"high":90,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
           {"id":"sez-pri-flight","label":"SEZ → PRI","type":"domestic_flight","required":true,"durationMin":{"low":15,"high":20,"status":"supported"},"cost":{"status":"to_recheck"},"source":"https://fly.airseychelles.com/fr/domestic/services-domestiques"}
         ]
@@ -111,7 +111,7 @@
         ]
       },
       "costs": [
-        {"id":"international-airfare","label":"Etihad BRU↔SEZ pour 2","required":true,"partyValueEUR":1190,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-bru-ey-2026-11","checkedAt":"2026-09-06","dates":"2026-11-09/2026-11-23","source":"https://www.etihad.com/en/flights/flights-from-brussels-to-mahe"},
+        {"id":"international-airfare","label":"Turkish BRU↔SEZ pour 2","required":true,"partyValueEUR":1198,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"sey-bru-tk-2026-11","checkedAt":"2026-09-24","dates":"2026-11-10/2026-11-24","source":"https://www.turkishairlines.com/en-be/book-flights-from-brussels-to-seychelles-1"},
         {"id":"reims-bru-roundtrip-floor","label":"Rail Reims↔Bruxelles-Midi pour 2 (borne basse, hors segment BRU)","required":true,"partyValueEUR":204,"status":"published_floor_incomplete","source":"https://www.sncf-connect.com/train/trajet/reims/bruxelles"},
         {"id":"bru-airport-segments","label":"Bruxelles-Midi↔BRU pour 2 (supplément aéroport 6,90 €/trajet généralement inclus + tarif de base)","required":true,"status":"to_recheck","source":"https://www.belgiantrain.be/fr/tickets-and-railcards/airports/brussels-airport/"},
         {"id":"sez-pri-domestic","label":"Vol domestique SEZ→PRI pour 2","required":true,"status":"to_recheck"},
@@ -126,13 +126,13 @@
       "geometry": "roundtrip_gateway",
       "status": "partial",
       "confidence": "low",
-      "note": "Le temps aller jusqu'à Ubud est calculable sous hypothèses ; le tarif Turkish est seulement un minimum mensuel novembre. Le retour dépend encore du choix Sanur ou Lembongan.",
+      "note": "Le temps aller jusqu'à Ubud est calculable sous hypothèses ; le tarif Turkish reste un minimum mensuel novembre à 761 €/personne. Le retour dépend encore du choix Sanur ou Lembongan.",
       "outbound": {
         "label": "Reims → Ubud",
         "segments": [
           {"id":"reims-cdg-rail","label":"Reims → CDG","type":"ground_access","required":true,"durationMin":{"low":81,"high":92,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/roissy-charles-de-gaulle"},
           {"id":"cdg-margin","label":"Marge aéroport CDG","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
-          {"id":"cdg-dps-flight","label":"CDG → DPS","type":"international_flight","required":true,"durationMin":{"low":1015,"high":1015,"status":"route_reference"},"cost":{"partyValueEUR":1522,"status":"observed_month","budgetUse":"signal_only","marketObservationId":"komodo-cdg-tk-2026-11","checkedAt":"2026-09-06"},"source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
+          {"id":"cdg-dps-flight","label":"CDG → DPS","type":"international_flight","required":true,"durationMin":{"low":1015,"high":1015,"status":"route_reference"},"cost":{"partyValueEUR":1522,"status":"observed_month","budgetUse":"signal_only","marketObservationId":"komodo-cdg-tk-2026-11","checkedAt":"2026-09-24","source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},"source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
           {"id":"dps-ubud-transfer","label":"DPS → Ubud","type":"arrival_transfer","required":true,"durationMin":{"low":75,"high":120,"status":"hypothesis"},"cost":{"status":"to_recheck"},"source":"https://www.indonesia.travel/gb/en/destination/bali-nusa-tenggara/bali/ubud/"}
         ]
       },
@@ -146,7 +146,7 @@
         ]
       },
       "costs": [
-        {"id":"international-airfare","label":"Turkish CDG↔DPS pour 2","required":true,"partyValueEUR":1522,"status":"observed_month","budgetUse":"signal_only","marketObservationId":"komodo-cdg-tk-2026-11","checkedAt":"2026-09-06","source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
+        {"id":"international-airfare","label":"Turkish CDG↔DPS pour 2","required":true,"partyValueEUR":1522,"status":"observed_month","budgetUse":"signal_only","marketObservationId":"komodo-cdg-tk-2026-11","checkedAt":"2026-09-24","source":"https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali"},
         {"id":"reims-cdg-roundtrip","label":"Rail Reims↔CDG pour 2","required":true,"status":"to_recheck"},
         {"id":"dps-ubud-transfer-cost","label":"Transfert DPS→Ubud","required":true,"status":"to_recheck"},
         {"id":"final-base-dps-cost","label":"Dernière base→DPS","required":true,"status":"variant_dependent"}
@@ -160,13 +160,13 @@
       "geometry": "roundtrip_gateway",
       "status": "partial",
       "confidence": "low",
-      "note": "Alternative destinée à mesurer l'impact du pré-acheminement vers Francfort. Le tarif Etihad observé est désormais aligné sur le signal marché 10–24/11 ; le retour reste dépendant de Sanur/Lembongan.",
+      "note": "Alternative Francfort : Etihad est observé à 677 €/personne sur 10–24/11. Le gain aérien brut reste insuffisant pour conclure sans intégrer le pré-acheminement Reims↔FRA et la fatigue.",
       "outbound": {
         "label": "Reims → Ubud",
         "segments": [
           {"id":"reims-fra-rail","label":"Reims → FRA","type":"ground_access","required":true,"durationMin":{"low":310,"high":310,"status":"estimated"},"cost":{"status":"to_recheck"},"source":"https://www.sncf-connect.com/train/horaires/reims/francfort-sur-le-main"},
           {"id":"fra-margin","label":"Marge aéroport FRA","type":"airport_margin","required":true,"durationMin":{"low":180,"high":180,"status":"hypothesis"},"cost":{"valueEUR":0,"status":"not_applicable"}},
-          {"id":"fra-dps-flight","label":"FRA → DPS","type":"international_flight","required":true,"durationMin":{"low":995,"high":995,"status":"route_reference"},"cost":{"partyValueEUR":1386,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"komodo-fra-ey-2026-11","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-24"},"source":"https://www.etihad.com/fr/flights/vols-de-francfort-vers-denpasar"},
+          {"id":"fra-dps-flight","label":"FRA → DPS","type":"international_flight","required":true,"durationMin":{"low":995,"high":995,"status":"route_reference"},"cost":{"partyValueEUR":1354,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"komodo-fra-ey-2026-11","checkedAt":"2026-09-24","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/de/flights/fluge-von-deutschland-nach-denpasar"},"source":"https://www.etihad.com/fr/flights/vols-de-francfort-vers-denpasar"},
           {"id":"dps-ubud-transfer","label":"DPS → Ubud","type":"arrival_transfer","required":true,"durationMin":{"low":75,"high":120,"status":"hypothesis"},"cost":{"status":"to_recheck"},"source":"https://www.indonesia.travel/gb/en/destination/bali-nusa-tenggara/bali/ubud/"}
         ]
       },
@@ -180,7 +180,7 @@
         ]
       },
       "costs": [
-        {"id":"international-airfare","label":"Etihad FRA↔DPS pour 2","required":true,"partyValueEUR":1386,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"komodo-fra-ey-2026-11","checkedAt":"2026-09-06","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/fr/flights/vols-de-francfort-vers-denpasar"},
+        {"id":"international-airfare","label":"Etihad FRA↔DPS pour 2","required":true,"partyValueEUR":1354,"status":"observed_nearby","budgetUse":"signal_only","marketObservationId":"komodo-fra-ey-2026-11","checkedAt":"2026-09-24","dates":"2026-11-10/2026-11-24","source":"https://www.etihad.com/de/flights/fluge-von-deutschland-nach-denpasar"},
         {"id":"reims-fra-roundtrip","label":"Rail Reims↔FRA pour 2","required":true,"status":"to_recheck"},
         {"id":"dps-ubud-transfer-cost","label":"Transfert DPS→Ubud","required":true,"status":"to_recheck"},
         {"id":"final-base-dps-cost","label":"Dernière base→DPS","required":true,"status":"variant_dependent"}

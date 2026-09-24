@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
   "tripId": "south-africa-nov-2026",
-  "checkedAt": "2026-09-06",
+  "checkedAt": "2026-09-24",
   "status": "research",
-  "intro": "La destination est suffisamment documentée pour rester en shortlist, mais pas encore réservable : le produit aérien open-jaw exact, les hébergements et plusieurs transferts restent à fermer.",
+  "intro": "La destination reste dans la shortlist après le scan du 24/09, mais n'est pas encore réservable : le billet open-jaw exact, les hébergements et plusieurs transferts restent à fermer.",
   "readiness": {
     "state": "blocked",
     "blockerIds": ["destination-choice","exact-openjaw-flight","cape-town-lodging","kruger-lodging","coast-base","internal-transport","formalities","card-coverage"],
@@ -17,13 +17,13 @@
   ],
   "items": [
     {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},
-    {"id":"exact-openjaw-flight","category":"Vols","label":"Trouver et ouvrir le produit exact CDG→CPT / DUR→CDG pour deux","status":"research","blocking":true,"checkedAt":"2026-09-06","note":"Le scan actuel contient des signaux vers JNB/CPT/DUR, mais pas le billet open-jaw exact aligné sur l'itinéraire."},
+    {"id":"exact-openjaw-flight","category":"Vols","label":"Trouver et ouvrir le produit exact CDG→CPT / DUR→CDG pour deux","status":"research","blocking":true,"checkedAt":"2026-09-24","note":"Le scan public du 24/09 n'a pas exposé de produit CDG→CPT / DUR→CDG exact 05–24/11 ; les anciens signaux JNB restent indicatifs seulement."},
     {"id":"cape-town-lodging","category":"Hébergements","label":"Comparer 2–3 hôtels Confort à Cape Town pour 4 nuits","status":"research","blocking":true},
     {"id":"kruger-lodging","category":"Hébergements","label":"Comparer lodge de réserve privée vs SANParks pour 5 nuits","status":"research","blocking":true},
     {"id":"coast-base","category":"Hébergements","label":"Choisir la base iSimangaliso / Sodwana / Kosi et l'hébergement de fin de séjour","status":"research","blocking":true},
     {"id":"internal-transport","category":"Transport","label":"Fermer vols intérieurs et transferts CPT → Kruger → KwaZulu-Natal sans conduite nocturne","status":"research","blocking":true},
     {"id":"turtle-operator","category":"Activités","label":"Identifier un opérateur autorisé de turtle tracking compatible avec la base choisie","status":"research","blocking":false},
-    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé et recommandations locales avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-06"},
+    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé et recommandations locales avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-24","note":"Entrée <90 jours sans visa préalable confirmée ; déclaration en ligne marchandises/devises obligatoire depuis le 01/07/2026. À revérifier juste avant réservation/départ."},
     {"id":"card-coverage","category":"Assurance","label":"Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles","status":"research","blocking":true}
   ]
 }

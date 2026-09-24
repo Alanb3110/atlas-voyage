@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-09-06",
+  "updatedAt": "2026-09-24",
   "lifecycle": ["longlist", "shortlist", "selected", "detailed", "bookable", "booked", "archived"],
   "trips": [
     {"id":"south-africa-nov-2026","title":"Afrique du Sud — Kruger + iSimangaliso + Cape Town","subtitle":"Safari, tortues marines et fin côte sauvage.","coverImage":"https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80","status":"shortlist","researchDepth":"high","tags":["Big Five","Tortues","Plage","Gastronomie"],"variantCount":1,"defaultVariant":"balanced","defaultBudget":"comfort","dataFile":"data/trips/south-africa-nov-2026.json"},
