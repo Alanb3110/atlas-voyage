@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "checkedAt": "2026-09-06",
+  "checkedAt": "2026-09-24",
   "status": "market_scan",
   "travelers": 2,
   "targetWindow": {
@@ -24,7 +24,7 @@
     {
       "tripId": "south-africa-nov-2026",
       "arrivalAirport": "JNB",
-      "marketRead": "CDG reste le leader confort/logistique grâce au direct Air France et au pré-acheminement nettement plus court depuis Reims. BRU affiche 222 € de moins par personne, soit 444 € pour deux, mais sur des dates différentes, avec une correspondance aérienne et environ cinq heures supplémentaires de rail aller-retour au benchmark actuel. Aucun des deux tarifs ne doit encore alimenter le budget final.",
+      "marketRead": "Le scan public du 24/09 n'expose toujours pas le billet open-jaw exact CDG→CPT / DUR→CDG sur 05–24/11. Les signaux JNB observés le 06/09 restent des repères historiques, pas des prix frais ni budgétaires. CDG reste le leader pratique à ce stade.",
       "currentLeader": "CDG",
       "leaderConfidence": "medium",
       "observations": [
@@ -37,8 +37,16 @@
           "stops": 0,
           "flightDurationMin": 660,
           "flightDurationStatus": "supported",
-          "price": {"value":748,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
-          "observedDates": {"departure":"2026-11-05","return":"2026-11-26"},
+          "price": {
+            "value": 748,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
+          "observedDates": {
+            "departure": "2026-11-05",
+            "return": "2026-11-26"
+          },
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-06",
@@ -56,8 +64,16 @@
           "stops": 1,
           "flightDurationMin": 1320,
           "flightDurationStatus": "observed_nearby",
-          "price": {"value":526,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
-          "observedDates": {"departure":"2026-11-09","return":"2026-11-23"},
+          "price": {
+            "value": 526,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
+          "observedDates": {
+            "departure": "2026-11-09",
+            "return": "2026-11-23"
+          },
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-06",
@@ -67,12 +83,17 @@
           "note": "Signal prix fort mais séjour observé de 14 jours et vol avec escale ; ce produit n'est pas comparable strictement au direct Air France."
         }
       ],
-      "notYetComparable": ["ORY","LUX","AMS","FRA"]
+      "notYetComparable": [
+        "ORY",
+        "LUX",
+        "AMS",
+        "FRA"
+      ]
     },
     {
       "tripId": "seychelles-nov-2026",
       "arrivalAirport": "SEZ",
-      "marketRead": "CDG et BRU restent proches en prix brut. L'écart Etihad n'est que de 31 € par personne en faveur de BRU, soit 62 € pour deux ; le pré-acheminement Reims–BRU est nettement plus long et les dates ne sont pas celles de la cible. CDG reste donc le leader pratique provisoire, sans tarif encore éligible au budget final.",
+      "marketRead": "Les signaux frais convergent : Etihad affiche CDG↔SEZ à 625 € par personne sur 10–24/11 et Turkish BRU↔SEZ à 599 € sur 10–24/11. L'écart brut n'est que de 26 € par personne et ne compense pas, à lui seul, le pré-acheminement plus long vers BRU depuis Reims. Aucun tarif 05–24/11 exact n'est encore exposé.",
       "currentLeader": "CDG",
       "leaderConfidence": "medium",
       "observations": [
@@ -85,42 +106,63 @@
           "stops": 1,
           "flightDurationMin": 720,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {"value":626,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
-          "observedDates": {"departure":"2026-11-10","return":"2026-11-24"},
+          "price": {
+            "value": 625,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
+          "observedDates": {
+            "departure": "2026-11-10",
+            "return": "2026-11-24"
+          },
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
-          "checkedAt": "2026-09-06",
-          "source": "https://www.etihad.com/fr-fr/flights/vols-de-paris-a-seychelles",
+          "checkedAt": "2026-09-24",
+          "source": "https://www.etihad.com/fr-fr/flights/vols-de-france-vers-seychelles",
           "durationSource": "https://www.google.com/travel/flights/flights-from-paris-to-mahe.html",
           "confidence": "high",
-          "note": "Retour identique à la cible, départ cinq jours plus tard. Le temps de 12 h est le meilleur temps de route Google Flights, pas nécessairement le tarif Etihad exact."
+          "note": "Tarif compagnie observé dans les dernières 48 h ; retour cible exact, départ cinq jours plus tard."
         },
         {
-          "id": "sey-bru-ey-2026-11",
+          "id": "sey-bru-tk-2026-11",
           "origin": "BRU",
           "destination": "SEZ",
-          "airline": "Etihad Airways",
+          "airline": "Turkish Airlines",
           "routing": "1 escale",
           "stops": 1,
           "flightDurationMin": 705,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {"value":595,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
-          "observedDates": {"departure":"2026-11-09","return":"2026-11-23"},
+          "price": {
+            "value": 599,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
+          "observedDates": {
+            "departure": "2026-11-10",
+            "return": "2026-11-24"
+          },
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
-          "checkedAt": "2026-09-06",
-          "source": "https://www.etihad.com/en/flights/flights-from-brussels-to-mahe",
+          "checkedAt": "2026-09-24",
+          "source": "https://www.turkishairlines.com/en-be/book-flights-from-brussels-to-seychelles-1",
           "durationSource": "https://www.google.com/travel/flights/flights-from-brussels-to-mahe.html",
           "confidence": "high",
-          "note": "Prix observé proche de CDG. Le meilleur temps de route est ~11 h 45, mais le vol tarifé exact doit encore être ouvert avant réservation."
+          "note": "Tarif compagnie observé dans les dernières 48 h ; retour cible exact, départ cinq jours plus tard."
         }
       ],
-      "notYetComparable": ["ORY","LUX","AMS","FRA"]
+      "notYetComparable": [
+        "ORY",
+        "LUX",
+        "AMS",
+        "FRA"
+      ]
     },
     {
       "tripId": "komodo-flores-nov-2026",
       "arrivalAirport": "DPS",
-      "marketRead": "FRA affiche 693 € A/R Etihad sur 10–24/11, contre un plancher mensuel Turkish de 761 € depuis CDG : avantage brut de 68 € par personne, soit 136 € pour deux. Le pré-acheminement vers Francfort ajoute toutefois plusieurs heures par sens depuis Reims et les produits ne sont pas observés sur les mêmes dates. CDG reste le leader pratique provisoire ; FRA reste à surveiller lorsqu'un 05–24/11 exact sera exposé.",
+      "marketRead": "CDG reste le choix pratique depuis Reims. Turkish affiche toujours un plancher mensuel de 761 € A/R depuis CDG ; Etihad affiche FRA↔DPS à 677 € sur 10–24/11, soit 84 € de moins par personne avant pré-acheminement. Le gain brut ne compense pas clairement les plusieurs heures supplémentaires d'accès ferroviaire à Francfort ; aucun 05–24/11 exact n'est encore exposé.",
       "currentLeader": "CDG",
       "leaderConfidence": "low",
       "observations": [
@@ -133,14 +175,19 @@
           "stops": 1,
           "flightDurationMin": 1015,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {"value":761,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "price": {
+            "value": 761,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
           "dateMatch": "month",
           "budgetUse": "signal_only",
-          "checkedAt": "2026-09-06",
+          "checkedAt": "2026-09-24",
           "source": "https://www.turkishairlines.com/fr-fr/flights-from-paris-to-denpasar-bali",
           "durationSource": "https://www.google.com/travel/flights/flights-from-paris-to-denpasar.html",
           "confidence": "medium",
-          "note": "Minimum mensuel novembre, sans couple de dates 05–24/11 vérifié. Le meilleur temps de route Paris–DPS est ~16 h 55, pas nécessairement celui du tarif à 761 €."
+          "note": "Minimum mensuel novembre observé à nouveau le 24/09 ; aucune paire 05–24/11 vérifiée."
         },
         {
           "id": "komodo-fra-ey-2026-11",
@@ -151,15 +198,23 @@
           "stops": 1,
           "flightDurationMin": 995,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {"value":693,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
-          "observedDates": {"departure":"2026-11-10","return":"2026-11-24"},
+          "price": {
+            "value": 677,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
+          "observedDates": {
+            "departure": "2026-11-10",
+            "return": "2026-11-24"
+          },
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
-          "checkedAt": "2026-09-06",
-          "source": "https://www.etihad.com/fr/flights/vols-de-francfort-vers-denpasar",
+          "checkedAt": "2026-09-24",
+          "source": "https://www.etihad.com/de/flights/fluge-von-deutschland-nach-denpasar",
           "durationSource": "https://www.google.com/travel/flights/flights-from-frankfurt-to-denpasar.html",
           "confidence": "high",
-          "note": "Observation compagnie plus proche de la cible que le précédent 10–17/11 : retour cible exact, départ cinq jours plus tard."
+          "note": "Tarif compagnie frais sur 10–24/11 ; retour cible exact, départ cinq jours plus tard."
         },
         {
           "id": "komodo-bru-tk-2026-11",
@@ -168,7 +223,12 @@
           "airline": "Turkish Airlines",
           "routing": "1 escale",
           "stops": 1,
-          "price": {"value":852,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "price": {
+            "value": 852,
+            "currency": "EUR",
+            "unit": "person_roundtrip",
+            "status": "observed"
+          },
           "dateMatch": "month",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-06",
@@ -177,7 +237,11 @@
           "note": "Minimum mensuel novembre ; le signal brut est moins favorable que CDG/FRA avant même le pré-acheminement."
         }
       ],
-      "notYetComparable": ["ORY","LUX","AMS"]
+      "notYetComparable": [
+        "ORY",
+        "LUX",
+        "AMS"
+      ]
     }
   ]
 }
