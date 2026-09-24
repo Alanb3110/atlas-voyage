@@ -1,12 +1,21 @@
 {
   "schemaVersion": 2,
   "tripId": "seychelles-nov-2026",
-  "checkedAt": "2026-09-06",
+  "checkedAt": "2026-09-24",
   "status": "research",
-  "intro": "La structure Praslin → La Digue → Mahé est simple et cohérente, mais les tarifs aériens actuels sont encore des signaux sur dates proches et aucun hébergement n'est encore vérifié comme réellement disponible sur la fenêtre cible.",
+  "intro": "La structure Praslin → La Digue → Mahé reste la plus simple et reposante de la shortlist. Les tarifs aériens ont été rafraîchis, mais aucun 05–24/11 exact ni hébergement réellement disponible sur toute la fenêtre n'est encore validé.",
   "readiness": {
     "state": "blocked",
-    "blockerIds": ["destination-choice","exact-flight","praslin-lodging","la-digue-lodging","mahe-lodging","island-transfers","formalities","card-coverage"],
+    "blockerIds": [
+      "destination-choice",
+      "exact-flight",
+      "praslin-lodging",
+      "la-digue-lodging",
+      "mahe-lodging",
+      "island-transfers",
+      "formalities",
+      "card-coverage"
+    ],
     "nextAction": "Chercher un billet CDG↔SEZ exact 05–24/11, puis tester la disponibilité Confort des trois étapes Praslin, La Digue et Mahé sans modifier le rythme 6/5/6 nuits."
   },
   "references": [
@@ -16,14 +25,72 @@
     "data/trips/seychelles-nov-2026.json"
   ],
   "items": [
-    {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},
-    {"id":"exact-flight","category":"Vols","label":"Trouver un tarif CDG↔SEZ exact 05–24/11 pour deux","status":"research","blocking":true,"checkedAt":"2026-09-06","note":"Le signal Etihad CDG actuel est 10–24/11 et reste non budgétaire."},
-    {"id":"praslin-lodging","category":"Hébergements","label":"Comparer 2–3 options Confort à Praslin pour 6 nuits","status":"research","blocking":true},
-    {"id":"la-digue-lodging","category":"Hébergements","label":"Comparer 2–3 petits hôtels de charme à La Digue pour 5 nuits","status":"research","blocking":true},
-    {"id":"mahe-lodging","category":"Hébergements","label":"Comparer 2–3 hôtels 4★ à Mahé pour les 6 dernières nuits","status":"research","blocking":true},
-    {"id":"island-transfers","category":"Transport","label":"Chiffrer SEZ→Praslin puis ferries Praslin→La Digue→Mahé et transfert final SEZ","status":"research","blocking":true},
-    {"id":"marine-activities","category":"Activités","label":"Présélectionner Curieuse et 1–2 sorties snorkeling avec conditions d'annulation","status":"research","blocking":false},
-    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé, taxes et règles locales avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-06"},
-    {"id":"card-coverage","category":"Assurance","label":"Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles","status":"research","blocking":true}
+    {
+      "id": "destination-choice",
+      "category": "Décision",
+      "label": "Choisir la destination finale et figer la fenêtre 05–24/11",
+      "status": "research",
+      "blocking": true
+    },
+    {
+      "id": "exact-flight",
+      "category": "Vols",
+      "label": "Trouver un tarif CDG↔SEZ exact 05–24/11 pour deux",
+      "status": "research",
+      "blocking": true,
+      "checkedAt": "2026-09-24",
+      "note": "Etihad CDG↔SEZ : 625 €/personne sur 10–24/11 ; Turkish BRU↔SEZ : 599 €/personne sur 10–24/11. Signaux proches, non budgétaires car départ cinq jours après la cible."
+    },
+    {
+      "id": "praslin-lodging",
+      "category": "Hébergements",
+      "label": "Comparer 2–3 options Confort à Praslin pour 6 nuits",
+      "status": "research",
+      "blocking": true
+    },
+    {
+      "id": "la-digue-lodging",
+      "category": "Hébergements",
+      "label": "Comparer 2–3 petits hôtels de charme à La Digue pour 5 nuits",
+      "status": "research",
+      "blocking": true
+    },
+    {
+      "id": "mahe-lodging",
+      "category": "Hébergements",
+      "label": "Comparer 2–3 hôtels 4★ à Mahé pour les 6 dernières nuits",
+      "status": "research",
+      "blocking": true
+    },
+    {
+      "id": "island-transfers",
+      "category": "Transport",
+      "label": "Chiffrer SEZ→Praslin puis ferries Praslin→La Digue→Mahé et transfert final SEZ",
+      "status": "research",
+      "blocking": true
+    },
+    {
+      "id": "marine-activities",
+      "category": "Activités",
+      "label": "Présélectionner Curieuse et 1–2 sorties snorkeling avec conditions d'annulation",
+      "status": "research",
+      "blocking": false
+    },
+    {
+      "id": "formalities",
+      "category": "Formalités",
+      "label": "Revérifier entrée, santé, taxes et règles locales avant réservation",
+      "status": "recheck",
+      "blocking": true,
+      "checkedAt": "2026-09-24",
+      "note": "Autorisation de voyage payante en ligne requise avant embarquement, avec justificatifs ; à revérifier au moment de réserver."
+    },
+    {
+      "id": "card-coverage",
+      "category": "Assurance",
+      "label": "Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles",
+      "status": "research",
+      "blocking": true
+    }
   ]
 }
