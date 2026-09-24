@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 2,
+  "id": "sri-lanka-yala-south-nov-2026",
+  "defaultVariant": "balanced",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Sri Lanka — Sigiriya + safari + côte sud",
+    "subtitle": "Éléphants, culture, safari et longue fin tropicale à budget contenu.",
+    "travelers": "2 adultes",
+    "duration": "≈ 18–20 jours",
+    "dates": "Début novembre 2026",
+    "departure": "Départ réel : Reims",
+    "heroImage": "https://images.unsplash.com/photo-1737859986851-30c9c350957a?auto=format&fit=crop&w=1800&q=80"
+  },
+  "traceability": {
+    "researchDate": "2026-09-24",
+    "priceDate": "2026-09-24",
+    "lastChecked": "2026-09-24",
+    "budgetConfidence": "moyenne — phase de comparaison"
+  },
+  "budgetIntro": "Option très compétitive financièrement ; le principal compromis n'est pas le prix mais la seconde inter-mousson de novembre.",
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Culture + safari + plage",
+      "subtitle": "Sigiriya, Udawalawe/Yala puis Tangalle.",
+      "rhythm": "Doux à modéré",
+      "tradeoff": "Excellent budget et bonne diversité, mais novembre est météorologiquement moins robuste pour la plage.",
+      "scores": {
+        "wildlife": 4.6,
+        "relaxation": 4.2,
+        "culture": 4.5,
+        "beach": 3.5,
+        "logistics": 3.9
+      },
+      "overviewIntro": "Trois bases permettent de garder un circuit lisible : culture au centre, safari au sud-est, puis longue fin sur la côte sud.",
+      "summary": [
+        {
+          "value": "3",
+          "text": "bases"
+        },
+        {
+          "value": "≈ 4,5 k€",
+          "text": "budget Confort estimé"
+        },
+        {
+          "value": "Novembre",
+          "text": "seconde inter-mousson"
+        }
+      ],
+      "steps": [
+        {
+          "name": "Sigiriya / Habarana",
+          "nights": "4 nuits",
+          "coords": [
+            7.957,
+            80.7603
+          ],
+          "summary": "Sites historiques, paysages et excursions nature.",
+          "transfer": "Vol + route",
+          "fatigue": "Moyenne",
+          "tags": [
+            "Culture",
+            "Nature"
+          ],
+          "lodging": {
+            "essential": "Guesthouse",
+            "comfort": "Boutique-lodge",
+            "premium": "Resort nature"
+          }
+        },
+        {
+          "name": "Udawalawe / Yala",
+          "nights": "4 nuits",
+          "coords": [
+            6.4388,
+            81.0169
+          ],
+          "summary": "Safaris éléphants, oiseaux et léopards possibles.",
+          "transfer": "Chauffeur privé",
+          "fatigue": "Moyenne",
+          "tags": [
+            "Safari",
+            "Éléphants"
+          ],
+          "lodging": {
+            "essential": "Lodge simple",
+            "comfort": "Safari lodge",
+            "premium": "Lodge premium"
+          }
+        },
+        {
+          "name": "Tangalle",
+          "nights": "9 nuits",
+          "coords": [
+            6.024,
+            80.794
+          ],
+          "summary": "Longue fin plage et repos, conditionnée par l'état de mer.",
+          "transfer": "Route",
+          "fatigue": "Faible",
+          "tags": [
+            "Plage",
+            "Repos"
+          ],
+          "lodging": {
+            "essential": "Guesthouse plage",
+            "comfort": "Boutique-hôtel",
+            "premium": "Resort"
+          }
+        }
+      ],
+      "daysIntro": "17 nuits environ.",
+      "days": [
+        {
+          "day": "J1–J4",
+          "title": "Sigiriya",
+          "detail": "Culture et nature."
+        },
+        {
+          "day": "J5–J8",
+          "title": "Safari",
+          "detail": "Deux à trois sorties selon conditions ; observations non garanties."
+        },
+        {
+          "day": "J9–J17",
+          "title": "Tangalle",
+          "detail": "Plage et repos avec programme flexible selon météo."
+        }
+      ]
+    }
+  ],
+  "budgets": [
+    {
+      "id": "essential",
+      "label": "Essentiel",
+      "total": 3600,
+      "items": [
+        "Guesthouses",
+        "Chauffeur partagé/ciblé",
+        "Safaris standards"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "status": "estimated",
+          "amount": 150
+        },
+        {
+          "label": "Vols internationaux",
+          "status": "estimated",
+          "amount": 1150
+        },
+        {
+          "label": "Chauffeur / trains / transferts",
+          "status": "estimated",
+          "amount": 600
+        },
+        {
+          "label": "Hébergements",
+          "status": "estimated",
+          "amount": 700
+        },
+        {
+          "label": "Safaris + activités",
+          "status": "estimated",
+          "amount": 300
+        },
+        {
+          "label": "Repas",
+          "status": "estimated",
+          "amount": 350
+        },
+        {
+          "label": "ETA",
+          "status": "estimated",
+          "amount": 0
+        },
+        {
+          "label": "Marge imprévus",
+          "status": "estimated",
+          "amount": 350
+        }
+      ]
+    },
+    {
+      "id": "comfort",
+      "label": "Confort recommandé",
+      "recommended": true,
+      "total": 4500,
+      "items": [
+        "Boutique-lodges",
+        "Chauffeur privé structurant",
+        "Hôtels confortables"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "status": "estimated",
+          "amount": 160
+        },
+        {
+          "label": "Vols internationaux",
+          "status": "estimated",
+          "amount": 1200
+        },
+        {
+          "label": "Chauffeur / trains / transferts",
+          "status": "estimated",
+          "amount": 800
+        },
+        {
+          "label": "Hébergements",
+          "status": "estimated",
+          "amount": 1100
+        },
+        {
+          "label": "Safaris + activités",
+          "status": "estimated",
+          "amount": 400
+        },
+        {
+          "label": "Repas",
+          "status": "estimated",
+          "amount": 450
+        },
+        {
+          "label": "ETA",
+          "status": "estimated",
+          "amount": 0
+        },
+        {
+          "label": "Marge imprévus",
+          "status": "estimated",
+          "amount": 390
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "label": "Premium",
+      "total": 6500,
+      "items": [
+        "Lodges haut de gamme",
+        "Chauffeur privé continu",
+        "Resort plage premium"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "status": "estimated",
+          "amount": 200
+        },
+        {
+          "label": "Vols internationaux",
+          "status": "estimated",
+          "amount": 1500
+        },
+        {
+          "label": "Chauffeur / transferts",
+          "status": "estimated",
+          "amount": 1000
+        },
+        {
+          "label": "Hébergements",
+          "status": "estimated",
+          "amount": 2600
+        },
+        {
+          "label": "Safaris + activités",
+          "status": "estimated",
+          "amount": 550
+        },
+        {
+          "label": "Repas",
+          "status": "estimated",
+          "amount": 550
+        },
+        {
+          "label": "ETA",
+          "status": "estimated",
+          "amount": 0
+        },
+        {
+          "label": "Marge imprévus",
+          "status": "estimated",
+          "amount": 100
+        }
+      ]
+    }
+  ],
+  "wildlife": [
+    {
+      "title": "Safari",
+      "note": "Les observations sont sauvages et jamais garanties.",
+      "items": [
+        [
+          "Éléphants",
+          "Très bon potentiel à Udawalawe"
+        ],
+        [
+          "Léopard",
+          "Possible à Yala, non garanti"
+        ],
+        [
+          "Oiseaux / crocodiles",
+          "Bon potentiel"
+        ]
+      ]
+    }
+  ],
+  "food": {
+    "intro": "Cuisine épicée et très végétale, excellent rapport qualité/prix.",
+    "cards": [
+      {
+        "title": "À goûter",
+        "items": [
+          [
+            "Rice & curry",
+            "Base du repas local"
+          ],
+          [
+            "Hoppers",
+            "Crêpes de riz fermenté"
+          ],
+          [
+            "Piment",
+            "Souvent élevé ; demander mild si nécessaire"
+          ]
+        ]
+      }
+    ]
+  },
+  "weather": {
+    "intro": "Novembre est la seconde inter-mousson : pluie et orages possibles sur toute l'île.",
+    "cards": [
+      {
+        "title": "Conséquence pratique",
+        "items": [
+          [
+            "Plage",
+            "Programme flexible"
+          ],
+          [
+            "Mer",
+            "Peut être agitée"
+          ],
+          [
+            "Safari",
+            "Possible mais routes/averses à surveiller"
+          ]
+        ]
+      }
+    ]
+  },
+  "practical": {
+    "intro": "Chauffeur recommandé plutôt que conduite autonome.",
+    "cards": [
+      {
+        "title": "Entrée",
+        "items": [
+          [
+            "ETA",
+            "Obligatoire mais frais gratuits pour Français depuis 25/05/2026"
+          ],
+          [
+            "Passeport",
+            "Validité ≥ 6 mois à l'entrée"
+          ]
+        ]
+      },
+      {
+        "title": "Sécurité",
+        "items": [
+          [
+            "Pays",
+            "Vigilance renforcée"
+          ],
+          [
+            "Baignade",
+            "Courants parfois forts sur la côte sud"
+          ]
+        ]
+      }
+    ],
+    "rules": []
+  },
+  "sources": [
+    {
+      "label": "Etihad — Paris vers Colombo",
+      "url": "https://www.etihad.com/fr-fr/flights/vols-de-paris-a-sri-lanka",
+      "note": "Signal frais autour de 574 €/personne A/R sur plusieurs dates de novembre.",
+      "type": "tarif compagnie",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "label": "Sri Lanka Tourism — Weather",
+      "url": "https://www.srilanka.travel/weather",
+      "note": "Octobre-novembre : seconde inter-mousson, averses possibles sur toute l'île.",
+      "type": "officiel tourisme",
+      "checkedAt": "2026-09-24"
+    },
+    {
+      "label": "France Diplomatie — Sri Lanka entrée/séjour",
+      "url": "https://www.diplomatie.gouv.fr/fr/information-par-pays/sri-lanka/conseils-aux-voyageurs-entree-sejour",
+      "note": "ETA et conditions d'entrée.",
+      "type": "officiel",
+      "checkedAt": "2026-09-24"
+    }
+  ]
+}
