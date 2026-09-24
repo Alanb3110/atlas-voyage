@@ -37,16 +37,8 @@
           "stops": 0,
           "flightDurationMin": 660,
           "flightDurationStatus": "supported",
-          "price": {
-            "value": 748,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
-          "observedDates": {
-            "departure": "2026-11-05",
-            "return": "2026-11-26"
-          },
+          "price": {"value":748,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "observedDates": {"departure":"2026-11-05","return":"2026-11-26"},
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-06",
@@ -64,16 +56,8 @@
           "stops": 1,
           "flightDurationMin": 1320,
           "flightDurationStatus": "observed_nearby",
-          "price": {
-            "value": 526,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
-          "observedDates": {
-            "departure": "2026-11-09",
-            "return": "2026-11-23"
-          },
+          "price": {"value":526,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "observedDates": {"departure":"2026-11-09","return":"2026-11-23"},
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-06",
@@ -83,12 +67,7 @@
           "note": "Signal prix fort mais séjour observé de 14 jours et vol avec escale ; ce produit n'est pas comparable strictement au direct Air France."
         }
       ],
-      "notYetComparable": [
-        "ORY",
-        "LUX",
-        "AMS",
-        "FRA"
-      ]
+      "notYetComparable": ["ORY","LUX","AMS","FRA"]
     },
     {
       "tripId": "seychelles-nov-2026",
@@ -106,16 +85,8 @@
           "stops": 1,
           "flightDurationMin": 720,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {
-            "value": 625,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
-          "observedDates": {
-            "departure": "2026-11-10",
-            "return": "2026-11-24"
-          },
+          "price": {"value":625,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "observedDates": {"departure":"2026-11-10","return":"2026-11-24"},
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-24",
@@ -133,16 +104,8 @@
           "stops": 1,
           "flightDurationMin": 705,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {
-            "value": 599,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
-          "observedDates": {
-            "departure": "2026-11-10",
-            "return": "2026-11-24"
-          },
+          "price": {"value":599,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "observedDates": {"departure":"2026-11-10","return":"2026-11-24"},
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-24",
@@ -152,12 +115,7 @@
           "note": "Tarif compagnie observé dans les dernières 48 h ; retour cible exact, départ cinq jours plus tard."
         }
       ],
-      "notYetComparable": [
-        "ORY",
-        "LUX",
-        "AMS",
-        "FRA"
-      ]
+      "notYetComparable": ["ORY","LUX","AMS","FRA"]
     },
     {
       "tripId": "komodo-flores-nov-2026",
@@ -175,12 +133,7 @@
           "stops": 1,
           "flightDurationMin": 1015,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {
-            "value": 761,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
+          "price": {"value":761,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
           "dateMatch": "month",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-24",
@@ -198,16 +151,8 @@
           "stops": 1,
           "flightDurationMin": 995,
           "flightDurationStatus": "route_fastest_reference",
-          "price": {
-            "value": 677,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
-          "observedDates": {
-            "departure": "2026-11-10",
-            "return": "2026-11-24"
-          },
+          "price": {"value":677,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
+          "observedDates": {"departure":"2026-11-10","return":"2026-11-24"},
           "dateMatch": "nearby",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-24",
@@ -223,12 +168,7 @@
           "airline": "Turkish Airlines",
           "routing": "1 escale",
           "stops": 1,
-          "price": {
-            "value": 852,
-            "currency": "EUR",
-            "unit": "person_roundtrip",
-            "status": "observed"
-          },
+          "price": {"value":852,"currency":"EUR","unit":"person_roundtrip","status":"observed"},
           "dateMatch": "month",
           "budgetUse": "signal_only",
           "checkedAt": "2026-09-06",
@@ -237,11 +177,7 @@
           "note": "Minimum mensuel novembre ; le signal brut est moins favorable que CDG/FRA avant même le pré-acheminement."
         }
       ],
-      "notYetComparable": [
-        "ORY",
-        "LUX",
-        "AMS"
-      ]
+      "notYetComparable": ["ORY","LUX","AMS"]
     }
   ]
 }
