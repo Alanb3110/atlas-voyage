@@ -231,8 +231,8 @@
           "summary": "Khao Sok et Phang Nga offrent forêt tropicale, oiseaux, primates et éléphants sauvages possibles ; les rencontres ne sont jamais garanties. Les Similan sont connues pour le snorkeling/plongée de novembre à avril.",
           "sources": [
             {
-              "label": "Tourism Authority of Thailand — Phang Nga",
-              "url": "https://www.tourismthailand.org/Destinations/Provinces/Phrae/348",
+              "label": "Tourism Authority of Thailand — Khao Sok",
+              "url": "https://www.tourismthailand.org/Articles/a-different-side-of-surat-thani-no-sea-required",
               "type": "official-tourism",
               "checkedAt": "2026-09-24"
             },
@@ -276,8 +276,8 @@
           "summary": "Protection contre les moustiques, prudence alimentaire et vérification de la couverture médicale/rapatriement restent nécessaires.",
           "sources": [
             {
-              "label": "France Diplomatie — Thaïlande informations utiles",
-              "url": "https://www.diplomatie.gouv.fr/fr/information-par-pays/thailande/conseils-aux-voyageurs-informations-utiles",
+              "label": "France Diplomatie — Thaïlande santé",
+              "url": "https://www.diplomatie.gouv.fr/fr/information-par-pays/thailande/conseils-aux-voyageurs-sante",
               "type": "official",
               "checkedAt": "2026-09-24"
             }
@@ -317,7 +317,7 @@
         },
         "wildlife": {
           "status": "supported",
-          "confidence": "high",
+          "confidence": "medium",
           "summary": "Yala et Udawalawe permettent des safaris ciblant notamment éléphants, oiseaux et, à Yala, léopards possibles. Toute observation reste aléatoire.",
           "sources": [
             {
