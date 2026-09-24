@@ -6,17 +6,7 @@
   "intro": "Le circuit Ubud → Labuan Bajo/Komodo → plage Bali reste en tête du comparateur. Les signaux aériens sont plus frais, mais aucun billet 05–24/11 exact n'est encore exposé et la base finale Sanur/Lembongan n'est pas figée.",
   "readiness": {
     "state": "blocked",
-    "blockerIds": [
-      "destination-choice",
-      "exact-flight",
-      "final-base",
-      "ubud-lodging",
-      "komodo-lodging",
-      "beach-lodging",
-      "domestic-flight",
-      "formalities",
-      "card-coverage"
-    ],
+    "blockerIds": ["destination-choice","exact-flight","final-base","ubud-lodging","komodo-lodging","beach-lodging","domestic-flight","formalities","card-coverage"],
     "nextAction": "Rechercher CDG et FRA vers DPS sur 05–24/11 exact, puis arbitrer Sanur vs Lembongan avant de chiffrer les trois étapes Confort et le segment Bali↔Labuan Bajo."
   },
   "references": [
@@ -26,79 +16,15 @@
     "data/trips/komodo-flores-nov-2026.json"
   ],
   "items": [
-    {
-      "id": "destination-choice",
-      "category": "Décision",
-      "label": "Choisir la destination finale et figer la fenêtre 05–24/11",
-      "status": "research",
-      "blocking": true
-    },
-    {
-      "id": "exact-flight",
-      "category": "Vols",
-      "label": "Trouver et comparer CDG/FRA↔DPS exact 05–24/11 pour deux",
-      "status": "research",
-      "blocking": true,
-      "checkedAt": "2026-09-24",
-      "note": "CDG reste à 761 € A/R en minimum mensuel Turkish ; FRA est observé à 677 € sur 10–24/11. Aucun des deux n'est encore éligible au budget final 05–24/11."
-    },
-    {
-      "id": "final-base",
-      "category": "Itinéraire",
-      "label": "Arbitrer Sanur vs Nusa Lembongan pour les 7 dernières nuits",
-      "status": "research",
-      "blocking": true
-    },
-    {
-      "id": "ubud-lodging",
-      "category": "Hébergements",
-      "label": "Comparer 2–3 boutique-hôtels avec piscine à Ubud pour 4 nuits",
-      "status": "research",
-      "blocking": true
-    },
-    {
-      "id": "komodo-lodging",
-      "category": "Hébergements",
-      "label": "Comparer hôtel vue mer + croisière Komodo confortable pour 6 nuits",
-      "status": "research",
-      "blocking": true
-    },
-    {
-      "id": "beach-lodging",
-      "category": "Hébergements",
-      "label": "Comparer 2–3 resorts de fin de séjour une fois Sanur/Lembongan choisi",
-      "status": "research",
-      "blocking": true
-    },
-    {
-      "id": "domestic-flight",
-      "category": "Transport",
-      "label": "Chiffrer DPS↔Labuan Bajo et les transferts terrestres/maritimes associés",
-      "status": "research",
-      "blocking": true
-    },
-    {
-      "id": "komodo-provider",
-      "category": "Activités",
-      "label": "Présélectionner 2–3 opérateurs Komodo avec permis, programme et annulation comparables",
-      "status": "research",
-      "blocking": false
-    },
-    {
-      "id": "formalities",
-      "category": "Formalités",
-      "label": "Revérifier entrée, santé, taxes et règles des parcs avant réservation",
-      "status": "recheck",
-      "blocking": true,
-      "checkedAt": "2026-09-24",
-      "note": "All Indonesia à renseigner dans les 72 h avant l'arrivée ; règles de visa, taxes et conditions des opérateurs Komodo à revalider avant réservation."
-    },
-    {
-      "id": "card-coverage",
-      "category": "Assurance",
-      "label": "Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles",
-      "status": "research",
-      "blocking": true
-    }
+    {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},
+    {"id":"exact-flight","category":"Vols","label":"Trouver et comparer CDG/FRA↔DPS exact 05–24/11 pour deux","status":"research","blocking":true,"checkedAt":"2026-09-24","note":"CDG reste à 761 € A/R en minimum mensuel Turkish ; FRA est observé à 677 € sur 10–24/11. Aucun des deux n'est encore éligible au budget final 05–24/11."},
+    {"id":"final-base","category":"Itinéraire","label":"Arbitrer Sanur vs Nusa Lembongan pour les 7 dernières nuits","status":"research","blocking":true},
+    {"id":"ubud-lodging","category":"Hébergements","label":"Comparer 2–3 boutique-hôtels avec piscine à Ubud pour 4 nuits","status":"research","blocking":true},
+    {"id":"komodo-lodging","category":"Hébergements","label":"Comparer hôtel vue mer + croisière Komodo confortable pour 6 nuits","status":"research","blocking":true},
+    {"id":"beach-lodging","category":"Hébergements","label":"Comparer 2–3 resorts de fin de séjour une fois Sanur/Lembongan choisi","status":"research","blocking":true},
+    {"id":"domestic-flight","category":"Transport","label":"Chiffrer DPS↔Labuan Bajo et les transferts terrestres/maritimes associés","status":"research","blocking":true},
+    {"id":"komodo-provider","category":"Activités","label":"Présélectionner 2–3 opérateurs Komodo avec permis, programme et annulation comparables","status":"research","blocking":false},
+    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé, taxes et règles des parcs avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-24","note":"All Indonesia à renseigner dans les 72 h avant l'arrivée ; règles de visa, taxes et conditions des opérateurs Komodo à revalider avant réservation."},
+    {"id":"card-coverage","category":"Assurance","label":"Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles","status":"research","blocking":true}
   ]
 }
