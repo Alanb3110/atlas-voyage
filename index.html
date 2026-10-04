@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="./assets/css/shortlist-market.css">
   <link rel="stylesheet" href="./assets/css/shortlist-door-to-door.css">
   <link rel="stylesheet" href="./assets/css/theme.css">
+  <link rel="stylesheet" href="./assets/css/home-ux.css">
 </head>
 <body data-page="home">
   <header class="appbar">
@@ -27,7 +28,6 @@
       <span class="brand-mark">AV</span>
       <span><strong>Atlas Voyage</strong><small>Circuits personnels</small></span>
     </a>
-    <span class="privacy-chip" title="Cette version GitHub Pages est publiquement accessible">GitHub Pages · public</span>
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Changer de thème"><span aria-hidden="true">◐</span><span>Auto</span></button>
   </header>
 
@@ -36,11 +36,12 @@
       <div>
         <p class="eyebrow">Bibliothèque de voyages</p>
         <h1>Choisir, comparer, affiner.</h1>
-        <p class="lede">Les destinations progressent par niveau de maturité : longlist, shortlist, sélection, itinéraire détaillé, voyage réservable puis réservé. Le niveau affiché indique la profondeur réelle de recherche.</p>
+        <p class="lede">Les destinations actives sont affichées en premier et les présélections sont signalées explicitement. Comparez les candidates, puis ouvrez le dossier qui vous intéresse pour accéder au détail.</p>
       </div>
       <aside class="hero-note">
         <strong id="tripCount">—</strong>
-        <span>dossiers dans le catalogue</span>
+        <span>destinations actives</span>
+        <small>GitHub Pages · public</small>
       </aside>
     </section>
 
@@ -50,23 +51,36 @@
         <input id="searchInput" type="search" placeholder="Destination, saison, thème…" autocomplete="off">
       </label>
       <label class="selectbox">
-        <span>Maturité</span>
+        <span>Afficher</span>
         <select id="statusFilter">
-          <option value="all">Toutes</option>
+          <option value="active">Destinations actives</option>
+          <option value="shortlist">Présélectionnées</option>
+          <option value="detailed">Voyages détaillés</option>
           <option value="longlist">Longlist</option>
-          <option value="shortlist">Shortlist</option>
           <option value="selected">Sélectionné</option>
-          <option value="detailed">Itinéraire détaillé</option>
           <option value="bookable">Réservable</option>
           <option value="booked">Réservé</option>
-          <option value="archived">Archivé</option>
+          <option value="archived">Archives</option>
+          <option value="all">Toutes, archives incluses</option>
         </select>
       </label>
     </section>
 
+    <section id="catalogSection" class="catalog-section">
+      <div class="section-head">
+        <div><p class="eyebrow">Voyages</p><h2>Destinations disponibles</h2></div>
+        <div class="catalog-head-actions">
+          <p id="catalogUpdated" class="muted"></p>
+          <a id="compareDestinationsLink" class="button secondary" href="#destinationCompareSection">Comparer les destinations</a>
+        </div>
+      </div>
+      <div id="tripGrid" class="trip-grid" aria-live="polite"></div>
+      <div id="emptyState" class="empty" hidden>Aucun dossier ne correspond à ce filtre.</div>
+    </section>
+
     <section id="destinationCompareSection" class="destination-compare-section">
       <div class="section-head">
-        <div><p class="eyebrow">Décision</p><h2>Comparer les candidates</h2></div>
+        <div><p class="eyebrow">Décision</p><h2>Comparer les destinations</h2></div>
         <p class="muted">Le rang central est indicatif. Les critères éliminatoires passent avant le score ; lorsqu'une plage d'incertitude recouvre celle d'un rang voisin, l'ordre est marqué comme non robuste.</p>
       </div>
       <div id="destinationWeights" class="destination-weight-list" aria-label="Pondérations du comparateur destinations"></div>
@@ -79,37 +93,36 @@
       </div>
       <div id="destinationTop3" class="destination-top3"></div>
 
-      <div class="destination-all-head"><h3>Toutes les destinations correspondantes</h3><p class="muted">« Non robuste » signifie que les plages actuelles se recouvrent : l'ordre exact ne doit pas être interprété comme certain. Votre sélection personnelle reste locale à cet appareil ; le statut de maturité « shortlist » est versionné dans le catalogue.</p></div>
-      <div id="destinationCompareGrid" class="destination-compare-grid"></div>
+      <details id="destinationAllDetails" class="home-disclosure destination-all-details">
+        <summary>Voir le détail de toutes les destinations comparées</summary>
+        <div class="destination-all-head"><h3>Toutes les destinations correspondantes</h3><p class="muted">« Non robuste » signifie que les plages actuelles se recouvrent : l'ordre exact ne doit pas être interprété comme certain. Votre sélection personnelle reste locale à cet appareil ; le statut de maturité « shortlist » est versionné dans le catalogue.</p></div>
+        <div id="destinationCompareGrid" class="destination-compare-grid"></div>
+      </details>
       <p id="destinationCompareTrace" class="destination-compare-trace"></p>
     </section>
 
-    <section id="shortlistMarketSection" class="shortlist-market-section">
-      <div class="section-head">
-        <div><p class="eyebrow">Marché aérien</p><h2>Shortlist approfondie — signaux tarifaires</h2></div>
-        <p id="shortlistMarketIntro" class="muted"></p>
-      </div>
-      <div id="shortlistMarketGrid" class="market-grid"></div>
-      <p id="shortlistMarketTrace" class="market-trace"></p>
-    </section>
+    <details id="advancedAnalysis" class="home-disclosure advanced-analysis">
+      <summary>Analyses avancées — marché aérien et porte-à-porte</summary>
+      <div class="advanced-analysis-body">
+        <section id="shortlistMarketSection" class="shortlist-market-section">
+          <div class="section-head">
+            <div><p class="eyebrow">Marché aérien</p><h2>Shortlist approfondie — signaux tarifaires</h2></div>
+            <p id="shortlistMarketIntro" class="muted"></p>
+          </div>
+          <div id="shortlistMarketGrid" class="market-grid"></div>
+          <p id="shortlistMarketTrace" class="market-trace"></p>
+        </section>
 
-    <section id="doorToDoorSection" class="d2d-section">
-      <div class="section-head">
-        <div><p class="eyebrow">Porte-à-porte réel</p><h2>Couverture des scénarios shortlist</h2></div>
-        <p id="doorToDoorIntro" class="muted"></p>
+        <section id="doorToDoorSection" class="d2d-section">
+          <div class="section-head">
+            <div><p class="eyebrow">Porte-à-porte réel</p><h2>Couverture des scénarios shortlist</h2></div>
+            <p id="doorToDoorIntro" class="muted"></p>
+          </div>
+          <div id="doorToDoorGrid" class="d2d-grid"></div>
+          <p id="doorToDoorTrace" class="d2d-trace"></p>
+        </section>
       </div>
-      <div id="doorToDoorGrid" class="d2d-grid"></div>
-      <p id="doorToDoorTrace" class="d2d-trace"></p>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <div><p class="eyebrow">Dossiers</p><h2>Destinations et voyages</h2></div>
-        <p id="catalogUpdated" class="muted"></p>
-      </div>
-      <div id="tripGrid" class="trip-grid" aria-live="polite"></div>
-      <div id="emptyState" class="empty" hidden>Aucun dossier ne correspond à ce filtre.</div>
-    </section>
+    </details>
   </main>
 
   <footer class="site-footer">Atlas Voyage · données datées et sourcées · observation de faune jamais garantie</footer>
