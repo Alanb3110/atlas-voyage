@@ -491,6 +491,31 @@ function activateStep(index,{openAccordion=true,centerMap=true,openPopup=true,sc
   }
 }
 
+function markerCollisionOffsets(steps, minimumDistance = 54) {
+  const points = steps.map(step => map.latLngToLayerPoint(step.coords));
+  const offsets = [];
+  points.forEach((point, index) => {
+    const offset = {x:0,y:0};
+    for (let pass = 0; pass < 3; pass += 1) {
+      for (let previous = 0; previous < index; previous += 1) {
+        const other = points[previous];
+        const otherOffset = offsets[previous] || {x:0,y:0};
+        const dx = point.x + offset.x - other.x - otherOffset.x;
+        const dy = point.y + offset.y - other.y - otherOffset.y;
+        const distance = Math.hypot(dx, dy);
+        if (distance >= minimumDistance) continue;
+        const ux = distance > 0.5 ? dx / distance : (index % 2 ? 1 : -1);
+        const uy = distance > 0.5 ? dy / distance : -1;
+        const push = minimumDistance - distance + 2;
+        offset.x += ux * push;
+        offset.y += uy * push;
+      }
+    }
+    offsets.push(offset);
+  });
+  return offsets;
+}
+
 function renderMap() {
   if (activeTab !== 'circuit') {
     if (map) {
@@ -519,8 +544,11 @@ function renderMap() {
     const status = r.real===false ? 'schématique' : 'tracé documenté';
     if (r.label) line.bindPopup(`<strong>${escapeHtml(r.label)}</strong><br>${escapeHtml(meta.label)} · ${status}`);
   });
+  map.fitBounds(allCoords,{padding:[40,40]});
+  const markerOffsets = markerCollisionOffsets(steps);
   mapMarkers = steps.map((s,i)=>{
-    const marker = L.marker(s.coords,{icon:L.divIcon({className:'atlas-marker',html:`<div class="marker-pin"><span>${i+1}</span></div>`,iconSize:[34,34],iconAnchor:[17,32]})})
+    const offset = markerOffsets[i] || {x:0,y:0};
+    const marker = L.marker(s.coords,{icon:L.divIcon({className:'atlas-marker',html:`<div class="marker-pin"><span>${i+1}</span></div>`,iconSize:[44,44],iconAnchor:[22-offset.x,37-offset.y]})})
       .bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(s.nights)}<br>${escapeHtml(s.summary||'')}`);
     marker.on('add', () => {
       const markerElement = marker.getElement();
@@ -542,7 +570,6 @@ function renderMap() {
     marker.addTo(map);
     return marker;
   });
-  map.fitBounds(allCoords,{padding:[40,40]});
   document.querySelectorAll('.stop').forEach((node,i)=>node.onclick=()=>activateStep(i,{openAccordion:true,centerMap:true,openPopup:true,scrollAccordion:true}));
   const unique = [...new Map(routes.map(r=>[r.type,r])).values()];
   $('#mapLegend').innerHTML = unique.map(r=>{
