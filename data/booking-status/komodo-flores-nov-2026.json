@@ -1,13 +1,21 @@
 {
   "schemaVersion": 2,
   "tripId": "komodo-flores-nov-2026",
-  "checkedAt": "2026-09-24",
-  "status": "research",
-  "intro": "Le circuit Ubud → Labuan Bajo/Komodo → plage Bali reste en tête du comparateur. Les signaux aériens sont plus frais, mais aucun billet 05–24/11 exact n'est encore exposé et la base finale Sanur/Lembongan n'est pas figée.",
+  "checkedAt": "2026-10-04",
+  "status": "detailed",
+  "intro": "Le circuit 14/11–04/12 est désormais structuré. Les décisions restantes portent surtout sur les vols exacts, les chambres annulables et la validation finale des prestataires avant paiement.",
   "readiness": {
     "state": "blocked",
-    "blockerIds": ["destination-choice","exact-flight","final-base","ubud-lodging","komodo-lodging","beach-lodging","domestic-flight","formalities","card-coverage"],
-    "nextAction": "Rechercher CDG et FRA vers DPS sur 05–24/11 exact, puis arbitrer Sanur vs Lembongan avant de chiffrer les trois étapes Confort et le segment Bali↔Labuan Bajo."
+    "blockerIds": [
+      "exact-flight",
+      "domestic-flight",
+      "wae-booking",
+      "ubud-lodging",
+      "labuan-bajo-lodging",
+      "formalities",
+      "card-coverage"
+    ],
+    "nextAction": "Verrouiller le long-courrier autour de 14/11–04/12, puis confirmer Komodo 20–22/11, Wae Rebo 23–24/11 et les hébergements encore seulement présélectionnés."
   },
   "references": [
     "data/shortlist-market-scan.json",
@@ -16,15 +24,110 @@
     "data/trips/komodo-flores-nov-2026.json"
   ],
   "items": [
-    {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},
-    {"id":"exact-flight","category":"Vols","label":"Trouver et comparer CDG/FRA↔DPS exact 05–24/11 pour deux","status":"research","blocking":true,"checkedAt":"2026-09-24","note":"CDG reste à 761 € A/R en minimum mensuel Turkish ; FRA est observé à 677 € sur 10–24/11. Aucun des deux n'est encore éligible au budget final 05–24/11."},
-    {"id":"final-base","category":"Itinéraire","label":"Arbitrer Sanur vs Nusa Lembongan pour les 7 dernières nuits","status":"research","blocking":true},
-    {"id":"ubud-lodging","category":"Hébergements","label":"Comparer 2–3 boutique-hôtels avec piscine à Ubud pour 4 nuits","status":"research","blocking":true},
-    {"id":"komodo-lodging","category":"Hébergements","label":"Comparer hôtel vue mer + croisière Komodo confortable pour 6 nuits","status":"research","blocking":true},
-    {"id":"beach-lodging","category":"Hébergements","label":"Comparer 2–3 resorts de fin de séjour une fois Sanur/Lembongan choisi","status":"research","blocking":true},
-    {"id":"domestic-flight","category":"Transport","label":"Chiffrer DPS↔Labuan Bajo et les transferts terrestres/maritimes associés","status":"research","blocking":true},
-    {"id":"komodo-provider","category":"Activités","label":"Présélectionner 2–3 opérateurs Komodo avec permis, programme et annulation comparables","status":"research","blocking":false},
-    {"id":"formalities","category":"Formalités","label":"Revérifier entrée, santé, taxes et règles des parcs avant réservation","status":"recheck","blocking":true,"checkedAt":"2026-09-24","note":"All Indonesia à renseigner dans les 72 h avant l'arrivée ; règles de visa, taxes et conditions des opérateurs Komodo à revalider avant réservation."},
-    {"id":"card-coverage","category":"Assurance","label":"Vérifier les garanties de la carte Boursobank noire et les lacunes éventuelles","status":"research","blocking":true}
+    {
+      "id": "destination-choice",
+      "category": "Décision",
+      "label": "Bali + Komodo + Flores retenu comme circuit de travail",
+      "status": "verified",
+      "blocking": false,
+      "checkedAt": "2026-10-04",
+      "note": "Variante sans Wae Rebo disponible si fatigue/météo défavorable."
+    },
+    {
+      "id": "dates",
+      "category": "Décision",
+      "label": "Fenêtre de travail 14 novembre → 4 décembre 2026",
+      "status": "verified",
+      "blocking": false,
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "exact-flight",
+      "category": "Vols",
+      "label": "Comparer et réserver CDG↔DPS exact 14/11–04/12 pour deux",
+      "status": "research",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Enveloppe budget actuelle : 1 500 € pour deux."
+    },
+    {
+      "id": "domestic-flight",
+      "category": "Vols",
+      "label": "Réserver DPS↔Labuan Bajo avec bagages autour du 19 et 25/11",
+      "status": "research",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Enveloppe : 250 € pour deux."
+    },
+    {
+      "id": "komodo-booking",
+      "category": "Activités",
+      "label": "Kanha Loka Superior — départ 20–22 novembre",
+      "status": "verified",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Départ publié ; prix 6,0 M IDR/pax. Comparer l’upgrade Natha Ocean View avant paiement."
+    },
+    {
+      "id": "wae-booking",
+      "category": "Activités",
+      "label": "Wae Rebo 2J/1N — 23–24 novembre",
+      "status": "shortlisted",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Open trip 1,75 M IDR/pax publié pour 2 personnes."
+    },
+    {
+      "id": "ubud-lodging",
+      "category": "Hébergements",
+      "label": "Green Field Ubud — 4 nuits",
+      "status": "shortlisted",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Tarif exact 15–19/11 à vérifier sur une offre annulable."
+    },
+    {
+      "id": "labuan-bajo-lodging",
+      "category": "Hébergements",
+      "label": "Bayview Gardens / Seaesta — 3 nuits non consécutives",
+      "status": "shortlisted",
+      "blocking": true,
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "sidemen-lodging",
+      "category": "Hébergements",
+      "label": "Wapa di Ume Sidemen — 3 nuits",
+      "status": "verified",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Forfait 2 nuits publié ; chiffrage exact 3 nuits à obtenir."
+    },
+    {
+      "id": "jimbaran-lodging",
+      "category": "Hébergements",
+      "label": "Anja Jimbaran — 6 nuits",
+      "status": "verified",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Offre 5+ nuits publiée ; vérifier le prix 28/11–04/12."
+    },
+    {
+      "id": "formalities",
+      "category": "Formalités",
+      "label": "Revalider passeport, entrée, visa, Bali levy et parc Komodo",
+      "status": "recheck",
+      "blocking": true,
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "card-coverage",
+      "category": "Assurance",
+      "label": "Vérifier les garanties exactes de la carte BoursoBank noire",
+      "status": "research",
+      "blocking": true,
+      "checkedAt": "2026-10-04",
+      "note": "Contrôler particulièrement évacuation, activités mer/snorkeling, trek et conditions de paiement par carte."
+    }
   ]
 }
