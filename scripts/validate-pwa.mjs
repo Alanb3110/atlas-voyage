@@ -80,7 +80,7 @@ if (!sw.includes("const CACHE = 'atlas-v27-shell';")) fail('sw.js: version de ca
 if (!sw.includes('async function networkFirstShell(request)')) fail('sw.js: stratégie network-first du shell absente');
 if (!sw.includes('event.respondWith(networkFirstShell(request));')) fail('sw.js: assets shell non servis en network-first');
 if (sw.includes('event.respondWith(cacheFirst(request));')) fail('sw.js: cache-first persistant encore actif pour le shell');
-if (!sw.includes("keys.filter(key => key.startsWith('atlas-') && key !== CACHE)")) fail('sw.js: purge des anciens caches Atlas absente');
+if (!sw.includes(".filter(key => key.startsWith('atlas-') && key !== CACHE)")) fail('sw.js: purge des anciens caches Atlas absente');
 
 if (errors.length) {
   console.error(`\nErreurs PWA (${errors.length})`);
