@@ -193,9 +193,9 @@ test('Leaflet reste cadré et ouvre la bonne étape après changement de variant
   expect(mapState.count).toBe(5);
   expect(mapState.outside).toBe(0);
 
-  const markerBox = await page.locator('.leaflet-marker-icon').nth(1).boundingBox();
-  expect(markerBox).not.toBeNull();
-  await page.mouse.click(markerBox.x + markerBox.width / 2, markerBox.y + markerBox.height / 2);
+  const marker = page.locator('.leaflet-marker-icon').nth(1);
+  await expect(marker).toHaveAttribute('aria-label', /Ouvrir l’étape 2/);
+  await marker.locator('.marker-pin').click({ force: true });
   const target = page.locator('.step-accordion[data-step="1"]');
   await expect(target).toHaveAttribute('open', '');
   await page.waitForTimeout(650);
