@@ -193,7 +193,9 @@ test('Leaflet reste cadré et ouvre la bonne étape après changement de variant
   expect(mapState.count).toBe(5);
   expect(mapState.outside).toBe(0);
 
-  await page.locator('.leaflet-marker-icon .marker-pin').nth(1).click();
+  const markerBox = await page.locator('.leaflet-marker-icon').nth(1).boundingBox();
+  expect(markerBox).not.toBeNull();
+  await page.mouse.click(markerBox.x + markerBox.width / 2, markerBox.y + markerBox.height / 2);
   const target = page.locator('.step-accordion[data-step="1"]');
   await expect(target).toHaveAttribute('open', '');
   await page.waitForTimeout(650);
@@ -295,6 +297,20 @@ test('PWA: service worker actif, cache v27 et shell disponible hors ligne', asyn
   expect(pwa.script).toContain('/sw.js');
   expect(pwa.keys).toContain('atlas-v27-shell');
   expect(pwa.display).toBe('standalone');
+
+  const seededOldCache = await page.evaluate(async () => {
+    const cache = await caches.open('atlas-v26-shell');
+    await cache.put('./legacy-probe', new Response('legacy'));
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map(registration => registration.unregister()));
+    return (await caches.keys()).includes('atlas-v26-shell');
+  });
+  expect(seededOldCache).toBe(true);
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await expect.poll(() => page.evaluate(() => caches.keys())).not.toContain('atlas-v26-shell');
+  await expect.poll(() => page.evaluate(() => caches.keys())).toContain('atlas-v27-shell');
 
   await context.setOffline(true);
   const cachedShellWorks = await page.evaluate(() =>
