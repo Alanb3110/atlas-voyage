@@ -158,13 +158,14 @@ test('navigation clavier, focus, dialogue et accordéons — mobile', async ({ b
   await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('tripSelector');
   await page.keyboard.press('Escape');
   await expect(page.locator('#tripConfigDialog')).not.toHaveAttribute('open', '');
-  expect(await page.evaluate(() => document.activeElement?.id)).toBe('configBtn');
+  await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('configBtn');
 
   const circuitTab = page.locator('#tab-circuit');
   await circuitTab.focus();
+  await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('tab-circuit');
   await circuitTab.press('ArrowRight');
   await expect(page.locator('#tab-choice')).toHaveAttribute('aria-selected', 'true');
-  expect(await page.evaluate(() => document.activeElement?.id)).toBe('tab-choice');
+  await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('tab-choice');
   const outline = await page.locator('#tab-choice').evaluate(node => ({
     style: getComputedStyle(node).outlineStyle,
     width: Number.parseFloat(getComputedStyle(node).outlineWidth)
