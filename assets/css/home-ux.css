@@ -1,0 +1,72 @@
+/* Atlas Voyage — focused home/catalogue UX */
+body[data-page="home"] .appbar .theme-toggle{margin-left:auto;flex:0 0 auto}
+body[data-page="home"] .hero-note small{display:block;margin-top:9px;font-size:.68rem;opacity:.78}
+body[data-page="home"] .toolbar{margin-bottom:28px}
+.catalog-section{padding:16px 0 58px}
+.catalog-head-actions{display:flex;align-items:flex-end;justify-content:flex-end;gap:12px;flex-wrap:wrap;max-width:640px}
+.catalog-head-actions .muted{margin:0;text-align:right}
+.catalog-head-actions .button{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.home-disclosure{border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 8px 24px rgba(23,59,51,.04)}
+.home-disclosure>summary{display:flex;align-items:center;min-height:48px;padding:12px 16px;cursor:pointer;font-weight:900;color:var(--primary)}
+.home-disclosure>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.destination-all-details{margin-top:22px}
+.destination-all-details>.destination-all-head{padding:4px 16px 0;margin:0 0 12px}
+.destination-all-details>.destination-compare-grid{padding:0 16px 16px}
+.advanced-analysis{margin-top:38px;margin-bottom:12px}
+.advanced-analysis-body{padding:0 16px 20px}
+.advanced-analysis .shortlist-market-section,.advanced-analysis .d2d-section{margin-top:22px}
+body[data-page="home"] .trip-actions .button{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+body[data-page="home"] .toolbar input,
+body[data-page="home"] .toolbar select{min-height:44px}
+@media(max-width:900px){
+  .catalog-head-actions{justify-content:flex-start;align-items:flex-start;max-width:none}
+  .catalog-head-actions .muted{text-align:left}
+}
+@media(max-width:620px){
+  body[data-page="home"] .theme-toggle{width:44px;height:44px;flex:0 0 44px}
+  body[data-page="home"] .home-hero{padding-top:32px;padding-bottom:28px;gap:18px}
+  body[data-page="home"] .lede{font-size:1rem;line-height:1.55}
+  body[data-page="home"] .hero-note{padding:16px 18px}
+  body[data-page="home"] .toolbar{margin-bottom:22px}
+  .catalog-section{padding-top:6px}
+  .catalog-head-actions{width:100%;display:grid;gap:10px}
+  .catalog-head-actions .button{width:100%}
+  body[data-page="home"] .trip-card-body{padding:18px}
+  body[data-page="home"] .trip-actions{display:grid;grid-template-columns:1fr;gap:8px}
+  body[data-page="home"] .trip-actions .button{width:100%;text-align:center}
+  .home-disclosure>summary{min-height:52px;padding:12px 14px;line-height:1.35}
+  .destination-all-details>.destination-all-head{padding-left:14px;padding-right:14px}
+  .destination-all-details>.destination-compare-grid{padding-left:14px;padding-right:14px}
+  .advanced-analysis-body{padding-left:14px;padding-right:14px}
+  .destination-method,
+  .destination-result-meta span,
+  .destination-top-copy p,
+  .destination-top-meta span,
+  .destination-confidence,
+  .destination-gate-pill,
+  .destination-score-row,
+  .destination-all-head p,
+  .destination-compare-trace{font-size:.75rem}
+  .market-confidence,
+  .market-geometry span,
+  .market-geometry p,
+  .market-observation-main>div:first-child span,
+  .market-fare span,
+  .market-meta,
+  .market-observation p,
+  .market-pareto-status,
+  .market-pareto-row li,
+  .market-pareto-row small,
+  .market-missing,
+  .market-trace{font-size:.72rem}
+  .d2d-group-head>span,
+  .d2d-scenario-head>div span,
+  .d2d-status,
+  .d2d-scenario>p,
+  .d2d-direction span,
+  .d2d-direction small,
+  .d2d-cost>div span,
+  .d2d-cost small,
+  .d2d-missing,
+  .d2d-trace{font-size:.72rem}
+}
