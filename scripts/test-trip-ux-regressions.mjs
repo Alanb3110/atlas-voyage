@@ -108,6 +108,9 @@ check(bookingJs.includes("window.matchMedia('(max-width: 620px)').matches") &&
 check(css.includes('#mapSection .stops{display:none}') &&
       css.includes('#mapSection .map{height:300px;min-height:300px'),
   'densité mobile: doublon des étapes retiré au-dessus de la carte et carte compactée');
+check(js.includes('class="step-expanded-tags"') &&
+      css.includes('.step-expanded-tags{display:flex'),
+  'densité mobile: tags d’étape déplacés dans le détail plutôt que supprimés');
 
 function parseHex(hex) {
   const value = hex.replace('#', '');
