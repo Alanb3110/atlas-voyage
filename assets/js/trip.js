@@ -18,7 +18,10 @@ let tabsResizeObserver;
 let responsiveHeaderMedia;
 let configReturnFocus;
 const MOBILE_HEADER_QUERY = '(max-width: 899px)';
+const ACTIVITY_MOBILE_QUERY = '(max-width: 760px)';
 let activityState = new Set();
+let activityFilter = window.matchMedia(ACTIVITY_MOBILE_QUERY).matches ? 'selected' : 'all';
+const activityOpenState = new Set();
 
 function formatEURPrecise(value) {
   if (value == null || Number.isNaN(Number(value))) return '—';
@@ -508,50 +511,128 @@ function renderActivities() {
   }
   section.hidden = false;
   $('#activitiesIntro').textContent = trip.activitiesIntro || 'Active ou désactive les activités à la carte.';
+
+  const priorityLabel = {
+    must:'À faire',
+    recommended:'Recommandé',
+    splurge:'Upgrade intéressant',
+    nice:'Option plaisir',
+    skip:'À couper'
+  };
+  const priorityTradeoff = {
+    must:'Structure le circuit : ce choix est verrouillé ici et se modifie via la variante.',
+    recommended:'Bon rapport intérêt / coût ; à conserver sauf contrainte de temps ou de budget.',
+    splurge:'Gain de confort ou d’expérience contre un surcoût ; pertinent si la marge le permet.',
+    nice:'Plaisir secondaire, facile à retirer pour préserver la marge ou alléger le programme.',
+    skip:'Valeur ajoutée limitée au regard du coût ou du temps consommé.'
+  };
+  const sourceFor = activity => {
+    if (!activity.url) return '—';
+    const normalize = value => String(value || '').replace(/\/+$/,'');
+    const exact = (trip.sources || []).find(source => normalize(source.url) === normalize(activity.url));
+    if (exact?.label) return exact.label;
+    try { return new URL(activity.url, location.href).hostname.replace(/^www\./,''); }
+    catch { return 'Source externe'; }
+  };
+  const isIncludedByBudget = activity => (activity.includedBudgets || []).includes(budget.id);
+  const isSelected = activity => activity.locked || isIncludedByBudget(activity) || activityState.has(activity.id);
+  const matchesFilter = activity => {
+    if (activityFilter === 'selected') return isSelected(activity);
+    if (activityFilter === 'recommended') return ['must','recommended','splurge'].includes(activity.priority) || activity.defaultSelected;
+    return true;
+  };
+  const compactPrice = activity => {
+    if (isIncludedByBudget(activity)) return 'Inclus · 0 € / 2';
+    const value = activityPriceEUR(activity,budget);
+    if (value === 0) return 'Sans surcoût';
+    return `≈ ${formatEURPrecise(value)} / 2`;
+  };
+  const euroPrice = activity => {
+    if (isIncludedByBudget(activity)) return `Inclus dans ${budget.label} · surcoût 0 €`;
+    const value = activityPriceEUR(activity,budget);
+    return value === 0 ? 'Sans surcoût' : `${formatEURPrecise(value)} / 2`;
+  };
+
   const projected = projectedBudgetTotal(budget);
   const target = Number(trip.activityBudget?.targetEUR) || 0;
   const margin = target ? target - projected : null;
   const selectedCount = selectableActivities().filter(activity => activityState.has(activity.id)).length;
-  const marginLabel = margin == null ? '' : margin >= 0
-    ? `<span class="activity-margin ok">Marge cible : ${escapeHtml(formatEUR(margin))}</span>`
-    : `<span class="activity-margin over">Dépassement : ${escapeHtml(formatEUR(Math.abs(margin)))}</span>`;
-  $('#activityBudgetSummary').innerHTML = `<div><span>Budget projeté · ${escapeHtml(budget.label)}</span><strong>${escapeHtml(formatEUR(projected))}</strong></div><div><span>${selectedCount} option${selectedCount>1?'s':''} sélectionnée${selectedCount>1?'s':''}</span>${marginLabel}</div>${trip.activityBudget?.currencyNote?`<small>${escapeHtml(trip.activityBudget.currencyNote)}</small>`:''}`;
+  const marginTitle = margin == null ? 'Marge' : margin >= 0 ? 'Marge restante' : 'Dépassement';
+  const marginValue = margin == null ? '—' : formatEUR(Math.abs(margin));
 
-  const priorityLabel = {must:'Structurant',recommended:'Recommandé',splurge:'Upgrade intéressant',nice:'Option plaisir',skip:'À couper en premier'};
-  $('#activities').innerHTML = activities.map(activity => {
-    const includedByBudget = (activity.includedBudgets || []).includes(budget.id);
-    const selected = activity.locked || includedByBudget || activityState.has(activity.id);
+  $('#activityBudgetSummary').innerHTML = `
+    <div class="activity-budget-metric primary"><span>Budget projeté</span><strong>${escapeHtml(formatEUR(projected))}</strong><small>${escapeHtml(budget.label)}</small></div>
+    <div class="activity-budget-metric"><span>Objectif</span><strong>${target ? escapeHtml(formatEUR(target)) : '—'}</strong><small>pour 2 adultes</small></div>
+    <div class="activity-budget-metric"><span>${escapeHtml(marginTitle)}</span><strong class="${margin != null && margin < 0 ? 'over' : 'ok'}">${escapeHtml(marginValue)}</strong><small>${margin == null ? 'objectif non défini' : margin >= 0 ? 'sous l’objectif' : 'au-dessus de l’objectif'}</small></div>
+    <div class="activity-budget-metric"><span>Options sélectionnées</span><strong>${selectedCount}</strong><small>hors blocs structurels</small></div>
+    ${trip.activityBudget?.currencyNote ? `<small class="activity-budget-note">${escapeHtml(trip.activityBudget.currencyNote)}</small>` : ''}
+  `;
+
+  document.querySelectorAll('[data-activity-filter]').forEach(button => {
+    const active = button.dataset.activityFilter === activityFilter;
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    button.onclick = () => {
+      activityFilter = button.dataset.activityFilter;
+      renderActivities();
+    };
+  });
+
+  const visibleActivities = activities.filter(matchesFilter);
+  $('#activities').innerHTML = visibleActivities.length ? visibleActivities.map(activity => {
+    const includedByBudget = isIncludedByBudget(activity);
+    const selected = isSelected(activity);
     const disabled = activity.locked || includedByBudget;
+    const open = activityOpenState.has(activity.id);
+    const status = stayStatusLabel(activity.status);
     const image = activity.image ? `<img class="activity-image" loading="lazy" src="${safeUrl(activity.image)}" alt="">` : '';
-    const impact = activity.locked
-      ? 'Inclus dans le circuit'
+    const selectionLabel = activity.locked
+      ? `Activité structurelle verrouillée : ${activity.title || 'activité'}`
       : includedByBudget
-        ? 'Déjà inclus dans ce niveau de budget'
-        : activityPriceEUR(activity,budget) === 0
-          ? 'Sans surcoût'
-          : `${selected ? 'Inclus au budget projeté' : 'Ajouter'} · ${formatEURPrecise(activityPriceEUR(activity,budget))}`;
-    return `<article class="activity-card ${selected?'selected':''} ${activity.locked?'locked':''}">
-      ${image}
-      <div class="activity-copy">
-        <div class="activity-topline"><span>${escapeHtml(activity.date||'')}</span><span>${escapeHtml(activity.location||'')}</span></div>
-        <div class="activity-title-row">
-          <div><span class="activity-priority ${escapeHtml(activity.priority||'nice')}">${escapeHtml(priorityLabel[activity.priority]||activity.recommendation||'Option')}</span><h3>${escapeHtml(activity.title||'Activité')}</h3></div>
-          <label class="activity-toggle">
-            <input type="checkbox" data-activity-toggle="${escapeHtml(activity.id)}" ${selected?'checked':''} ${disabled?'disabled':''}>
-            <span>${activity.locked?'Circuit':includedByBudget?'Inclus':'Choisir'}</span>
-          </label>
+        ? `Activité incluse dans le budget ${budget.label} : ${activity.title || 'activité'}`
+        : `${selected ? 'Désélectionner' : 'Sélectionner'} ${activity.title || 'activité'}`;
+    const interest = activity.interest || activity.recommendation || priorityLabel[activity.priority] || 'À évaluer';
+    const tradeoff = activity.tradeoff || activity.compromise || priorityTradeoff[activity.priority] || 'À arbitrer selon le temps disponible et la marge budgétaire.';
+    const priceIDR = activity.priceIDR != null ? formatIDR(activity.priceIDR) : '—';
+    const verifiedAt = activity.checkedAt ? formatDateFR(activity.checkedAt) : 'à revérifier';
+    return `<details class="activity-card ${selected?'selected':''} ${activity.locked?'locked':''}" data-activity-card="${escapeHtml(activity.id)}" ${open?'open':''}>
+      <summary class="activity-summary">
+        <span class="activity-summary-main">
+          <span class="activity-title-line"><h3>${escapeHtml(activity.title||'Activité')}</h3><span class="activity-priority ${escapeHtml(activity.priority||'nice')}">${escapeHtml(priorityLabel[activity.priority]||'Option plaisir')}</span></span>
+          <span class="activity-compact-meta"><span>${escapeHtml([activity.date,activity.location].filter(Boolean).join(' · '))}</span><strong>${escapeHtml(compactPrice(activity))}</strong></span>
+        </span>
+        <label class="activity-toggle" title="${escapeHtml(selectionLabel)}">
+          <input type="checkbox" data-activity-toggle="${escapeHtml(activity.id)}" aria-label="${escapeHtml(selectionLabel)}" ${selected?'checked':''} ${disabled?'disabled':''}>
+          <span class="activity-toggle-ui" aria-hidden="true"></span>
+        </label>
+      </summary>
+      <div class="activity-expanded ${image?'has-image':''}">
+        ${image}
+        <div class="activity-expanded-copy">
+          <p class="activity-description">${escapeHtml(activity.description||'')}</p>
+          <dl class="activity-detail-grid">
+            <div><dt>Intérêt</dt><dd>${escapeHtml(interest)}</dd></div>
+            <div><dt>Compromis</dt><dd>${escapeHtml(tradeoff)}</dd></div>
+            <div><dt>Prix IDR</dt><dd>${escapeHtml(priceIDR)}</dd></div>
+            <div><dt>Prix EUR</dt><dd>${escapeHtml(euroPrice(activity))}</dd></div>
+            <div><dt>Statut</dt><dd><span class="budget-status ${status==='estimé'?'estimated':''}">${escapeHtml(status)}</span></dd></div>
+            <div><dt>Source</dt><dd>${escapeHtml(sourceFor(activity))}</dd></div>
+            <div><dt>Vérification</dt><dd>${escapeHtml(verifiedAt)}</dd></div>
+          </dl>
+          ${activity.url ? `<a class="activity-book-link" href="${safeUrl(activity.url)}" target="_blank" rel="noopener noreferrer">Source / réservation ↗</a>` : ''}
+          ${activity.note ? `<div class="activity-note"><strong>Note</strong><span>${escapeHtml(activity.note)}</span></div>` : ''}
         </div>
-        <p>${escapeHtml(activity.description||'')}</p>
-        <div class="activity-price"><strong>${escapeHtml(activity.priceLabel||formatEURPrecise(activityPriceEUR(activity,budget)))}</strong><span>${escapeHtml(impact)}</span></div>
-        <div class="activity-footer">
-          <span>${escapeHtml(activity.recommendation||'')}</span>
-          ${activity.url?`<a href="${safeUrl(activity.url)}" target="_blank" rel="noopener noreferrer">Source / réserver ↗</a>`:''}
-        </div>
-        ${activity.note?`<small class="activity-note">${escapeHtml(activity.note)}</small>`:''}
       </div>
-    </article>`;
-  }).join('');
+    </details>`;
+  }).join('') : '<p class="activity-empty">Aucune activité dans ce filtre. Utilise « Toutes » pour revoir l’ensemble des options.</p>';
 
+  document.querySelectorAll('.activity-toggle').forEach(label => {
+    label.addEventListener('click', event => event.stopPropagation());
+    label.addEventListener('keydown', event => event.stopPropagation());
+  });
+  document.querySelectorAll('[data-activity-card]').forEach(card => card.addEventListener('toggle', () => {
+    if (card.open) activityOpenState.add(card.dataset.activityCard);
+    else activityOpenState.delete(card.dataset.activityCard);
+  }));
   document.querySelectorAll('[data-activity-toggle]').forEach(input => input.addEventListener('change', () => {
     if (input.disabled) return;
     if (input.checked) activityState.add(input.dataset.activityToggle);

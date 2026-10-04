@@ -106,7 +106,14 @@
           <div><p class="eyebrow">À la carte</p><h2>Choisir les activités</h2></div>
           <p id="activitiesIntro" class="muted"></p>
         </div>
-        <div id="activityBudgetSummary" class="activity-budget-summary" aria-live="polite"></div>
+        <div id="activityConfiguratorBar" class="activity-configurator-bar">
+          <div class="activity-filters" role="group" aria-label="Filtrer les activités">
+            <button class="activity-filter" type="button" data-activity-filter="selected" aria-pressed="false">Sélectionnées</button>
+            <button class="activity-filter" type="button" data-activity-filter="recommended" aria-pressed="false">Recommandées</button>
+            <button class="activity-filter" type="button" data-activity-filter="all" aria-pressed="false">Toutes</button>
+          </div>
+          <div id="activityBudgetSummary" class="activity-budget-summary" aria-live="polite"></div>
+        </div>
         <div class="activity-actions">
           <button id="activitiesReset" class="button secondary" type="button">Sélection recommandée</button>
           <button id="activitiesClear" class="button secondary" type="button">Retirer les options</button>
