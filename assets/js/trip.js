@@ -871,9 +871,314 @@ function renderSources() {
   $('#sources').innerHTML = (trip.sources||[]).map(s=>`<div class="source-item"><span class="source-type">${escapeHtml(s.type||'source')}</span><br><a href="${safeUrl(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.label)}</a><div>${escapeHtml(s.note||'')}</div><div class="source-meta">consulté ${formatDateFR(s.checkedAt||t.lastChecked)}</div></div>`).join('');
 }
 
+
+const PRACTICAL_REVIEW_RE = /à\s+(?:re)?vérifier|à confirmer|à contrôler|à discuter|à rechercher|devra être refaite|reste(?:nt)? à revérifier/i;
+
+function practicalUnique(values, limit = 3) {
+  const seen = new Set();
+  return values
+    .map(value => String(value || '').trim())
+    .filter(value => {
+      if (!value) return false;
+      const key = value.toLocaleLowerCase('fr');
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, limit);
+}
+
+function practicalRows(nodes) {
+  return nodes.flatMap(node => [...node.querySelectorAll('.info-row')].map(row => {
+    const spans = row.querySelectorAll('span');
+    return {
+      label: spans[0]?.textContent?.trim() || '',
+      value: spans[1]?.textContent?.trim() || ''
+    };
+  }));
+}
+
+function practicalCards(selector, titlePattern) {
+  return [...document.querySelectorAll(selector)].filter(card => {
+    const title = card.querySelector('h3')?.textContent || '';
+    return titlePattern.test(title);
+  });
+}
+
+function practicalNeedsReview(nodes = [], extraText = '') {
+  return nodes.some(node => node.querySelector('.status-pill.check') || PRACTICAL_REVIEW_RE.test(node.textContent || ''))
+    || PRACTICAL_REVIEW_RE.test(extraText || '');
+}
+
+function practicalGroup(className, nodes) {
+  if (!nodes.length) return null;
+  const group = document.createElement('div');
+  group.className = className;
+  nodes.forEach(node => group.append(node.cloneNode(true)));
+  return group;
+}
+
+function practicalAccordion({id, title, critical, status, statusTone = 'info', intro = '', nodes = [], groupClass = '', emptyText = 'Aucune information détaillée dans ce dossier.'}) {
+  const details = document.createElement('details');
+  details.className = 'practical-accordion';
+  details.id = id;
+
+  const summary = document.createElement('summary');
+  summary.className = 'practical-summary';
+
+  const main = document.createElement('span');
+  main.className = 'practical-summary-main';
+
+  const titleNode = document.createElement('span');
+  titleNode.className = 'practical-summary-title';
+  titleNode.textContent = title;
+
+  const criticalNode = document.createElement('span');
+  criticalNode.className = 'practical-critical';
+  criticalNode.textContent = practicalUnique(critical?.length ? critical : ['Données à compléter']).join(' · ');
+
+  main.append(titleNode, criticalNode);
+  summary.append(main);
+
+  if (status) {
+    const statusNode = document.createElement('span');
+    statusNode.className = 'practical-status ' + statusTone;
+    statusNode.textContent = status;
+    summary.append(statusNode);
+  }
+
+  const body = document.createElement('div');
+  body.className = 'practical-body';
+
+  if (intro) {
+    const introNode = document.createElement('p');
+    introNode.className = 'muted practical-detail-intro';
+    introNode.textContent = intro;
+    body.append(introNode);
+  }
+
+  const group = practicalGroup(groupClass, nodes);
+  if (group) body.append(group);
+  else {
+    const empty = document.createElement('p');
+    empty.className = 'muted practical-empty';
+    empty.textContent = emptyText;
+    body.append(empty);
+  }
+
+  details.append(summary, body);
+  return details;
+}
+
+function enhancePracticalAccordions() {
+  const panel = $('#panel-practical');
+  if (!panel) return;
+
+  const sourceSections = [
+    $('#wildlifeSection'),
+    $('#weatherSection'),
+    $('#foodSection'),
+    $('#practicalSection'),
+    $('#rulesSection'),
+    $('#sourcesSection')
+  ].filter(Boolean);
+
+  let compactSection = $('#practicalAccordionSection');
+  if (!compactSection) {
+    compactSection = document.createElement('section');
+    compactSection.id = 'practicalAccordionSection';
+    compactSection.className = 'panel-section practical-accordion-section';
+    panel.prepend(compactSection);
+  }
+  sourceSections.forEach(section => { section.hidden = true; });
+
+  const allPracticalCards = [...document.querySelectorAll('#practicalCards .info-card')];
+  const healthCards = practicalCards('#practicalCards .info-card', /santé|health|moust|vaccin|hydrat|hygiène|consultation/i);
+  const insuranceCards = practicalCards('#practicalCards .info-card', /assurance|bourso|bank|carte/i);
+  const formalCards = practicalCards('#practicalCards .info-card', /formal|entrée|entry|passeport|visa|douane|immigration/i);
+  const directSecurityCards = practicalCards('#practicalCards .info-card', /sécur|transport|route|bateau|boat|conduite|scooter|maritime|vol intérieur/i);
+  const assigned = new Set([...healthCards, ...insuranceCards, ...formalCards, ...directSecurityCards]);
+  const securityCards = practicalUniqueNodes([...directSecurityCards, ...allPracticalCards.filter(card => !assigned.has(card))]);
+
+  const allRules = [...document.querySelectorAll('#rules .rule-card')];
+  const formalRulePattern = /formal|passeport|entrée|entry|visa|immigration|douane|tourist levy|taxe/i;
+  const formalRules = allRules.filter(card => formalRulePattern.test(card.querySelector('h3')?.textContent || ''));
+  const localRules = allRules.filter(card => !formalRules.includes(card));
+
+  const wildlifeCards = [...document.querySelectorAll('#wildlifeCards .info-card')];
+  const weatherCards = [...document.querySelectorAll('#weatherCards .info-card')];
+  const foodCards = [...document.querySelectorAll('#foodCards .info-card')];
+  const sourceItems = [...document.querySelectorAll('#sources .source-item')];
+
+  const wildlifeCritical = practicalRows(wildlifeCards)
+    .filter(row => !/interaction|priorité/i.test(row.label))
+    .map(row => row.label);
+
+  const weatherIntro = $('#weatherIntro')?.textContent?.trim() || '';
+  const weatherCritical = [];
+  if (/début de la saison humide/i.test(weatherIntro)) weatherCritical.push('Début de saison humide');
+  if (/partie maritime tôt/i.test(weatherIntro)) weatherCritical.push('Partie maritime placée tôt dans le séjour');
+  practicalRows(weatherCards)
+    .filter(row => /pluie|navigation|marge|vent|mer|saison|conséquence/i.test(row.label))
+    .forEach(row => weatherCritical.push(row.value || row.label));
+
+  const foodCritical = practicalRows(foodCards)
+    .filter(row => !/eau|glace|cru|hygiène/i.test(row.label))
+    .map(row => row.label);
+
+  const healthCritical = practicalRows(healthCards).map(row => row.label);
+
+  const securityRows = practicalRows(securityCards);
+  const securityLabels = securityRows.map(row => row.label);
+  const securityCritical = [];
+  if (securityLabels.some(label => /^route$/i.test(label)) && securityLabels.some(label => /bateau|boat/i.test(label))) {
+    securityCritical.push('Route et bateau = principaux risques opérationnels');
+  }
+  securityRows.forEach(row => {
+    if (!/^route$/i.test(row.label) && !/bateau|boat/i.test(row.label)) securityCritical.push(row.label);
+  });
+
+  const localRulesCritical = localRules.map(card => card.querySelector('h3')?.textContent || '');
+  const formalCritical = [
+    ...formalCards.map(card => card.querySelector('h3')?.textContent || ''),
+    ...formalRules.map(card => card.querySelector('h3')?.textContent || '')
+  ];
+  const insuranceCritical = practicalRows(insuranceCards).map(row => row.label);
+
+  const wildlifeNote = $('#wildlifeSection .section-head .muted')?.textContent?.trim() || '';
+  const foodIntro = $('#foodIntro')?.textContent?.trim() || '';
+  const practicalIntro = $('#practicalIntro')?.textContent?.trim() || '';
+  const rulesIntro = $('#rulesSection .section-head .muted')?.textContent?.trim() || '';
+  const traceability = $('#traceability')?.textContent?.trim() || '';
+  const researchDate = trip.traceability?.researchDate || trip.traceability?.lastChecked;
+  const sourceCritical = [
+    researchDate ? 'Recherche mise à jour le ' + formatDateFR(researchDate) : '',
+    sourceItems.length ? sourceItems.length + ' source' + (sourceItems.length > 1 ? 's' : '') : 'Sources à compléter'
+  ];
+
+  const healthReview = practicalNeedsReview(healthCards);
+  const securityReview = practicalNeedsReview(securityCards);
+  const localRulesReview = practicalNeedsReview(localRules);
+  const formalReview = practicalNeedsReview([...formalCards, ...formalRules], practicalIntro);
+  const insuranceReview = practicalNeedsReview(insuranceCards, practicalIntro);
+  const weatherReview = practicalNeedsReview(weatherCards, weatherIntro);
+
+  const head = document.createElement('div');
+  head.className = 'section-head practical-compact-head';
+  const headingWrap = document.createElement('div');
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'eyebrow';
+  eyebrow.textContent = 'Pratique';
+  const heading = document.createElement('h2');
+  heading.textContent = 'L’essentiel, puis le détail';
+  headingWrap.append(eyebrow, heading);
+  const overview = document.createElement('p');
+  overview.className = 'muted';
+  overview.textContent = practicalIntro || 'Ouvre seulement le sujet dont tu as besoin ; les points à revérifier restent signalés.';
+  head.append(headingWrap, overview);
+
+  const list = document.createElement('div');
+  list.className = 'practical-accordions';
+  list.append(
+    practicalAccordion({
+      id:'practical-wildlife',
+      title:'Faune',
+      critical:wildlifeCritical,
+      status:wildlifeCards.length ? 'Observation non garantie' : 'À compléter',
+      statusTone:wildlifeCards.length ? 'info' : 'review',
+      intro:wildlifeNote,
+      nodes:wildlifeCards,
+      groupClass:'info-grid practical-detail-grid'
+    }),
+    practicalAccordion({
+      id:'practical-weather',
+      title:'Météo',
+      critical:weatherCritical,
+      status:weatherCards.length ? (weatherReview ? 'À revérifier' : '') : 'À compléter',
+      statusTone:'review',
+      intro:weatherIntro,
+      nodes:weatherCards,
+      groupClass:'info-grid practical-detail-grid'
+    }),
+    practicalAccordion({
+      id:'practical-food',
+      title:'Cuisine',
+      critical:foodCritical,
+      status:foodCards.length ? '' : 'À compléter',
+      statusTone:'review',
+      intro:foodIntro,
+      nodes:foodCards,
+      groupClass:'info-grid practical-detail-grid'
+    }),
+    practicalAccordion({
+      id:'practical-health',
+      title:'Santé',
+      critical:healthCritical,
+      status:healthCards.length ? (healthReview ? 'À revérifier' : '') : 'À compléter',
+      statusTone:'review',
+      nodes:healthCards,
+      groupClass:'info-grid practical-detail-grid'
+    }),
+    practicalAccordion({
+      id:'practical-security',
+      title:'Sécurité',
+      critical:securityCritical,
+      status:securityCards.length ? (securityReview ? 'À revérifier' : '') : 'À compléter',
+      statusTone:'review',
+      nodes:securityCards,
+      groupClass:'info-grid practical-detail-grid'
+    }),
+    practicalAccordion({
+      id:'practical-local-rules',
+      title:'Règles locales',
+      critical:localRulesCritical,
+      status:localRules.length ? (localRulesReview ? 'À revérifier' : '') : 'À compléter',
+      statusTone:'review',
+      intro:rulesIntro,
+      nodes:localRules,
+      groupClass:'rules-grid practical-rules-grid'
+    }),
+    practicalAccordion({
+      id:'practical-formalities',
+      title:'Formalités',
+      critical:formalCritical,
+      status:(formalCards.length || formalRules.length) ? (formalReview ? 'À revérifier' : '') : 'À compléter',
+      statusTone:'review',
+      intro:practicalIntro,
+      nodes:[...formalCards, ...formalRules],
+      groupClass:'practical-mixed-grid'
+    }),
+    practicalAccordion({
+      id:'practical-insurance',
+      title:'Assurance BoursoBank',
+      critical:insuranceCritical,
+      status:insuranceCards.length ? (insuranceReview ? 'À revérifier' : '') : 'À compléter',
+      statusTone:'review',
+      nodes:insuranceCards,
+      groupClass:'info-grid practical-detail-grid'
+    }),
+    practicalAccordion({
+      id:'practical-sources',
+      title:'Sources',
+      critical:sourceCritical,
+      status:sourceItems.length ? sourceItems.length + ' source' + (sourceItems.length > 1 ? 's' : '') : 'À compléter',
+      statusTone:sourceItems.length ? 'info' : 'review',
+      intro:traceability,
+      nodes:sourceItems,
+      groupClass:'sources practical-sources'
+    })
+  );
+
+  compactSection.replaceChildren(head, list);
+}
+
+function practicalUniqueNodes(nodes) {
+  return nodes.filter((node, index) => nodes.indexOf(node) === index);
+}
+
 function render() {
   renderHero(); renderOverview(); renderVariantCompare(); renderMap(); renderSteps();
-  renderActivities(); renderNatureFoodWeather(); renderPractical(); renderBudgets(); renderDays(); renderSources();
+  renderActivities(); renderNatureFoodWeather(); renderPractical(); renderBudgets(); renderDays(); renderSources(); enhancePracticalAccordions();
   renderTabs();
 }
 
