@@ -455,3 +455,82 @@ html[data-theme="dark"] .practical-status.review{background:rgba(227,154,130,.13
   outline:3px solid var(--primary);
   outline-offset:2px;
 }
+
+
+/* Final mobile vertical-density pass */
+.days-disclosure,
+.budget-drivers-disclosure{
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--panel);
+  box-shadow:0 6px 18px rgba(23,59,51,.045);
+}
+.days-disclosure>summary,
+.budget-drivers-disclosure>summary{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-height:56px;
+  padding:11px 14px;
+  cursor:pointer;
+  user-select:none;
+}
+.days-disclosure>summary::-webkit-details-marker,
+.budget-drivers-disclosure>summary::-webkit-details-marker{display:none}
+.days-disclosure>summary>span:first-child,
+.budget-drivers-disclosure>summary>span:first-child{display:grid;gap:2px;min-width:0}
+.days-disclosure>summary strong,
+.budget-drivers-disclosure>summary strong{font-size:.9rem;color:var(--ink)}
+.days-disclosure>summary small,
+.budget-drivers-disclosure>summary small{font-size:.7rem;color:var(--muted)}
+.days-disclosure>summary>span:last-child,
+.budget-drivers-disclosure>summary>span:last-child{font-weight:900;color:var(--primary);transition:transform .16s ease}
+.days-disclosure[open]>summary>span:last-child,
+.budget-drivers-disclosure[open]>summary>span:last-child{transform:rotate(180deg)}
+.days-disclosure[open]>summary,
+.budget-drivers-disclosure[open]>summary{border-bottom:1px solid var(--line);background:#173b3305}
+.days-disclosure-body{display:grid;gap:8px;padding:8px}
+.budget-drivers-body{padding:12px 14px 14px}
+.budget-drivers-body>.muted{margin:0 0 10px;font-size:.76rem}
+
+@media(max-width:620px){
+  .trip-hero{min-height:270px;padding:18px}
+  .trip-tabs{margin-top:8px}
+  .trip-tabpanel>.panel-section,
+  .trip-tabpanel>.panel-section:first-child{padding-top:22px}
+  .trip-tabpanel .section-head{gap:6px;margin-bottom:10px}
+  .trip-tabpanel .section-head>.muted{font-size:.78rem;line-height:1.4}
+  #mapSection .stops{display:none}
+  #mapSection .map{height:300px;min-height:300px;border-radius:16px}
+  #stepsSection .section-head>.muted{display:none}
+  .steps-grid{gap:7px}
+  .step-summary{padding:10px 40px 10px 11px}
+  .step-summary-main{gap:4px}
+  .step-summary-title-line{gap:6px}
+  .step-number{width:24px;height:24px;flex-basis:24px}
+  .step-title{font-size:1rem}
+  .step-nights{font-size:.68rem}
+  .step-summary-text{font-size:.76rem;line-height:1.35}
+  .step-summary-tags{display:none}
+  .step-summary-meta{gap:4px 8px;font-size:.68rem}
+  .step-summary-meta strong{font-size:.72rem}
+  #daysSection .section-head{margin-bottom:8px}
+  .days-grid{gap:0}
+  .days-disclosure{border-radius:14px}
+  .days-disclosure-body{padding:7px}
+  .day-card{border-radius:12px;box-shadow:none}
+  .day-card summary{grid-template-columns:58px 1fr;gap:8px;padding:11px 12px;font-size:.79rem}
+  .day-body{padding:0 12px 12px;font-size:.78rem;line-height:1.5}
+  .budget-drivers-disclosure{margin-top:12px;border-radius:14px}
+  .budget-drivers-body .budget-driver-list{gap:7px}
+  .budget-drivers-body .budget-driver{padding:10px 11px}
+  .decision-context{margin-bottom:12px;padding:12px}
+  .decision-subtitle{margin-bottom:5px;font-size:.94rem}
+  .decision-meta{margin:8px 0 10px}
+  .practical-accordion-section{padding-top:20px}
+  .practical-compact-head>.muted{font-size:.76rem;line-height:1.4}
+  .practical-accordions{gap:7px}
+}
