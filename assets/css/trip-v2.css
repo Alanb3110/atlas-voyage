@@ -43,3 +43,49 @@
   .decision-context{padding:15px;border-radius:15px}
   .decision-context .summary-grid{grid-template-columns:1fr}
 }
+
+
+/* Compact responsive trip header + accessible configuration sheet */
+html{scroll-padding-top:var(--trip-scroll-offset,150px)}
+.trip-appbar{align-items:center;flex-wrap:nowrap}
+.desktop-switcher-slot{flex:1;min-width:0}
+.desktop-switcher-slot .global-switchers{width:100%}
+.trip-appbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.desktop-theme-slot{display:flex}
+.config-button{display:none}
+
+.trip-config-dialog{position:fixed;inset:auto 0 0;width:min(100%,560px);max-width:none;max-height:none;margin:0 auto;border:0;padding:0;background:transparent;color:var(--ink);overflow:visible}
+.trip-config-dialog::backdrop{background:rgba(7,25,21,.48);backdrop-filter:blur(3px)}
+.trip-config-sheet{max-height:min(86dvh,640px);overflow:auto;padding:18px max(18px,env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;background:var(--panel);box-shadow:0 -18px 50px rgba(7,25,21,.22)}
+.trip-config-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+.trip-config-head h2{margin:0;font-size:1.45rem}
+.trip-config-head .eyebrow{margin-bottom:4px}
+.trip-config-close{min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--ink);font-weight:850;cursor:pointer}
+.mobile-switcher-slot .global-switchers{display:grid;grid-template-columns:1fr;gap:12px;width:100%;padding:0;overflow:visible}
+.mobile-switcher-slot .global-switchers label{display:grid;gap:6px;min-width:0}
+.mobile-switcher-slot .global-switchers select{min-height:48px;padding:11px 12px}
+.trip-config-theme{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.trip-config-theme .theme-toggle{width:100%;min-height:44px;justify-content:center}
+.trip-config-theme .theme-toggle span:last-child{display:inline}
+.trip-config-done{width:100%;min-height:48px;margin-top:12px}
+
+@media(max-width:899px){
+  .trip-appbar{min-height:56px;gap:6px;padding:max(6px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) 6px max(8px,env(safe-area-inset-left))}
+  .trip-appbar .brand{flex:1 1 auto;min-width:0;gap:7px}
+  .trip-appbar .brand-mark{width:32px;height:32px;border-radius:10px;font-size:.76rem;flex:0 0 32px}
+  .trip-appbar .brand strong{font-size:.82rem;line-height:1.1;white-space:nowrap}
+  .trip-appbar .brand small{display:none}
+  .desktop-switcher-slot,.desktop-theme-slot{display:none}
+  .config-button{display:inline-flex;align-items:center;justify-content:center}
+  .trip-appbar-actions{gap:6px}
+  .trip-appbar-actions .icon-button{min-height:42px;padding:0 9px;border-radius:11px;font-size:.78rem}
+  .trip-tabs{margin-top:10px}
+}
+@media(max-width:340px){
+  .trip-appbar{gap:5px;padding-left:max(6px,env(safe-area-inset-left));padding-right:max(6px,env(safe-area-inset-right))}
+  .trip-appbar .brand{gap:5px}
+  .trip-appbar .brand-mark{width:30px;height:30px;flex-basis:30px}
+  .trip-appbar .brand strong{font-size:.78rem}
+  .trip-appbar-actions{gap:4px}
+  .trip-appbar-actions .icon-button{padding:0 7px;font-size:.74rem}
+}

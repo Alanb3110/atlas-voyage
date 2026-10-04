@@ -12,6 +12,10 @@ const TAB_IDS = ['circuit','choice','budget','practical'];
 let activeTab = TAB_IDS.includes(p.get('tab')) ? p.get('tab') : 'circuit';
 let map;
 let appbarResizeObserver;
+let tabsResizeObserver;
+let responsiveHeaderMedia;
+let configReturnFocus;
+const MOBILE_HEADER_QUERY = '(max-width: 899px)';
 let activityState = new Set();
 
 function formatEURPrecise(value) {
@@ -123,8 +127,87 @@ function renderHero() {
 
 function syncStickyOffset() {
   const appbar = $('.trip-appbar');
+  const tabs = $('#tripTabs');
   if (!appbar) return;
-  document.documentElement.style.setProperty('--trip-appbar-height', `${Math.ceil(appbar.getBoundingClientRect().height)}px`);
+  const appbarHeight = Math.ceil(appbar.getBoundingClientRect().height);
+  const tabsHeight = tabs ? Math.ceil(tabs.getBoundingClientRect().height) : 0;
+  document.documentElement.style.setProperty('--trip-appbar-height', `${appbarHeight}px`);
+  document.documentElement.style.setProperty('--trip-tabs-height', `${tabsHeight}px`);
+  document.documentElement.style.setProperty('--trip-scroll-offset', `${appbarHeight + tabsHeight + 12}px`);
+}
+
+function closeConfigDialog({restoreFocus=true}={}) {
+  const dialog = $('#tripConfigDialog');
+  if (!dialog?.open) return;
+  dialog.dataset.restoreFocus = restoreFocus ? 'true' : 'false';
+  dialog.close();
+}
+
+function syncResponsiveHeader() {
+  const dialog = $('#tripConfigDialog');
+  const switchers = $('#tripSwitchers');
+  const themeToggle = $('[data-theme-toggle]');
+  const mobile = responsiveHeaderMedia?.matches ?? false;
+
+  if (!mobile && dialog?.open) closeConfigDialog({restoreFocus:false});
+
+  const switcherTarget = mobile ? $('#mobileSwitcherSlot') : $('#desktopSwitcherSlot');
+  const themeTarget = mobile ? $('#mobileThemeSlot') : $('#desktopThemeSlot');
+  if (switchers && switcherTarget && switchers.parentElement !== switcherTarget) switcherTarget.appendChild(switchers);
+  if (themeToggle && themeTarget && themeToggle.parentElement !== themeTarget) themeTarget.appendChild(themeToggle);
+
+  if (!mobile) $('#configBtn')?.setAttribute('aria-expanded','false');
+  requestAnimationFrame(syncStickyOffset);
+}
+
+function openConfigDialog() {
+  const dialog = $('#tripConfigDialog');
+  const trigger = $('#configBtn');
+  if (!dialog || !trigger || dialog.open) return;
+  configReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : trigger;
+  trigger.setAttribute('aria-expanded','true');
+  dialog.showModal();
+  requestAnimationFrame(() => $('#tripSelector')?.focus({preventScroll:true}));
+}
+
+function initResponsiveHeader() {
+  const dialog = $('#tripConfigDialog');
+  const trigger = $('#configBtn');
+  const closeButton = $('#configCloseBtn');
+  const doneButton = $('#configDoneBtn');
+  if (!dialog || !trigger) return;
+
+  responsiveHeaderMedia = window.matchMedia(MOBILE_HEADER_QUERY);
+  if (responsiveHeaderMedia.addEventListener) responsiveHeaderMedia.addEventListener('change', syncResponsiveHeader);
+  else responsiveHeaderMedia.addListener?.(syncResponsiveHeader);
+
+  trigger.addEventListener('click', openConfigDialog);
+  closeButton?.addEventListener('click', () => closeConfigDialog());
+  doneButton?.addEventListener('click', () => closeConfigDialog());
+
+  dialog.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeConfigDialog();
+  });
+  dialog.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    closeConfigDialog();
+  });
+  dialog.addEventListener('click', event => {
+    if (event.target === dialog) closeConfigDialog();
+  });
+  dialog.addEventListener('close', () => {
+    trigger.setAttribute('aria-expanded','false');
+    const shouldRestore = dialog.dataset.restoreFocus !== 'false' && responsiveHeaderMedia.matches;
+    dialog.dataset.restoreFocus = 'true';
+    if (shouldRestore) {
+      const target = configReturnFocus?.isConnected ? configReturnFocus : trigger;
+      target?.focus?.({preventScroll:true});
+    }
+  });
+
+  syncResponsiveHeader();
 }
 
 function fitMapToCurrentRoute() {
@@ -179,11 +262,15 @@ function renderTabs() {
 
 function initStickyOffset() {
   const appbar = $('.trip-appbar');
+  const tabs = $('#tripTabs');
   if (!appbar) return;
   if ('ResizeObserver' in window) {
     appbarResizeObserver?.disconnect();
+    tabsResizeObserver?.disconnect();
     appbarResizeObserver = new ResizeObserver(syncStickyOffset);
+    tabsResizeObserver = new ResizeObserver(syncStickyOffset);
     appbarResizeObserver.observe(appbar);
+    if (tabs) tabsResizeObserver.observe(tabs);
   }
   window.addEventListener('resize', syncStickyOffset,{passive:true});
   syncStickyOffset();
@@ -454,6 +541,7 @@ $('#shareBtn').onclick = async () => {
 
 initActivityState();
 populateSelectors();
+initResponsiveHeader();
 initStickyOffset();
 canonicalizeUrl();
 render();
