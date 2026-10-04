@@ -133,9 +133,11 @@
 
     <div id="panel-budget" class="trip-tabpanel" role="tabpanel" aria-labelledby="tab-budget" data-tab-panel="budget" tabindex="0" hidden>
       <section id="budgetSection" class="panel-section">
-        <div class="section-head"><div><p class="eyebrow">Budget</p><h2>Trois niveaux de prestation</h2></div><p id="budgetIntro" class="muted"></p></div>
-        <div id="budgetCards" class="budget-grid"></div>
+        <div class="section-head"><div><p class="eyebrow">Budget</p><h2 id="budgetTitle">Est-ce qu’on reste sous les 5 000 € pour deux ?</h2></div><p id="budgetIntro" class="muted"></p></div>
+        <div id="budgetSummary" class="budget-overview" aria-live="polite"></div>
+        <div id="budgetCards" class="budget-grid budget-grid-compact"></div>
         <div id="budgetBreakdown" class="budget-breakdown"></div>
+        <div id="budgetDrivers" class="budget-drivers"></div>
       </section>
 
       <section id="bookingSection" class="panel-section">
