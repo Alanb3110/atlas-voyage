@@ -210,7 +210,14 @@
 .decision-context .summary-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .decision-context .summary-card{box-shadow:none}
 @media(max-width:900px){
-  .trip-hero{min-height:390px}
+  .trip-hero{min-height:390px;grid-template-columns:minmax(0,1fr)}
+  .trip-hero-copy,.hero-panel{min-width:0;width:100%}
+  .trip-hero-copy h1{overflow-wrap:normal;word-break:normal}
+  #heroTags{max-width:100%}
+  #heroTags .chip{white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.35}
+  .hero-panel .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero-panel .kpi{min-width:0}
+  .hero-panel .kpi strong{overflow-wrap:normal;word-break:normal}
   .decision-context .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:620px){
