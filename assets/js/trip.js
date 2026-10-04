@@ -526,6 +526,7 @@ function renderMap() {
       const markerElement = marker.getElement();
       if (!markerElement) return;
       markerElement.setAttribute('aria-label', `Ouvrir l’étape ${i+1} : ${s.name}`);
+      markerElement.dataset.step = String(i);
       markerElement.onclick = event => {
         event.preventDefault();
         event.stopPropagation();
