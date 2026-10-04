@@ -1,4 +1,4 @@
-const CACHE = 'atlas-v26-shell';
+const CACHE = 'atlas-v27-shell';
 
 const SHELL = [
   './index.html',
@@ -61,15 +61,19 @@ self.addEventListener('activate', event => {
   ]));
 });
 
-async function cacheFirst(request) {
-  const cached = await caches.match(request, { ignoreSearch: true });
-  if (cached) return cached;
-  const response = await fetch(request);
-  if (response.ok && response.type === 'basic') {
-    const cache = await caches.open(CACHE);
-    await cache.put(request, response.clone());
+async function networkFirstShell(request) {
+  try {
+    const response = await fetch(request, { cache: 'no-cache' });
+    if (response.ok && response.type === 'basic') {
+      const cache = await caches.open(CACHE);
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cached = await caches.match(request, { ignoreSearch: true });
+    if (cached) return cached;
+    throw error;
   }
-  return response;
 }
 
 async function networkFirstPublicData(request) {
@@ -117,7 +121,7 @@ self.addEventListener('fetch', event => {
   const normalizedUrl = new URL(request.url);
   normalizedUrl.search = '';
   if (shellUrls.has(normalizedUrl.href)) {
-    event.respondWith(cacheFirst(request));
+    event.respondWith(networkFirstShell(request));
     return;
   }
 
