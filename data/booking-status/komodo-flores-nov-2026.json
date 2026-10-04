@@ -5,25 +5,23 @@
   "status": "detailed",
   "intro": "Le circuit 14/11–04/12 est désormais structuré. Les décisions restantes portent surtout sur les vols exacts, les chambres annulables et la validation finale des prestataires avant paiement.",
   "readiness": {
-    "state": "decision_ready",
+    "state": "blocked",
     "blockerIds": [
       "exact-flight",
+      "domestic-flight",
+      "wae-booking",
       "ubud-lodging",
       "labuan-bajo-lodging",
-      "sidemen-lodging",
-      "jimbaran-lodging",
-      "domestic-flight",
-      "komodo-booking",
-      "wae-booking",
       "formalities",
       "card-coverage"
     ],
-    "nextAction": "Verrouiller d’abord le long-courrier autour de 14/11–04/12, puis réserver le départ Komodo 20–22/11 et les hôtels annulables."
+    "nextAction": "Verrouiller le long-courrier autour de 14/11–04/12, puis confirmer Komodo 20–22/11, Wae Rebo 23–24/11 et les hébergements encore seulement présélectionnés."
   },
   "references": [
-    "data/trips/komodo-flores-nov-2026.json",
-    "https://komodoboat.com/schedule-availability/",
-    "https://kapalwisatalabuanbajo.com/tour/open-trip-wae-rebo/"
+    "data/shortlist-market-scan.json",
+    "data/shortlist-gateway-geometry.json",
+    "data/shortlist-door-to-door.json",
+    "data/trips/komodo-flores-nov-2026.json"
   ],
   "items": [
     {
