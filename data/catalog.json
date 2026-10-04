@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-09-24",
+  "updatedAt": "2026-10-04",
   "lifecycle": [
     "longlist",
     "shortlist",
@@ -31,19 +31,20 @@
     },
     {
       "id": "komodo-flores-nov-2026",
-      "title": "Komodo + Flores + Bali",
-      "subtitle": "Dragons, mantas, culture et fin plage.",
+      "title": "Bali + Komodo + Flores",
+      "subtitle": "14 nov.–4 déc. 2026 · Komodo 3J/2N, Wae Rebo et longue fin plage.",
       "coverImage": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1600&q=80",
-      "status": "shortlist",
+      "status": "detailed",
       "researchDepth": "high",
       "tags": [
         "Dragons",
         "Mantas",
-        "Culture",
+        "Wae Rebo",
+        "Rizières",
         "Plage"
       ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
+      "variantCount": 2,
+      "defaultVariant": "flores",
       "defaultBudget": "comfort",
       "dataFile": "data/trips/komodo-flores-nov-2026.json"
     },
