@@ -193,9 +193,17 @@ test('Leaflet reste cadré et ouvre la bonne étape après changement de variant
   expect(mapState.count).toBe(5);
   expect(mapState.outside).toBe(0);
 
-  const marker = page.locator('.leaflet-marker-icon').nth(1);
+  await page.locator('#map').evaluate(node => node.scrollIntoView({ block: 'center' }));
+  await page.waitForTimeout(180);
+  const marker = page.locator('.leaflet-marker-icon[data-step="1"]');
   await expect(marker).toHaveAttribute('aria-label', /Ouvrir l’étape 2/);
-  await marker.locator('.marker-pin').click({ force: true });
+  const markerBox = await marker.locator('.marker-pin').boundingBox();
+  expect(markerBox).not.toBeNull();
+  const point = { x: markerBox.x + markerBox.width / 2, y: markerBox.y + markerBox.height / 2 };
+  const hitStep = await page.evaluate(({ x, y }) =>
+    document.elementFromPoint(x, y)?.closest('.leaflet-marker-icon')?.dataset.step || null, point);
+  expect(hitStep).toBe('1');
+  await page.mouse.click(point.x, point.y);
   const target = page.locator('.step-accordion[data-step="1"]');
   await expect(target).toHaveAttribute('open', '');
   await page.waitForTimeout(650);
