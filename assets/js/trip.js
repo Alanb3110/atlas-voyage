@@ -931,8 +931,9 @@ function renderBudgets() {
 function renderDays() {
   $('#daysIntro').textContent = variant.daysIntro || '';
   const days = variant.days || [];
-  const cards = days.map(d=>`<details class="day-card"><summary><span>${escapeHtml(d.day)}</span><span>${escapeHtml(d.title)}</span></summary><div class="day-body">${escapeHtml(d.detail||'')}</div></details>`).join('');
-  if (window.matchMedia(MOBILE_DENSITY_QUERY).matches) {
+  const compactMobile = window.matchMedia(MOBILE_DENSITY_QUERY).matches;
+  const cards = days.map((d,i)=>`<details class="day-card" ${!compactMobile && i===0?'open':''}><summary><span>${escapeHtml(d.day)}</span><span>${escapeHtml(d.title)}</span></summary><div class="day-body">${escapeHtml(d.detail||'')}</div></details>`).join('');
+  if (compactMobile) {
     $('#days').innerHTML = `<details class="days-disclosure"><summary><span><strong>Programme jour par jour</strong><small>${days.length} journées · détails repliés</small></span><span aria-hidden="true">⌄</span></summary><div class="days-disclosure-body">${cards}</div></details>`;
   } else {
     $('#days').innerHTML = cards;
