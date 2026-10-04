@@ -11,6 +11,8 @@ let budget = trip.budgets.find(b => b.id === p.get('budget')) || trip.budgets.fi
 const TAB_IDS = ['circuit','choice','budget','practical'];
 let activeTab = TAB_IDS.includes(p.get('tab')) ? p.get('tab') : 'circuit';
 let map;
+let mapMarkers = [];
+let activeStepIndex = 0;
 let appbarResizeObserver;
 let tabsResizeObserver;
 let responsiveHeaderMedia;
@@ -109,7 +111,7 @@ function populateSelectors() {
     next.searchParams.set('tab', activeTab);
     location.href = `./trip.html?${next.searchParams.toString()}`;
   };
-  $('#variantSelector').onchange = e => { variant = trip.variants.find(v=>v.id===e.target.value); canonicalizeUrl(); render(); };
+  $('#variantSelector').onchange = e => { variant = trip.variants.find(v=>v.id===e.target.value); activeStepIndex = 0; canonicalizeUrl(); render(); };
   $('#budgetSelector').onchange = e => { budget = trip.budgets.find(b=>b.id===e.target.value); canonicalizeUrl(); render(); };
 }
 
@@ -233,11 +235,11 @@ function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
   if (syncUrl) canonicalizeUrl();
   if (focus) selectedTab?.focus();
   if (activeTab === 'circuit') {
-    setTimeout(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       if (!map) return;
-      map.invalidateSize();
-      fitMapToCurrentRoute();
-    }, 0);
+      map.invalidateSize({pan:false});
+      syncActiveStepVisuals();
+    }));
   }
 }
 
@@ -316,6 +318,7 @@ function renderVariantCompare() {
     const next = trip.variants.find(v=>v.id===btn.dataset.variant);
     if (!next || next.id===variant.id) return;
     variant = next;
+    activeStepIndex = 0;
     $('#variantSelector').value = variant.id;
     canonicalizeUrl();
     render();
@@ -326,13 +329,79 @@ function lodgingFor(step) {
   return step.lodging?.[budget.id] || step.lodging?.[trip.defaultBudget] || 'À sélectionner';
 }
 
+function stayStatusLabel(value='') {
+  const normalized = String(value).trim().toLowerCase();
+  if (['observed','observe','observé'].includes(normalized)) return 'observé';
+  if (['estimated','estimate','estimé'].includes(normalized)) return 'estimé';
+  if (/recheck|revérifier|reverifier|check|verify|vérifier|verifier/.test(normalized)) return 'à revérifier';
+  return value || 'à revérifier';
+}
+
+function selectedLodgingPrice(step) {
+  const selected = lodgingFor(step);
+  const match = String(selected).match(/(?:≈\s*)?([0-9][0-9\s.,]*)\s*€/i);
+  if (match) {
+    const pair = /€\s*\/\s*2\b/i.test(selected) ? ' / 2' : '';
+    return `≈ ${match[1].trim()} €${pair}`;
+  }
+  if (step.recommendedStay?.priceEUR != null) return `≈ ${formatEURPrecise(step.recommendedStay.priceEUR)}`;
+  return 'Tarif à confirmer';
+}
+
+function stepIsHighlight(step) {
+  if (step.highlight || step.featured) return true;
+  if ((step.tags || []).some(tag => /^temps fort$/i.test(String(tag).trim()))) return true;
+  return /temps fort|cœur .{0,24}voyage|coeur .{0,24}voyage/i.test(`${step.summary || ''} ${step.signature || ''}`);
+}
+
+function syncActiveStepVisuals() {
+  document.querySelectorAll('[data-stop]').forEach(node => {
+    const active = Number(node.dataset.stop) === activeStepIndex;
+    node.classList.toggle('active', active);
+    if (active) node.setAttribute('aria-current','step');
+    else node.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('.step-accordion[data-step]').forEach(node => {
+    node.classList.toggle('active', Number(node.dataset.step) === activeStepIndex);
+  });
+  mapMarkers.forEach((marker,index) => marker.getElement()?.classList.toggle('active', index === activeStepIndex));
+}
+
+function activateStep(index,{openAccordion=true,centerMap=true,openPopup=true,scrollAccordion=false}={}) {
+  const steps = variant.steps || [];
+  if (!Number.isInteger(index) || index < 0 || index >= steps.length) return;
+  activeStepIndex = index;
+
+  const target = document.querySelector(`.step-accordion[data-step="${index}"]`);
+  if (openAccordion && target) {
+    document.querySelectorAll('.step-accordion[open]').forEach(node => {
+      if (node !== target) node.open = false;
+    });
+    target.open = true;
+  }
+
+  syncActiveStepVisuals();
+
+  const coords = steps[index]?.coords;
+  if (centerMap && map && Array.isArray(coords)) {
+    map.flyTo(coords, Math.max(map.getZoom(), 9), {duration:.45});
+    if (openPopup) mapMarkers[index]?.openPopup();
+  }
+
+  if (scrollAccordion && target) {
+    requestAnimationFrame(() => target.scrollIntoView({behavior:'smooth',block:'start'}));
+  }
+}
+
 function renderMap() {
   const steps = variant.steps || [];
   const routes = variant.routes || [];
+  activeStepIndex = Math.min(Math.max(activeStepIndex,0),Math.max(steps.length-1,0));
   $('#mapNote').textContent = variant.mapNote || (routes.some(r=>r.real===false) ? 'Les liaisons pointillées sont schématiques et ne représentent pas un itinéraire routier ou maritime exact.' : 'Tracés issus des données du voyage.');
-  $('#stops').innerHTML = steps.map((s,i)=>`<article class="stop" data-stop="${i}"><div class="stop-num">${i+1}</div><div><h3>${escapeHtml(s.name)}</h3><small>${escapeHtml(s.nights)}</small><p>${escapeHtml(s.summary)}</p></div></article>`).join('');
+  $('#stops').innerHTML = steps.map((s,i)=>`<button class="stop ${i===activeStepIndex?'active':''}" type="button" data-stop="${i}" ${i===activeStepIndex?'aria-current="step"':''}><span class="stop-num">${i+1}</span><span class="stop-copy"><span class="stop-title">${escapeHtml(s.name)}</span><small>${escapeHtml(s.nights)}</small></span></button>`).join('');
   if (!window.L || !steps.length) return;
   if (map) map.remove();
+  mapMarkers = [];
   map = L.map('map',{scrollWheelZoom:false});
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
   const allCoords = [...steps.map(s=>s.coords)];
@@ -344,20 +413,24 @@ function renderMap() {
     const status = r.real===false ? 'schématique' : 'tracé documenté';
     if (r.label) line.bindPopup(`<strong>${escapeHtml(r.label)}</strong><br>${escapeHtml(meta.label)} · ${status}`);
   });
-  const markers = steps.map((s,i)=>L.marker(s.coords,{icon:L.divIcon({className:'atlas-marker',html:`<div class="marker-pin"><span>${i+1}</span></div>`,iconSize:[34,34],iconAnchor:[17,32]})}).addTo(map).bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(s.nights)}<br>${escapeHtml(s.summary||'')}`));
-  map.fitBounds(allCoords,{padding:[40,40]});
-  document.querySelectorAll('.stop').forEach((node,i)=>node.onclick=()=>{
-    document.querySelectorAll('.stop').forEach(x=>x.classList.remove('active'));
-    node.classList.add('active');
-    map.flyTo(steps[i].coords,9);
-    markers[i].openPopup();
+  mapMarkers = steps.map((s,i)=>{
+    const marker = L.marker(s.coords,{icon:L.divIcon({className:'atlas-marker',html:`<div class="marker-pin"><span>${i+1}</span></div>`,iconSize:[34,34],iconAnchor:[17,32]})})
+      .addTo(map)
+      .bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(s.nights)}<br>${escapeHtml(s.summary||'')}`);
+    marker.on('click', () => activateStep(i,{openAccordion:true,centerMap:true,openPopup:false,scrollAccordion:true}));
+    return marker;
   });
+  map.fitBounds(allCoords,{padding:[40,40]});
+  document.querySelectorAll('.stop').forEach((node,i)=>node.onclick=()=>activateStep(i,{openAccordion:true,centerMap:true,openPopup:true,scrollAccordion:true}));
   const unique = [...new Map(routes.map(r=>[r.type,r])).values()];
   $('#mapLegend').innerHTML = unique.map(r=>{
     const meta=ROUTE_STYLES[r.type]||{label:r.type||'Liaison'};
     return `<span class="legend-item"><span class="legend-line ${escapeHtml(r.type||'')} ${r.real===false?'schematic':''}"></span>${escapeHtml(meta.label)}${r.real===false?' · schématique':''}</span>`;
   }).join('');
-  setTimeout(()=>map.invalidateSize(),100);
+  setTimeout(()=>{
+    map.invalidateSize();
+    syncActiveStepVisuals();
+  },100);
 }
 
 function detailBlock(label,value) {
@@ -366,21 +439,55 @@ function detailBlock(label,value) {
 }
 
 function renderSteps() {
-  $('#steps').innerHTML = (variant.steps||[]).map(s=>{
-    const image = s.image ? `<img class="step-image" loading="lazy" src="${safeUrl(s.image)}" alt="${escapeHtml(s.name)}">` : '';
+  const steps = variant.steps || [];
+  activeStepIndex = Math.min(Math.max(activeStepIndex,0),Math.max(steps.length-1,0));
+  $('#steps').innerHTML = steps.map((s,i)=>{
+    const image = s.image ? `<img class="step-image" loading="lazy" src="${safeUrl(s.image)}" alt="">` : '';
     const details = [
-      ['Faune',s.wildlife],['Plage / eau',s.beach],['Culture',s.culture],['Gastronomie',s.food],
+      ['Transfert',s.transfer],['Faune',s.wildlife],['Plage / eau',s.beach],['Culture',s.culture],['Gastronomie',s.food],
       ['Activité',s.activity],['Fréquentation',s.crowding],['Météo',s.weather],['Sécurité',s.safety]
     ].map(([a,b])=>detailBlock(a,b)).join('');
     const stay = s.recommendedStay;
+    const stayStatus = stayStatusLabel(stay?.status);
     const stayBlock = stay ? `<div class="stay-choice">
-      <div><span class="stay-kicker">Option de travail</span><strong>${escapeHtml(stay.name||'Hébergement')}</strong></div>
-      <div class="stay-meta">${stay.priceIDR ? `<span>${escapeHtml(formatIDR(stay.priceIDR))}</span>` : ''}${stay.priceEUR != null ? `<span>≈ ${escapeHtml(formatEURPrecise(stay.priceEUR))}</span>` : ''}<span class="budget-status ${/estim/i.test(stay.status||'')?'estimated':''}">${escapeHtml(stay.status||'à vérifier')}</span></div>
+      <div class="stay-choice-head"><div><span class="stay-kicker">Option de travail</span><strong>${escapeHtml(stay.name||'Hébergement')}</strong></div><span class="budget-status ${stayStatus==='estimé'?'estimated':''}">${escapeHtml(stayStatus)}</span></div>
+      <div class="stay-meta">${stay.priceIDR ? `<span>${escapeHtml(formatIDR(stay.priceIDR))}</span>` : ''}${stay.priceEUR != null ? `<span>≈ ${escapeHtml(formatEURPrecise(stay.priceEUR))}</span>` : ''}${stay.checkedAt ? `<span>Vérifié ${escapeHtml(formatDateFR(stay.checkedAt))}</span>` : ''}</div>
       ${stay.note?`<p>${escapeHtml(stay.note)}</p>`:''}
-      ${stay.url?`<a class="text-link" href="${safeUrl(stay.url)}" target="_blank" rel="noopener noreferrer">Voir le site / l’offre ↗</a>`:''}
+      ${stay.url?`<a class="text-link" href="${safeUrl(stay.url)}" target="_blank" rel="noopener noreferrer">Voir le prestataire / l’offre ↗</a>`:''}
     </div>` : '';
-    return `<article class="step-card ${image?'has-image':''}">${image}<div class="step-copy"><h3>${escapeHtml(s.name)}</h3><p><strong>${escapeHtml(s.nights)}</strong> — ${escapeHtml(s.summary)}</p><p><strong>Transfert :</strong> ${escapeHtml(s.transfer||'—')}<br><strong>Fatigue :</strong> ${escapeHtml(s.fatigue||'—')}</p>${details?`<div class="step-details">${details}</div>`:''}${s.signature?`<div class="signature"><strong>Expérience signature :</strong> ${escapeHtml(s.signature)}</div>`:''}<div class="selected-lodging"><strong>${escapeHtml(budget.label)} :</strong><br>${escapeHtml(lodgingFor(s))}</div>${stayBlock}<div class="chips">${(s.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div></div></article>`;
+    const tags = (s.tags||[]).slice(0,4);
+    const highlight = stepIsHighlight(s);
+    return `<details class="step-card step-accordion ${i===activeStepIndex?'active':''}" data-step="${i}" ${i===activeStepIndex?'open':''}>
+      <summary class="step-summary">
+        <span class="step-summary-main">
+          <span class="step-summary-title-line"><span class="step-number">${i+1}</span><span class="step-title-wrap"><span class="step-title">${escapeHtml(s.name)}</span><span class="step-nights">${escapeHtml(s.nights)}</span></span>${highlight?'<span class="step-highlight">Temps fort</span>':''}</span>
+          <span class="step-summary-text">${escapeHtml(s.summary||'')}</span>
+          ${tags.length?`<span class="step-summary-tags">${tags.map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</span>`:''}
+          <span class="step-summary-meta"><span>Fatigue <strong>${escapeHtml(s.fatigue||'—')}</strong></span><span>Hébergement <strong>${escapeHtml(selectedLodgingPrice(s))}</strong></span></span>
+        </span>
+      </summary>
+      <div class="step-expanded">
+        ${image}
+        <div class="step-expanded-copy">
+          ${details?`<div class="step-details">${details}</div>`:''}
+          ${s.signature?`<div class="signature"><strong>Expérience signature :</strong> ${escapeHtml(s.signature)}</div>`:''}
+          <div class="selected-lodging"><span class="stay-kicker">Hébergement · ${escapeHtml(budget.label)}</span><strong>${escapeHtml(lodgingFor(s))}</strong></div>
+          ${stayBlock}
+        </div>
+      </div>
+    </details>`;
   }).join('');
+
+  document.querySelectorAll('.step-accordion').forEach((node,i)=>{
+    node.addEventListener('toggle',()=>{
+      if (!node.open) return;
+      document.querySelectorAll('.step-accordion[open]').forEach(other=>{
+        if (other !== node) other.open = false;
+      });
+      activateStep(i,{openAccordion:false,centerMap:true,openPopup:true,scrollAccordion:false});
+    });
+  });
+  syncActiveStepVisuals();
 }
 
 function normalizeItem(item) {
