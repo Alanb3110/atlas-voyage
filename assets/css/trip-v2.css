@@ -515,6 +515,8 @@ html[data-theme="dark"] .practical-status.review{background:rgba(227,154,130,.13
   .step-nights{font-size:.68rem}
   .step-summary-text{font-size:.76rem;line-height:1.35}
   .step-summary-tags{display:none}
+  .step-expanded-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+  .step-expanded-tags .chip{padding:4px 7px;font-size:.68rem}
   .step-summary-meta{gap:4px 8px;font-size:.68rem}
   .step-summary-meta strong{font-size:.72rem}
   #daysSection .section-head{margin-bottom:8px}
