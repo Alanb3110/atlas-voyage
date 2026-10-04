@@ -898,7 +898,12 @@
       "image": "https://images.unsplash.com/photo-1544550285-f813152fb2fd?auto=format&fit=crop&w=1000&q=80",
       "url": "https://komodoboat.com/schedule-availability/",
       "checkedAt": "2026-10-04",
-      "note": "Surcoût calculé entre Loka Superior (6,0 M IDR/pax) et Natha Private Ocean View (7,2 M IDR/pax)."
+      "note": "Impact budgétaire selon niveau : ≈ +268 € depuis la cabine partagée Essentiel, ≈ +119 € depuis Loka Superior Confort, déjà inclus dans le budget Premium.",
+      "priceByBudgetEUR": {
+        "essential": 268.1,
+        "comfort": 119.15,
+        "premium": 0
+      }
     },
     {
       "id": "sidemen-trek",
