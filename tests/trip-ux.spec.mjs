@@ -126,7 +126,7 @@ test('navigation clavier, focus, dialogue et accordéons — mobile', async ({ b
 
   await page.locator('#configBtn').click();
   await expect(page.locator('#tripConfigDialog')).toHaveAttribute('open', '');
-  expect(await page.evaluate(() => document.activeElement?.id)).toBe('tripSelector');
+  await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('tripSelector');
   await page.keyboard.press('Escape');
   await expect(page.locator('#tripConfigDialog')).not.toHaveAttribute('open', '');
   expect(await page.evaluate(() => document.activeElement?.id)).toBe('configBtn');
