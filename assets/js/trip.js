@@ -5,9 +5,7 @@ const $ = s => document.querySelector(s);
 const p = params();
 const catalog = await loadCatalog();
 const requestedEntry = catalog.trips.find(t => t.id === p.get('trip'));
-if (requestedEntry && !tripDetailAvailable(requestedEntry)) {
-  location.replace('./index.html#destinationCompareSection');
-}
+const redirectToCatalog = Boolean(requestedEntry && !tripDetailAvailable(requestedEntry));
 let entry = tripDetailAvailable(requestedEntry) ? requestedEntry : catalog.trips.find(tripDetailAvailable);
 if (!entry) throw new Error('Aucun dossier détaillé disponible dans le catalogue.');
 let trip = await loadTrip(entry.dataFile);
@@ -1272,10 +1270,14 @@ $('#shareBtn').onclick = async () => {
   }
 };
 
-initActivityState();
-populateSelectors();
-initResponsiveHeader();
-initStickyOffset();
-canonicalizeUrl();
-render();
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if (redirectToCatalog) {
+  location.replace('./index.html#destinationCompareSection');
+} else {
+  initActivityState();
+  populateSelectors();
+  initResponsiveHeader();
+  initStickyOffset();
+  canonicalizeUrl();
+  render();
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
