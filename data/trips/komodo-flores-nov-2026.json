@@ -903,7 +903,10 @@
         "essential": 268.1,
         "comfort": 119.15,
         "premium": 0
-      }
+      },
+      "includedBudgets": [
+        "premium"
+      ]
     },
     {
       "id": "sidemen-trek",
