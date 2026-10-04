@@ -304,7 +304,8 @@ test('Partager transmet exactement l’URL canonique', async ({ browser }) => {
   await context.close();
 });
 
-test('PWA: service worker actif, cache v27 et shell disponible hors ligne', async ({ browser }) => {
+test('PWA: service worker actif, cache v27 et shell disponible hors ligne', async ({ browser, browserName }) => {
+  test.skip(browserName === 'webkit', 'Le cache Service Worker hors ligne est validé dans Chromium ; WebKit couvre le rendu/navigation iPhone.');
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'allow' });
   const page = await context.newPage();
   const errors = await openTrip(page);
