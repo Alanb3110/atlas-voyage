@@ -19,6 +19,7 @@ let responsiveHeaderMedia;
 let configReturnFocus;
 const MOBILE_HEADER_QUERY = '(max-width: 899px)';
 const ACTIVITY_MOBILE_QUERY = '(max-width: 760px)';
+const MOBILE_DENSITY_QUERY = '(max-width: 620px)';
 let activityState = new Set();
 let activityFilter = window.matchMedia(ACTIVITY_MOBILE_QUERY).matches ? 'selected' : 'all';
 const activityOpenState = new Set();
@@ -589,6 +590,7 @@ function detailBlock(label,value) {
 
 function renderSteps() {
   const steps = variant.steps || [];
+  const compactMobile = window.matchMedia(MOBILE_DENSITY_QUERY).matches;
   activeStepIndex = Math.min(Math.max(activeStepIndex,0),Math.max(steps.length-1,0));
   $('#steps').innerHTML = steps.map((s,i)=>{
     const image = s.image ? `<img class="step-image" loading="lazy" src="${safeUrl(s.image)}" alt="">` : '';
@@ -606,7 +608,7 @@ function renderSteps() {
     </div>` : '';
     const tags = (s.tags||[]).slice(0,4);
     const highlight = stepIsHighlight(s);
-    return `<details class="step-card step-accordion ${i===activeStepIndex?'active':''}" data-step="${i}" ${i===activeStepIndex?'open':''}>
+    return `<details class="step-card step-accordion ${i===activeStepIndex?'active':''}" data-step="${i}" ${!compactMobile && i===activeStepIndex?'open':''}>
       <summary class="step-summary">
         <span class="step-summary-main">
           <span class="step-summary-title-line"><span class="step-number">${i+1}</span><span class="step-title-wrap"><span class="step-title">${escapeHtml(s.name)}</span><span class="step-nights">${escapeHtml(s.nights)}</span></span>${highlight?'<span class="step-highlight">Temps fort</span>':''}</span>
@@ -904,18 +906,36 @@ function renderBudgets() {
     </details>`;
 
   const drivers = budgetDrivers(5);
-  $('#budgetDrivers').innerHTML = `
-    <div class="budget-drivers-head">
-      <div><p class="eyebrow">Sensibilité</p><h3>Ce qui fait varier le budget</h3></div>
-      <p class="muted">Calculé automatiquement à partir des écarts entre les trois niveaux et des activités sélectionnées.</p>
-    </div>
-    ${drivers.length
-      ? `<div class="budget-driver-list">${drivers.map(driver=>`<article class="budget-driver"><span>${escapeHtml(driver.kind)}</span><strong>${escapeHtml(driver.label)}</strong><small>${escapeHtml(driver.detail)}</small></article>`).join('')}</div>`
-      : '<p class="muted budget-driver-empty">Pas assez de détail poste par poste pour calculer les principaux écarts.</p>'}`;
+  const driverList = drivers.length
+    ? `<div class="budget-driver-list">${drivers.map(driver=>`<article class="budget-driver"><span>${escapeHtml(driver.kind)}</span><strong>${escapeHtml(driver.label)}</strong><small>${escapeHtml(driver.detail)}</small></article>`).join('')}</div>`
+    : '<p class="muted budget-driver-empty">Pas assez de détail poste par poste pour calculer les principaux écarts.</p>';
+  if (window.matchMedia(MOBILE_DENSITY_QUERY).matches) {
+    $('#budgetDrivers').innerHTML = `
+      <details class="budget-drivers-disclosure">
+        <summary><span><strong>Ce qui fait varier le budget</strong><small>${drivers.length} poste${drivers.length>1?'s':''} principal${drivers.length>1?'aux':' '}</small></span><span aria-hidden="true">⌄</span></summary>
+        <div class="budget-drivers-body">
+          <p class="muted">Calculé automatiquement à partir des écarts entre les trois niveaux et des activités sélectionnées.</p>
+          ${driverList}
+        </div>
+      </details>`;
+  } else {
+    $('#budgetDrivers').innerHTML = `
+      <div class="budget-drivers-head">
+        <div><p class="eyebrow">Sensibilité</p><h3>Ce qui fait varier le budget</h3></div>
+        <p class="muted">Calculé automatiquement à partir des écarts entre les trois niveaux et des activités sélectionnées.</p>
+      </div>
+      ${driverList}`;
+  }
 }
 function renderDays() {
   $('#daysIntro').textContent = variant.daysIntro || '';
-  $('#days').innerHTML = (variant.days||[]).map((d,i)=>`<details class="day-card" ${i===0?'open':''}><summary><span>${escapeHtml(d.day)}</span><span>${escapeHtml(d.title)}</span></summary><div class="day-body">${escapeHtml(d.detail||'')}</div></details>`).join('');
+  const days = variant.days || [];
+  const cards = days.map(d=>`<details class="day-card"><summary><span>${escapeHtml(d.day)}</span><span>${escapeHtml(d.title)}</span></summary><div class="day-body">${escapeHtml(d.detail||'')}</div></details>`).join('');
+  if (window.matchMedia(MOBILE_DENSITY_QUERY).matches) {
+    $('#days').innerHTML = `<details class="days-disclosure"><summary><span><strong>Programme jour par jour</strong><small>${days.length} journées · détails repliés</small></span><span aria-hidden="true">⌄</span></summary><div class="days-disclosure-body">${cards}</div></details>`;
+  } else {
+    $('#days').innerHTML = cards;
+  }
 }
 
 function renderSources() {
