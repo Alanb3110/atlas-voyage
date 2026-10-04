@@ -76,6 +76,11 @@ const sw = await readFile(resolve(root, 'sw.js'), 'utf8');
 for (const iconPath of ['./assets/icons/icon-192.png', './assets/icons/icon-512.png']) {
   if (!sw.includes(`'${iconPath}'`)) fail(`sw.js: ${iconPath} absent du shell PWA`);
 }
+if (!sw.includes("const CACHE = 'atlas-v27-shell';")) fail('sw.js: version de cache atlas-v27-shell attendue');
+if (!sw.includes('async function networkFirstShell(request)')) fail('sw.js: stratégie network-first du shell absente');
+if (!sw.includes('event.respondWith(networkFirstShell(request));')) fail('sw.js: assets shell non servis en network-first');
+if (sw.includes('event.respondWith(cacheFirst(request));')) fail('sw.js: cache-first persistant encore actif pour le shell');
+if (!sw.includes("keys.filter(key => key.startsWith('atlas-') && key !== CACHE)")) fail('sw.js: purge des anciens caches Atlas absente');
 
 if (errors.length) {
   console.error(`\nErreurs PWA (${errors.length})`);
@@ -83,4 +88,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log('\nValidation PWA OK: identité manifest, icônes PNG, touch icons, Leaflet SRI et shell cache cohérents.');
+console.log('\nValidation PWA OK: identité manifest, icônes PNG, touch icons, Leaflet SRI, cache v27 et shell network-first cohérents.');
