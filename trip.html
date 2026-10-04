@@ -79,6 +79,19 @@
       <div id="steps" class="steps-grid"></div>
     </section>
 
+    <section id="activitiesSection" class="panel-section" hidden>
+      <div class="section-head">
+        <div><p class="eyebrow">À la carte</p><h2>Choisir les activités</h2></div>
+        <p id="activitiesIntro" class="muted"></p>
+      </div>
+      <div id="activityBudgetSummary" class="activity-budget-summary" aria-live="polite"></div>
+      <div class="activity-actions">
+        <button id="activitiesReset" class="button secondary" type="button">Sélection recommandée</button>
+        <button id="activitiesClear" class="button secondary" type="button">Retirer les options</button>
+      </div>
+      <div id="activities" class="activity-grid"></div>
+    </section>
+
     <section id="wildlifeSection" class="panel-section">
       <div class="section-head"><div><p class="eyebrow">Nature</p><h2>Faune et milieux</h2></div><p class="muted">Les probabilités d’observation sont indicatives : aucune observation d’animal sauvage n’est garantie.</p></div>
       <div id="wildlifeCards" class="info-grid"></div>
