@@ -27,14 +27,33 @@
     <a class="brand compact" href="./index.html" aria-label="Retour aux voyages">
       <span class="brand-mark">AV</span><span><strong>Atlas Voyage</strong><small>Mes voyages</small></span>
     </a>
-    <nav class="global-switchers" aria-label="Navigation voyage">
-      <label><span>Voyage</span><select id="tripSelector"></select></label>
-      <label><span>Option</span><select id="variantSelector"></select></label>
-      <label><span>Budget</span><select id="budgetSelector"></select></label>
-    </nav>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Changer de thème"><span aria-hidden="true">◐</span><span>Auto</span></button>
-    <button id="shareBtn" class="icon-button" type="button">Partager</button>
+    <div id="desktopSwitcherSlot" class="desktop-switcher-slot">
+      <nav id="tripSwitchers" class="global-switchers" aria-label="Navigation voyage">
+        <label><span>Voyage</span><select id="tripSelector" aria-label="Voyage"></select></label>
+        <label><span>Variante</span><select id="variantSelector" aria-label="Variante"></select></label>
+        <label><span>Budget</span><select id="budgetSelector" aria-label="Budget"></select></label>
+      </nav>
+    </div>
+    <div class="trip-appbar-actions">
+      <div id="desktopThemeSlot" class="desktop-theme-slot">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Changer de thème"><span aria-hidden="true">◐</span><span>Auto</span></button>
+      </div>
+      <button id="configBtn" class="icon-button config-button" type="button" aria-expanded="false" aria-controls="tripConfigDialog">Configurer</button>
+      <button id="shareBtn" class="icon-button" type="button">Partager</button>
+    </div>
   </header>
+
+  <dialog id="tripConfigDialog" class="trip-config-dialog" aria-labelledby="tripConfigTitle">
+    <div class="trip-config-sheet">
+      <div class="trip-config-head">
+        <div><p class="eyebrow">Voyage</p><h2 id="tripConfigTitle">Configurer</h2></div>
+        <button id="configCloseBtn" class="trip-config-close" type="button" aria-label="Fermer la configuration">Fermer</button>
+      </div>
+      <div id="mobileSwitcherSlot" class="mobile-switcher-slot"></div>
+      <div id="mobileThemeSlot" class="trip-config-theme"></div>
+      <button id="configDoneBtn" class="button trip-config-done" type="button">Terminé</button>
+    </div>
+  </dialog>
 
   <main class="shell trip-shell">
     <section id="hero" class="trip-hero" aria-labelledby="tripTitle">
