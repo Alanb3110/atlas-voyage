@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const TRIP = '/trip.html?trip=komodo-flores-nov-2026';
+const TRIP = 'http://127.0.0.1:4173/trip.html?trip=komodo-flores-nov-2026';
 
 async function openTrip(page, suffix = '') {
   const errors = [];
