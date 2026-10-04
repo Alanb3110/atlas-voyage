@@ -68,7 +68,7 @@ check(occurrences(css, '.activity-actions .button{') >= 2 && !/\.activity-action
 check(css.includes('.activity-toggle{position:relative;width:44px;height:44px') &&
       css.includes('  .activity-toggle{width:44px;height:44px}'),
   'tactile: interrupteurs activités 44 × 44 px');
-check(occurrences(css, '.trip-tab{min-height:44px') >= 2,
+check((css.match(/\\.trip-tab\\{[^}]*min-height:44px/g) || []).length >= 2,
   'tactile: onglets ≥44 px');
 check(css.includes('.trip-appbar-actions .icon-button{min-height:44px'),
   'tactile: Configurer/Partager ≥44 px');
