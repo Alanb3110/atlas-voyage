@@ -32,7 +32,6 @@ async function init() {
   const data = await response.json();
   if (data.tripId !== tripId) throw new Error('tripId incohérent');
   render(data);
-  ensureNavLink();
 }
 
 function render(data) {
@@ -85,21 +84,4 @@ function renderItem(item, isBlocker = false) {
       ${item.checkedAt ? `<small>${formatDateFR(item.checkedAt)}</small>` : ''}
     </div>
   </div>`;
-}
-
-function ensureNavLink() {
-  const nav = document.querySelector('#sectionNav');
-  if (!nav || nav.querySelector('[data-section="bookingSection"]')) return;
-  const link = document.createElement('a');
-  link.href = '#bookingSection';
-  link.dataset.section = 'bookingSection';
-  link.textContent = 'Préparation';
-  const after = nav.querySelector('[data-section="budgetSection"]');
-  if (after) after.insertAdjacentElement('afterend', link); else nav.appendChild(link);
-
-  const observer = new IntersectionObserver(entries => {
-    if (!entries.some(e => e.isIntersecting)) return;
-    nav.querySelectorAll('a').forEach(a => a.classList.toggle('active', a === link));
-  }, { rootMargin: '-28% 0px -62% 0px', threshold: [0, .15, .35] });
-  observer.observe(section);
 }

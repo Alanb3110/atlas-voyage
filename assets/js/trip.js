@@ -8,8 +8,10 @@ if (!entry) throw new Error('Aucun voyage dans le catalogue.');
 let trip = await loadTrip(entry.dataFile);
 let variant = trip.variants.find(v => v.id === p.get('variant')) || trip.variants.find(v => v.id === trip.defaultVariant) || trip.variants[0];
 let budget = trip.budgets.find(b => b.id === p.get('budget')) || trip.budgets.find(b => b.id === trip.defaultBudget) || trip.budgets[0];
+const TAB_IDS = ['circuit','choice','budget','practical'];
+let activeTab = TAB_IDS.includes(p.get('tab')) ? p.get('tab') : 'circuit';
 let map;
-let navObserver;
+let appbarResizeObserver;
 let activityState = new Set();
 
 function formatEURPrecise(value) {
@@ -90,6 +92,7 @@ function canonicalizeUrl() {
     const selected = [...activityState].sort();
     base.searchParams.set('activities', selected.length ? selected.join(',') : 'none');
   }
+  base.searchParams.set('tab', activeTab);
   history.replaceState(null, '', `./trip.html?${base.searchParams.toString()}`);
 }
 
@@ -97,7 +100,11 @@ function populateSelectors() {
   $('#tripSelector').innerHTML = catalog.trips.map(t => `<option value="${escapeHtml(t.id)}" ${t.id===trip.id?'selected':''}>${escapeHtml(t.title)}</option>`).join('');
   $('#variantSelector').innerHTML = trip.variants.map(v => `<option value="${escapeHtml(v.id)}" ${v.id===variant.id?'selected':''}>${escapeHtml(v.label)}</option>`).join('');
   $('#budgetSelector').innerHTML = trip.budgets.map(b => `<option value="${escapeHtml(b.id)}" ${b.id===budget.id?'selected':''}>${escapeHtml(b.label)}</option>`).join('');
-  $('#tripSelector').onchange = e => location.href = buildTripUrl(e.target.value);
+  $('#tripSelector').onchange = e => {
+    const next = new URL(buildTripUrl(e.target.value), location.href);
+    next.searchParams.set('tab', activeTab);
+    location.href = `./trip.html?${next.searchParams.toString()}`;
+  };
   $('#variantSelector').onchange = e => { variant = trip.variants.find(v=>v.id===e.target.value); canonicalizeUrl(); render(); };
   $('#budgetSelector').onchange = e => { budget = trip.budgets.find(b=>b.id===e.target.value); canonicalizeUrl(); render(); };
 }
@@ -105,41 +112,100 @@ function populateSelectors() {
 function renderHero() {
   document.title = `${trip.meta.title} — Atlas Voyage`;
   $('#hero').style.backgroundImage = `url('${safeUrl(trip.meta.heroImage || '')}')`;
-  $('#heroEyebrow').textContent = `${variant.label} · ${budget.label}`;
   $('#tripTitle').textContent = trip.meta.title;
-  $('#tripSubtitle').textContent = variant.subtitle || trip.meta.subtitle || '';
-  $('#heroTags').innerHTML = [trip.meta.travelers,trip.meta.duration,trip.meta.dates,trip.meta.departure].filter(Boolean).map(x=>`<span class="chip light">${escapeHtml(x)}</span>`).join('');
+  $('#heroTags').innerHTML = [trip.meta.dates,trip.meta.duration].filter(Boolean).map(x=>`<span class="chip light">${escapeHtml(x)}</span>`).join('');
   const kpis = [
-    ['Budget projeté', formatEUR(projectedBudgetTotal(budget))],
-    ['Option', variant.label],
-    ['Rythme', variant.rhythm || '—'],
-    ['Vérifié', formatDateFR(trip.traceability?.lastChecked)]
+    ['Variante sélectionnée', variant.label],
+    ['Budget projeté', formatEUR(projectedBudgetTotal(budget))]
   ];
   $('#kpis').innerHTML = kpis.map(([a,b])=>`<div class="kpi"><span>${escapeHtml(a)}</span><strong>${escapeHtml(b)}</strong></div>`).join('');
 }
 
-function renderNav() {
-  const items = [
-    ['overview','Synthèse'],['compareSection','Options'],['mapSection','Carte'],['stepsSection','Étapes'],
-    ...((trip.activities || []).length ? [['activitiesSection','Activités']] : []),
-    ['wildlifeSection','Faune'],['foodSection','Cuisine'],['weatherSection','Météo'],
-    ['practicalSection','Santé & sécurité'],['rulesSection','Règles'],['budgetSection','Budgets'],
-    ['daysSection','Programme'],['sourcesSection','Sources']
-  ];
-  $('#sectionNav').innerHTML = items.map(([id,label])=>`<a href="#${id}" data-section="${id}">${label}</a>`).join('');
-  navObserver?.disconnect();
-  navObserver = new IntersectionObserver(entries => {
-    const visible = entries.filter(x=>x.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-    if (!visible) return;
-    document.querySelectorAll('#sectionNav a').forEach(a=>a.classList.toggle('active', a.dataset.section===visible.target.id));
-  }, {rootMargin:'-28% 0px -62% 0px',threshold:[0,.15,.35]});
-  items.forEach(([id])=>{const node=document.getElementById(id);if(node)navObserver.observe(node)});
+function syncStickyOffset() {
+  const appbar = $('.trip-appbar');
+  if (!appbar) return;
+  document.documentElement.style.setProperty('--trip-appbar-height', `${Math.ceil(appbar.getBoundingClientRect().height)}px`);
+}
+
+function fitMapToCurrentRoute() {
+  if (!map) return;
+  const coords = (variant.steps || []).map(step => step.coords).filter(Array.isArray);
+  (variant.routes || []).forEach(route => (route.points || []).forEach(point => coords.push(point)));
+  if (coords.length) map.fitBounds(coords,{padding:[40,40]});
+}
+
+function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
+  activeTab = TAB_IDS.includes(tab) ? tab : 'circuit';
+  const tabs = [...document.querySelectorAll('#tripTabs [role="tab"]')];
+  let selectedTab = null;
+  tabs.forEach(node => {
+    const selected = node.dataset.tab === activeTab;
+    node.setAttribute('aria-selected', selected ? 'true' : 'false');
+    node.tabIndex = selected ? 0 : -1;
+    if (selected) selectedTab = node;
+  });
+  document.querySelectorAll('[data-tab-panel]').forEach(panel => {
+    panel.hidden = panel.dataset.tabPanel !== activeTab;
+  });
+  if (syncUrl) canonicalizeUrl();
+  if (focus) selectedTab?.focus();
+  if (activeTab === 'circuit') {
+    setTimeout(() => {
+      if (!map) return;
+      map.invalidateSize();
+      fitMapToCurrentRoute();
+    }, 0);
+  }
+}
+
+function renderTabs() {
+  const tabs = [...document.querySelectorAll('#tripTabs [role="tab"]')];
+  tabs.forEach((tab,index) => {
+    tab.onclick = () => setActiveTab(tab.dataset.tab,{syncUrl:true});
+    tab.onkeydown = event => {
+      let nextIndex = null;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = tabs.length - 1;
+      if (nextIndex == null) return;
+      event.preventDefault();
+      setActiveTab(tabs[nextIndex].dataset.tab,{syncUrl:true,focus:true});
+    };
+  });
+  setActiveTab(activeTab);
+  syncStickyOffset();
+}
+
+function initStickyOffset() {
+  const appbar = $('.trip-appbar');
+  if (!appbar) return;
+  if ('ResizeObserver' in window) {
+    appbarResizeObserver?.disconnect();
+    appbarResizeObserver = new ResizeObserver(syncStickyOffset);
+    appbarResizeObserver.observe(appbar);
+  }
+  window.addEventListener('resize', syncStickyOffset,{passive:true});
+  syncStickyOffset();
 }
 
 function renderOverview() {
+  $('#variantSubtitle').textContent = variant.subtitle || trip.meta.subtitle || '';
   $('#overviewIntro').textContent = variant.overviewIntro || trip.overviewIntro || '';
+  $('#decisionMeta').innerHTML = [trip.meta.travelers,trip.meta.departure,variant.rhythm].filter(Boolean).map(x=>`<span class="chip">${escapeHtml(x)}</span>`).join('');
   const summary = variant.summary?.length ? variant.summary : (trip.summary || []);
-  $('#summaryCards').innerHTML = summary.map(x=>`<article class="summary-card"><div class="metric">${escapeHtml(x.value)}</div><p>${escapeHtml(x.text)}</p></article>`).join('');
+  const normalize = value => String(value ?? '').trim().toLocaleLowerCase('fr-FR').replace(/\s+/g,' ');
+  const heroValues = new Set([
+    trip.meta.dates,
+    trip.meta.duration,
+    variant.label,
+    budget.label,
+    formatEUR(projectedBudgetTotal(budget))
+  ].filter(Boolean).map(normalize));
+  const visibleSummary = summary.filter(item => !heroValues.has(normalize(item.value)));
+  const node = $('#summaryCards');
+  node.hidden = visibleSummary.length === 0;
+  node.innerHTML = visibleSummary.map(x=>`<article class="summary-card"><div class="metric">${escapeHtml(x.value)}</div><p>${escapeHtml(x.text)}</p></article>`).join('');
 }
 
 function scoreBar(key, value) {
@@ -371,8 +437,9 @@ function renderSources() {
 }
 
 function render() {
-  renderHero(); renderNav(); renderOverview(); renderVariantCompare(); renderMap(); renderSteps();
+  renderHero(); renderOverview(); renderVariantCompare(); renderMap(); renderSteps();
   renderActivities(); renderNatureFoodWeather(); renderPractical(); renderBudgets(); renderDays(); renderSources();
+  renderTabs();
 }
 
 function toast(text){const node=$('#toast');node.textContent=text;node.classList.add('show');setTimeout(()=>node.classList.remove('show'),1800)}
@@ -386,7 +453,8 @@ $('#shareBtn').onclick = async () => {
 };
 
 initActivityState();
-canonicalizeUrl();
 populateSelectors();
+initStickyOffset();
+canonicalizeUrl();
 render();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});

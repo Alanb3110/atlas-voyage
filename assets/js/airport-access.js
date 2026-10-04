@@ -47,7 +47,6 @@ async function init() {
   const stored = loadWeights(tripId);
   const weights = normalizeWeights(stored || data.defaultWeights || { cost: 30, time: 30, flight: 25, fatigue: 15 });
   renderShell(data, accessData, groundCostData, weights);
-  ensureNavLink();
 }
 
 function normalizeWeights(raw) {
@@ -269,21 +268,4 @@ function renderGroundCost(cost) {
     ${carTotal ? `<div class="complete"><span>Voiture + parking</span><strong>${escapeHtml(formatRangeEUR(carTotal))}</strong><small>benchmark 20 j calculable</small></div>` : '<div><span>Total voiture</span><strong>incomplet</strong></div>'}
     <div><span>Train</span><strong>${escapeHtml(railText)}</strong></div>
   </div>`;
-}
-
-function ensureNavLink() {
-  const nav = $('#sectionNav');
-  if (!nav || nav.querySelector('[data-section="airportSection"]')) return;
-  const link = document.createElement('a');
-  link.href = '#airportSection';
-  link.dataset.section = 'airportSection';
-  link.textContent = 'Aéroports';
-  const after = nav.querySelector('[data-section="compareSection"]');
-  if (after) after.insertAdjacentElement('afterend', link); else nav.appendChild(link);
-
-  const observer = new IntersectionObserver(entries => {
-    if (!entries.some(e => e.isIntersecting)) return;
-    nav.querySelectorAll('a').forEach(a => a.classList.toggle('active', a === link));
-  }, { rootMargin: '-28% 0px -62% 0px', threshold: [0, .15, .35] });
-  observer.observe(section);
 }
