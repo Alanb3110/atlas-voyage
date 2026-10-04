@@ -5,8 +5,13 @@ const TRIP = 'http://127.0.0.1:4173/trip.html?trip=komodo-flores-nov-2026';
 async function openTrip(page, suffix = '') {
   const errors = [];
   page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
+  page.on('response', response => {
+    if (response.status() >= 400) errors.push(`http ${response.status()}: ${response.url()}`);
+  });
   page.on('console', message => {
-    if (message.type() === 'error') errors.push(`console: ${message.text()}`);
+    if (message.type() === 'error' && !/^Failed to load resource:/.test(message.text())) {
+      errors.push(`console: ${message.text()}`);
+    }
   });
   await page.goto(`${TRIP}${suffix}`, { waitUntil: 'domcontentloaded' });
   await expect.poll(async () => (await page.locator('#tripTitle').textContent())?.trim() || '').not.toBe('');
@@ -188,7 +193,7 @@ test('Leaflet reste cadré et ouvre la bonne étape après changement de variant
   expect(mapState.count).toBe(5);
   expect(mapState.outside).toBe(0);
 
-  await page.locator('.leaflet-marker-icon').nth(1).click();
+  await page.locator('.leaflet-marker-icon .marker-pin').nth(1).click();
   const target = page.locator('.step-accordion[data-step="1"]');
   await expect(target).toHaveAttribute('open', '');
   await page.waitForTimeout(650);
