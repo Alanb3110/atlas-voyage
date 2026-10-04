@@ -19,7 +19,7 @@ Longlist
 
 Le catalogue porte le statut de maturité réel de chaque dossier. Une destination peut encore posséder un ancien fichier `data/trips/*.json` riche sans être considérée comme détaillée ou réservable.
 
-Voir `docs/data-lifecycle-v3.md`.
+Voir `docs/data-lifecycle-v3.md` pour le contexte méthodologique et `docs/lifecycle-contract.md` pour le contrat métier exécutable, les transitions et les exigences minimales par stade.
 
 ## Navigation des voyages détaillés
 
@@ -43,13 +43,14 @@ Les trois sélections sont encodées dans l'URL :
 - `trip.html` : renderer générique des dossiers détaillés/hérités ;
 - `data/catalog.json` : index et maturité des dossiers ;
 - `data/destination-comparison.json` : longlist, scores, incertitudes, gates, facettes et valeurs traçables ;
-- `data/trips/*.json` : données détaillées/héritées ;
+- `data/trips/*.json` : données détaillées/héritées ; facultatives avant `detailed`, obligatoires à partir de `detailed` ;
 - `data/airport-access/reims-airports.json` : accès terrestres partagés depuis Reims ;
 - `data/airport-access/<tripId>.json` : recherche aérienne propre à une destination lorsqu'elle existe ;
 - `data/booking-status/*.json` : états abstraits de préparation, sans références personnelles ;
 - `assets/js/` : chargement, navigation et rendu ;
 - `assets/css/` : design commun ;
-- `scripts/validate-data.mjs` et `scripts/validate-airport-origins.mjs` : contrôles de cohérence ;
+- `scripts/validate-lifecycle.mjs` : contrat inter-jeux de données selon la maturité ;
+- `scripts/validate-data.mjs` et `scripts/validate-airport-origins.mjs` : contrôles de structure/cohérence des données présentes ;
 - `.github/workflows/validate-data.yml` : validation automatique à chaque push/PR.
 
 Aucune donnée de voyage ne doit être codée en dur dans `trip.html`.

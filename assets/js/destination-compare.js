@@ -1,5 +1,6 @@
 import { loadCatalog, buildTripUrl, formatEUR, formatDateFR, escapeHtml } from './store.js';
 import { assertDestinationComparisonNumericContract } from './destination-data-contract.js';
+import { tripDetailAvailable } from './lifecycle-contract.js';
 
 const section = document.querySelector('#destinationCompareSection');
 if (!section) throw new Error('destinationCompareSection absent du DOM');
@@ -290,6 +291,11 @@ function renderCounts(filteredCount) {
   if (shortlistCount) shortlistCount.textContent = `${shortlist.size} sélection${shortlist.size > 1 ? 's' : ''} locale${shortlist.size > 1 ? 's' : ''}`;
 }
 
+function renderDetailAction(trip, label, className = 'button') {
+  if (!tripDetailAvailable(trip)) return '<span class="muted">Dossier détaillé à construire</span>';
+  return `<a class="${escapeHtml(className)}" href="${buildTripUrl(trip.id, trip.defaultVariant, trip.defaultBudget)}">${escapeHtml(label)}</a>`;
+}
+
 function renderSummary(topRows) {
   const node = document.querySelector('#destinationTop3');
   if (!node) return;
@@ -310,7 +316,7 @@ function renderSummary(topRows) {
           <span>Confiance ${escapeHtml(row.evidenceConfidence || '—')}</span>
         </div>
       </div>
-      <a class="button secondary" href="${buildTripUrl(row.trip.id, row.trip.defaultVariant, row.trip.defaultBudget)}">Voir</a>
+      ${renderDetailAction(row.trip, 'Voir', 'button secondary')}
     </article>`).join('');
 }
 
@@ -359,7 +365,7 @@ function renderDestinationCard(row, rank) {
       <div class="destination-tradeoff"><strong>Compromis :</strong> ${escapeHtml(row.tradeoff || '—')}</div>
       <div class="destination-card-actions">
         <button class="button secondary destination-shortlist-button" type="button" data-shortlist-trip="${escapeHtml(row.tripId)}" aria-pressed="${shortlisted}">${shortlisted ? '★ Retirer de ma sélection' : '☆ Ajouter à ma sélection'}</button>
-        <a class="button" href="${buildTripUrl(trip.id, trip.defaultVariant, trip.defaultBudget)}">Ouvrir le dossier actuel</a>
+        ${renderDetailAction(trip, 'Ouvrir le dossier actuel')}
       </div>
     </div>
   </article>`;

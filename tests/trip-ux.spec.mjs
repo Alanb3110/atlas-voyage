@@ -2,6 +2,19 @@ import { test, expect } from '@playwright/test';
 
 const TRIP = 'http://127.0.0.1:4173/trip.html?trip=komodo-flores-nov-2026';
 
+async function mockCatalogWithoutDetail(context, page, tripId) {
+  const response = await context.request.get('http://127.0.0.1:4173/data/catalog.json');
+  if (!response.ok()) throw new Error(`Impossible de charger le catalogue de test: HTTP ${response.status()}`);
+  const catalog = await response.json();
+  const target = catalog.trips.find(item => item.id === tripId);
+  if (!target) throw new Error(`Destination de test absente: ${tripId}`);
+  delete target.dataFile;
+  delete target.defaultVariant;
+  delete target.defaultBudget;
+  delete target.variantCount;
+  await page.route('**/data/catalog.json', route => route.fulfill({ json: catalog }));
+}
+
 async function openTrip(page, suffix = '') {
   const errors = [];
   page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
@@ -380,6 +393,36 @@ test('sélecteurs desktop et paramètres canoniques', async ({ browser }) => {
   expect(new URL(page.url()).searchParams.get('budget')).toBe('premium');
 
   expect(errors).toEqual([]);
+  await context.close();
+});
+
+
+test('lifecycle: une destination exploratoire sans dossier détaillé reste rendable sans faux CTA', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+
+  await mockCatalogWithoutDetail(context, page, 'australia-queensland-nov-2026');
+
+  await page.goto('http://127.0.0.1:4173/index.html', { waitUntil: 'domcontentloaded' });
+  const card = page.locator('.trip-card').filter({ hasText: 'Australie — Queensland tropical' });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText('Dossier détaillé à construire');
+  await expect(card.locator('a[href*="trip=australia-queensland-nov-2026"]')).toHaveCount(0);
+  await expect(card.locator('.chip').filter({ hasText: 'option' })).toHaveCount(0);
+
+  await context.close();
+});
+
+test('lifecycle: une URL directe vers une destination sans dossier détaillé retourne au comparateur', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+
+  await mockCatalogWithoutDetail(context, page, 'south-africa-nov-2026');
+
+  await page.goto('http://127.0.0.1:4173/trip.html?trip=south-africa-nov-2026', { waitUntil: 'domcontentloaded' });
+  await page.waitForURL('**/index.html#destinationCompareSection');
+  expect(new URL(page.url()).hash).toBe('#destinationCompareSection');
+
   await context.close();
 });
 

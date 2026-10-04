@@ -6,6 +6,8 @@ La v3 sépare la maturité d'une destination de la quantité de contenu disponib
 
 Une destination de longlist ne doit plus donner l'impression d'être un voyage déjà détaillé ou réservable.
 
+Le contrat exécutable et les exigences minimales par stade sont documentés dans [`lifecycle-contract.md`](./lifecycle-contract.md). Ce document conserve le contexte méthodologique de la v3.
+
 ## Cycle de vie
 
 ```text

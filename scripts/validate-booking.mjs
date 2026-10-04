@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { allowedReadinessStates, requiresBookingReadiness } from '../assets/js/lifecycle-contract.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
@@ -13,7 +14,6 @@ const mandatoryReadinessRefs = new Set([
   'data/shortlist-gateway-geometry.json',
   'data/shortlist-door-to-door.json'
 ]);
-const lifecycleNeedsReadiness = new Set(['shortlist','selected','detailed','bookable','booked']);
 const readJson = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
 const fail = (file, msg) => errors.push(`${file}: ${msg}`);
 const warn = (file, msg) => warnings.push(`${file}: ${msg}`);
@@ -25,7 +25,7 @@ for (const trip of catalog.trips ?? []) {
   let data;
   try { data = await readJson(file); }
   catch (e) {
-    if (lifecycleNeedsReadiness.has(trip.status)) fail(file, `suivi de préparation obligatoire au statut ${trip.status}: ${e.message}`);
+    if (requiresBookingReadiness(trip.status)) fail(file, `suivi de préparation obligatoire au statut ${trip.status}: ${e.message}`);
     else warn(file, `suivi de réservation absent ou illisible: ${e.message}`);
     continue;
   }
@@ -50,7 +50,7 @@ for (const trip of catalog.trips ?? []) {
     }
   }
 
-  if (lifecycleNeedsReadiness.has(trip.status)) {
+  if (requiresBookingReadiness(trip.status)) {
     if (data.schemaVersion !== 2) fail(file, `schemaVersion 2 obligatoire au statut ${trip.status}`);
     if (!validDate(data.checkedAt)) fail(file, 'checkedAt racine obligatoire en YYYY-MM-DD');
     if (!data.intro || typeof data.intro !== 'string') fail(file, 'intro obligatoire');
@@ -69,8 +69,10 @@ for (const trip of catalog.trips ?? []) {
         if (data.readiness.state === 'blocked' && declared.size === 0) fail(file, 'readiness.state=blocked exige au moins un bloqueur');
         if (['decision_ready','booking_ready','booked'].includes(data.readiness.state) && declared.size > 0) fail(file, `readiness.state=${data.readiness.state} incompatible avec des bloqueurs actifs`);
       }
-      if (data.readiness.state === 'booked' && trip.status !== 'booked') fail(file, 'readiness.state=booked exige lifecycle booked');
-      if (trip.status === 'booked' && data.readiness.state !== 'booked') fail(file, 'lifecycle booked exige readiness.state=booked');
+      const lifecycleReadinessStates = allowedReadinessStates(trip.status);
+      if (!lifecycleReadinessStates.includes(data.readiness.state)) {
+        fail(file, `readiness.state=${data.readiness.state} incompatible avec lifecycle ${trip.status}; attendu ${lifecycleReadinessStates.join(' ou ')}`);
+      }
     }
 
     if (!Array.isArray(data.references)) fail(file, 'references obligatoire');

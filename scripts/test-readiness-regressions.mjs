@@ -43,6 +43,7 @@ try {
   await cp(resolve(root, 'data/catalog.json'), resolve(sandboxRoot, 'data/catalog.json'), { recursive: true });
   await cp(resolve(root, 'data/booking-status'), resolve(sandboxRoot, 'data/booking-status'), { recursive: true });
   await cp(resolve(root, 'scripts/validate-booking.mjs'), resolve(sandboxRoot, 'scripts/validate-booking.mjs'), { recursive: true });
+  await cp(resolve(root, 'assets/js/lifecycle-contract.js'), resolve(sandboxRoot, 'assets/js/lifecycle-contract.js'), { recursive: true });
 
   await expectRejects(sandboxRoot, {
     label: 'readiness shortlist: schema v1 est rejeté',

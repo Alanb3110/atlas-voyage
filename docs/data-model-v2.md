@@ -1,6 +1,6 @@
 # Modèle de données Atlas Voyage — v2
 
-Le renderer `trip.html` est générique : un voyage doit être décrit principalement dans `data/trips/<id>.json`.
+Le renderer `trip.html` est générique pour les dossiers **détaillés ou hérités**. À partir du statut `detailed`, un voyage doit être décrit principalement dans `data/trips/<id>.json`. Les stades `longlist`, `shortlist` et `selected` n'ont pas à fournir ce fichier ; voir [`lifecycle-contract.md`](./lifecycle-contract.md).
 
 ## Racine
 
@@ -157,6 +157,8 @@ Exécuter depuis la racine :
 ```bash
 node scripts/validate-data.mjs
 ```
+
+Le validateur applique ces exigences de structure complète à partir de `detailed`. Avant ce stade, il contrôle les données présentes sans imposer la création d'un faux dossier détaillé.
 
 Le validateur contrôle notamment :
 
