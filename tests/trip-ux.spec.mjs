@@ -422,7 +422,7 @@ test('lifecycle: une URL directe vers une destination sans dossier détaillé re
     delete target.defaultBudget;
     delete target.variantCount;
     await route.fulfill({ response, json: catalog });
-  });
+  }, { times: 1 });
 
   await page.goto('http://127.0.0.1:4173/trip.html?trip=south-africa-nov-2026', { waitUntil: 'domcontentloaded' });
   await page.waitForURL('**/index.html#destinationCompareSection');
