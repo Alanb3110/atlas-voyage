@@ -49,6 +49,11 @@ check(setTab.includes('map.invalidateSize({pan:false});'),
   'Leaflet: invalidateSize après réaffichage du Circuit');
 check(setTab.includes('fitMapToCurrentRoute();'),
   'Leaflet: recadrage après rendu dans un onglet précédemment masqué');
+const renderMapStart = js.indexOf('function renderMap()');
+const renderMapEnd = js.indexOf('function detailBlock(', renderMapStart);
+const renderMap = js.slice(renderMapStart, renderMapEnd);
+check(renderMap.includes("if (activeTab !== 'circuit')") && renderMap.includes('map.remove();') && renderMap.includes('map = null;'),
+  'Leaflet: aucun rendu de carte dans un panneau Circuit masqué');
 
 const canonicalStart = js.indexOf('function canonicalizeUrl()');
 const canonicalEnd = js.indexOf('function populateSelectors()', canonicalStart);
