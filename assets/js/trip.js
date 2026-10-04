@@ -466,7 +466,7 @@ function renderSteps() {
           <span class="step-summary-meta"><span>Fatigue <strong>${escapeHtml(s.fatigue||'—')}</strong></span><span>Hébergement <strong>${escapeHtml(selectedLodgingPrice(s))}</strong></span></span>
         </span>
       </summary>
-      <div class="step-expanded">
+      <div class="step-expanded ${image?'has-image':''}">
         ${image}
         <div class="step-expanded-copy">
           ${details?`<div class="step-details">${details}</div>`:''}
