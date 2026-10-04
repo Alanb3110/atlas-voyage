@@ -67,15 +67,108 @@ function selectedActivityTotal(forBudget = budget) {
   return selectableActivities().reduce((sum, activity) => sum + (activityState.has(activity.id) ? activityPriceEUR(activity, forBudget) : 0), 0);
 }
 
+const DEFAULT_BUDGET_TARGET_EUR = 5000;
+const BUDGET_STATUS_LABELS = {
+  confirmed: 'Confirmé',
+  observed: 'Observé',
+  estimated: 'Estimé',
+  to_recheck: 'À revérifier'
+};
+const BUDGET_STATUS_PRIORITY = {
+  confirmed: 0,
+  observed: 1,
+  estimated: 2,
+  to_recheck: 3
+};
+
+function foldBudgetText(value = '') {
+  return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function normalizeBudgetStatus(value = 'estimated') {
+  const status = foldBudgetText(value).replace(/[_-]+/g, ' ');
+  if (status.includes('confirm')) return 'confirmed';
+  if (status.includes('observ')) return 'observed';
+  if (status.includes('recheck') || status.includes('reverif') || status.includes('verif')) return 'to_recheck';
+  if (status.includes('estim')) return 'estimated';
+  return 'estimated';
+}
+
+function selectedActivityBudgetStatus() {
+  const selected = selectableActivities().filter(activity => activityState.has(activity.id));
+  if (!selected.length) return 'estimated';
+  return selected
+    .map(activity => normalizeBudgetStatus(activity.status))
+    .reduce((worst, status) => BUDGET_STATUS_PRIORITY[status] > BUDGET_STATUS_PRIORITY[worst] ? status : worst, 'confirmed');
+}
+
 function budgetRowsFor(forBudget = budget) {
   return (forBudget.breakdown || []).map(row => row.activityBaseline
-    ? {...row, label:'Activités à la carte sélectionnées', amount:selectedActivityTotal(forBudget)}
+    ? {
+        ...row,
+        label:'Activités à la carte sélectionnées',
+        amount:selectedActivityTotal(forBudget),
+        status:selectedActivityBudgetStatus()
+      }
     : row
   );
 }
 
 function projectedBudgetTotal(forBudget = budget) {
   return budgetRowsFor(forBudget).reduce((sum,row)=>sum+(Number(row.amount)||0),0);
+}
+
+function budgetTargetEUR() {
+  const target = Number(trip.budgetTargetEUR);
+  return Number.isFinite(target) && target > 0 ? target : DEFAULT_BUDGET_TARGET_EUR;
+}
+
+function budgetStatusCounts(rows) {
+  const counts = {confirmed:0, observed:0, estimated:0, to_recheck:0};
+  rows.forEach(row => { counts[normalizeBudgetStatus(row.status)] += 1; });
+  return counts;
+}
+
+function budgetConfidence() {
+  const full = String(budget.confidence || trip.traceability?.budgetConfidence || 'Non renseignée').trim();
+  const short = full.split(/\s+[—–]\s+/)[0].trim() || full;
+  return {short, full};
+}
+
+function budgetDrivers(limit = 5) {
+  const budgets = trip.budgets || [];
+  if (budgets.length < 2) return [];
+  const rowsByBudget = budgets.map(item => budgetRowsFor(item));
+  const activeRows = budgetRowsFor(budget);
+  const rowCount = Math.max(0, ...rowsByBudget.map(rows => rows.length));
+  const drivers = [];
+
+  for (let index = 0; index < rowCount; index += 1) {
+    const entries = rowsByBudget
+      .map((rows, budgetIndex) => ({budget:budgets[budgetIndex], row:rows[index]}))
+      .filter(entry => entry.row && Number.isFinite(Number(entry.row.amount)));
+    if (entries.length < 2) continue;
+
+    const ordered = [...entries].sort((a,b)=>(Number(a.row.amount)||0)-(Number(b.row.amount)||0));
+    const min = ordered[0];
+    const max = ordered[ordered.length - 1];
+    const spread = (Number(max.row.amount)||0) - (Number(min.row.amount)||0);
+    const activeRow = activeRows[index] || entries[0].row;
+    const selectedImpact = activeRow.activityBaseline ? Number(activeRow.amount)||0 : 0;
+    const impact = Math.max(spread, selectedImpact);
+    if (impact < 1) continue;
+
+    drivers.push({
+      label: activeRow.label || entries[0].row.label || 'Poste',
+      impact,
+      kind: activeRow.activityBaseline ? 'Sélection' : 'Écart de gamme',
+      detail: activeRow.activityBaseline
+        ? `${formatEUR(selectedImpact)} avec les activités actuellement sélectionnées`
+        : `${formatEUR(spread)} d’écart entre ${min.budget.label} et ${max.budget.label}`
+    });
+  }
+
+  return drivers.sort((a,b)=>b.impact-a.impact).slice(0,limit);
 }
 
 const SCORE_LABELS = [
@@ -690,16 +783,83 @@ function renderPractical() {
 }
 
 function renderBudgets() {
-  $('#budgetIntro').textContent = trip.budgetIntro || '';
-  $('#budgetCards').innerHTML = trip.budgets.map(b=>`<article class="budget-card ${b.id===budget.id?'active':''}">${b.recommended?'<span class="badge">Recommandé</span>':''}<h3>${escapeHtml(b.label)}</h3><div class="price">${formatEUR(projectedBudgetTotal(b))}</div><ul>${(b.items||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><button class="button ${b.id===budget.id?'secondary':''}" data-budget="${escapeHtml(b.id)}">${b.id===budget.id?'Sélectionné':'Choisir'}</button></article>`).join('');
-  document.querySelectorAll('[data-budget]').forEach(btn=>btn.onclick=()=>{budget=trip.budgets.find(b=>b.id===btn.dataset.budget);$('#budgetSelector').value=budget.id;canonicalizeUrl();render();});
+  const target = budgetTargetEUR();
+  const total = projectedBudgetTotal(budget);
+  const margin = target - total;
   const rows = budgetRowsFor(budget);
-  const sum = rows.reduce((acc,r)=>acc+(Number(r.amount)||0),0);
-  const baseline = Number(budget.total)||0;
-  const delta = sum-baseline;
-  $('#budgetBreakdown').innerHTML = `<table class="budget-table"><thead><tr><th>Poste</th><th>Statut</th><th>Montant</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${escapeHtml(r.label)}</td><td><span class="budget-status ${/estim/i.test(r.status||'')?'estimated':''}">${escapeHtml(r.status||'estimé')}</span></td><td>${formatEUR(r.amount)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total projeté</td><td>${formatEUR(sum)}</td></tr></tfoot></table><div class="budget-reconcile">Base recommandée : ${formatEUR(baseline)}${Math.abs(delta)>=1?` · effet des choix : ${delta>0?'+':''}${formatEUR(delta)}`:' · sélection recommandée active'}.</div>`;
-}
+  const counts = budgetStatusCounts(rows);
+  const confidence = budgetConfidence();
+  const underTarget = margin >= 0;
 
+  $('#budgetTitle').textContent = `Est-ce qu’on reste sous les ${formatEUR(target)} pour deux ?`;
+  $('#budgetIntro').textContent = trip.budgetIntro || 'Totaux pour deux personnes, activités sélectionnées incluses.';
+
+  $('#budgetSummary').innerHTML = `
+    <div class="budget-answer ${underTarget?'within':'over'}">
+      <span>Budget projeté pour 2</span>
+      <strong>${formatEUR(total)}</strong>
+      <small>${underTarget?'Sous l’objectif':'Au-dessus de l’objectif'}</small>
+    </div>
+    <div class="budget-overview-metrics">
+      <div class="budget-overview-metric"><span>Objectif</span><strong>${formatEUR(target)}</strong></div>
+      <div class="budget-overview-metric"><span>${underTarget?'Marge restante':'Dépassement'}</span><strong class="${underTarget?'ok':'over'}">${formatEUR(Math.abs(margin))}</strong></div>
+      <div class="budget-overview-metric"><span>Niveau sélectionné</span><strong>${escapeHtml(budget.label)}</strong></div>
+      <div class="budget-overview-metric" title="${escapeHtml(confidence.full)}"><span>Confiance globale</span><strong>${escapeHtml(confidence.short)}</strong></div>
+    </div>
+    <div class="budget-status-summary" aria-label="Répartition des postes par statut">
+      ${Object.entries(BUDGET_STATUS_LABELS).map(([key,label])=>`<span class="budget-status-count"><span class="budget-status ${key}">${escapeHtml(label)}</span><strong>${counts[key]}</strong></span>`).join('')}
+    </div>`;
+
+  $('#budgetCards').innerHTML = trip.budgets.map(item=>{
+    const active = item.id === budget.id;
+    const differences = (item.items || []).slice(0,3);
+    return `<article class="budget-card budget-card-compact ${active?'active':''}">
+      <div class="budget-card-top">
+        <div>
+          <div class="budget-card-badges">${item.recommended?'<span class="badge">Recommandé</span>':''}${active?'<span class="budget-active-badge">Actif</span>':''}</div>
+          <h3>${escapeHtml(item.label)}</h3>
+        </div>
+        <div class="price">${formatEUR(projectedBudgetTotal(item))}</div>
+      </div>
+      ${differences.length?`<ul class="budget-card-differences">${differences.map(text=>`<li>${escapeHtml(text)}</li>`).join('')}</ul>`:''}
+      <button class="button ${active?'secondary':''}" type="button" data-budget="${escapeHtml(item.id)}" aria-pressed="${active?'true':'false'}">${active?'Sélectionné':'Choisir'}</button>
+    </article>`;
+  }).join('');
+
+  document.querySelectorAll('[data-budget]').forEach(btn=>btn.onclick=()=>{
+    budget=trip.budgets.find(item=>item.id===btn.dataset.budget);
+    $('#budgetSelector').value=budget.id;
+    canonicalizeUrl();
+    render();
+  });
+
+  $('#budgetBreakdown').innerHTML = `
+    <details class="budget-detail">
+      <summary>
+        <span><strong>Détail poste par poste</strong><small>${rows.length} poste${rows.length>1?'s':''} · ${escapeHtml(budget.label)}</small></span>
+        <span class="budget-detail-chevron" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="budget-table-wrap">
+        <table class="budget-table">
+          <thead><tr><th>Poste</th><th>Statut</th><th>Montant</th></tr></thead>
+          <tbody>${rows.map(row=>{
+            const status = normalizeBudgetStatus(row.status);
+            return `<tr><td>${escapeHtml(row.label)}</td><td><span class="budget-status ${status}">${escapeHtml(BUDGET_STATUS_LABELS[status])}</span></td><td>${formatEUR(row.amount)}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </details>`;
+
+  const drivers = budgetDrivers(5);
+  $('#budgetDrivers').innerHTML = `
+    <div class="budget-drivers-head">
+      <div><p class="eyebrow">Sensibilité</p><h3>Ce qui fait varier le budget</h3></div>
+      <p class="muted">Calculé automatiquement à partir des écarts entre les trois niveaux et des activités sélectionnées.</p>
+    </div>
+    ${drivers.length
+      ? `<div class="budget-driver-list">${drivers.map(driver=>`<article class="budget-driver"><span>${escapeHtml(driver.kind)}</span><strong>${escapeHtml(driver.label)}</strong><small>${escapeHtml(driver.detail)}</small></article>`).join('')}</div>`
+      : '<p class="muted budget-driver-empty">Pas assez de détail poste par poste pour calculer les principaux écarts.</p>'}`;
+}
 function renderDays() {
   $('#daysIntro').textContent = variant.daysIntro || '';
   $('#days').innerHTML = (variant.days||[]).map((d,i)=>`<details class="day-card" ${i===0?'open':''}><summary><span>${escapeHtml(d.day)}</span><span>${escapeHtml(d.title)}</span></summary><div class="day-body">${escapeHtml(d.detail||'')}</div></details>`).join('');
