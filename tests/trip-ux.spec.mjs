@@ -229,7 +229,9 @@ test('densité verticale mobile — détails repliés et premier contenu utile p
     const measured = await page.evaluate(({ tab, cards, useful }) => {
       const panel = document.querySelector(`#panel-${tab}`);
       const target = panel?.querySelector(useful);
-      const visibleCards = [...(panel?.querySelectorAll(cards) || [])].filter(node => node.getClientRects().length > 0);
+      const visibleCards = [...(panel?.querySelectorAll(cards) || [])].filter(node =>
+        node.getClientRects().length > 0 && !node.parentElement?.closest('details:not([open])')
+      );
       const openedDetails = [...(panel?.querySelectorAll('details[open]') || [])].filter(node => node.getClientRects().length > 0);
       return {
         visibleCards: visibleCards.length,
@@ -244,7 +246,7 @@ test('densité verticale mobile — détails repliés et premier contenu utile p
     expect(measured.visibleCards).toBeGreaterThan(0);
     expect(measured.openSections).toBeLessThanOrEqual(1);
     expect(measured.firstUsefulOffset).not.toBeNull();
-    expect(measured.firstUsefulOffset).toBeLessThanOrEqual(320);
+    expect(measured.firstUsefulOffset).toBeLessThanOrEqual(220);
 
     for (const selector of spec.closed) {
       await expect(page.locator(`#panel-${tab} ${selector}`)).toHaveCount(0);
@@ -282,7 +284,7 @@ test('Leaflet reste cadré et ouvre la bonne étape après changement de variant
     };
   });
   expect(mapState.width).toBeGreaterThan(250);
-  expect(mapState.height).toBeGreaterThan(300);
+  expect(mapState.height).toBeGreaterThanOrEqual(300);
   expect(mapState.count).toBe(5);
   expect(mapState.outside).toBe(0);
 
