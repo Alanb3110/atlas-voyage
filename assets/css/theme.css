@@ -27,3 +27,8 @@ html[data-theme="dark"] .leaflet-control-attribution{background:rgba(11,18,16,.8
 html[data-theme="dark"] .leaflet-control-attribution a{color:#9ed9bf}
 @media(max-width:900px){.theme-toggle{padding:8px 10px}}
 @media(max-width:620px){.theme-toggle span:last-child{display:none}.theme-toggle{width:40px;height:40px;justify-content:center;padding:0}}
+
+html[data-theme="dark"] .trip-tabs{background:rgba(11,18,16,.95);box-shadow:0 10px 28px rgba(0,0,0,.24)}
+html[data-theme="dark"] .trip-tab:hover{background:rgba(122,196,166,.10);color:var(--ink)}
+html[data-theme="dark"] .trip-tab[aria-selected="true"]{color:#08110e}
+html[data-theme="dark"] .decision-context{background:var(--panel)}
