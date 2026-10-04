@@ -97,8 +97,8 @@ check(js.includes("const MOBILE_DENSITY_QUERY = '(max-width: 620px)';") &&
       js.includes("!compactMobile && i===activeStepIndex?'open':''"),
   'densité mobile: aucune étape ouverte par défaut à 620 px et moins');
 check(js.includes('class="days-disclosure"') && js.includes('class="day-card"') &&
-      !js.includes("i===0?'open':''"),
-  'densité mobile: programme replié et aucune journée ouverte par défaut');
+      js.includes("!compactMobile && i===0?'open':''"),
+  'densité mobile: programme replié sans changer le jour 1 ouvert sur desktop');
 check(js.includes('class="budget-drivers-disclosure"') &&
       js.includes('class="budget-detail"'),
   'densité mobile: détails budget conservés derrière des disclosures fermés');
