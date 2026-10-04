@@ -43,6 +43,34 @@ async function expectNoVisibleHeadingOverflow(page) {
   expect(offenders).toEqual([]);
 }
 
+async function expectReadableMobileHero(page, viewportWidth) {
+  const metrics = await page.evaluate(() => {
+    const hero = document.querySelector('#hero');
+    const title = document.querySelector('#tripTitle');
+    const heroStyle = getComputedStyle(hero);
+    const titleStyle = getComputedStyle(title);
+    const heroRect = hero.getBoundingClientRect();
+    const titleRect = title.getBoundingClientRect();
+    const contentWidth = heroRect.width
+      - Number.parseFloat(heroStyle.paddingLeft)
+      - Number.parseFloat(heroStyle.paddingRight);
+    const lineHeight = Number.parseFloat(titleStyle.lineHeight);
+    return {
+      titleWidth: titleRect.width,
+      contentWidth,
+      lineCount: Number.isFinite(lineHeight) && lineHeight > 0 ? titleRect.height / lineHeight : 0,
+      wordBreak: titleStyle.wordBreak,
+      overflowWrap: titleStyle.overflowWrap
+    };
+  });
+
+  expect(metrics.titleWidth).toBeGreaterThanOrEqual(viewportWidth - 72);
+  expect(metrics.titleWidth).toBeGreaterThanOrEqual(metrics.contentWidth - 2);
+  expect(metrics.lineCount).toBeLessThanOrEqual(3.1);
+  expect(metrics.wordBreak).toBe('normal');
+  expect(metrics.overflowWrap).toBe('normal');
+}
+
 const layouts = [
   { label: 'mobile 320', width: 320, height: 800 },
   { label: 'iPhone 375', width: 375, height: 812 },
@@ -65,6 +93,7 @@ for (const viewport of layouts) {
       await expect(page.locator('#desktopSwitcherSlot')).toBeHidden();
       const headerHeight = await page.locator('.trip-appbar').evaluate(node => node.getBoundingClientRect().height);
       expect(headerHeight).toBeLessThanOrEqual(64);
+      if (viewport.width <= 390) await expectReadableMobileHero(page, viewport.width);
     } else {
       await expect(page.locator('#configBtn')).toBeHidden();
       await expect(page.locator('#tripSwitchers')).toBeVisible();
