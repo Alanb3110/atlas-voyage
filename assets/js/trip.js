@@ -10,6 +10,62 @@ let variant = trip.variants.find(v => v.id === p.get('variant')) || trip.variant
 let budget = trip.budgets.find(b => b.id === p.get('budget')) || trip.budgets.find(b => b.id === trip.defaultBudget) || trip.budgets[0];
 let map;
 let navObserver;
+let activityState = new Set();
+
+function formatEURPrecise(value) {
+  if (value == null || Number.isNaN(Number(value))) return '—';
+  return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:0,maximumFractionDigits:2}).format(Number(value));
+}
+
+function formatIDR(value) {
+  if (value == null || Number.isNaN(Number(value))) return '—';
+  return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(value));
+}
+
+function activityApplies(activity) {
+  const variants = activity.applicableVariants || [];
+  return !variants.length || variants.includes(variant.id);
+}
+
+function selectableActivities() {
+  return (trip.activities || []).filter(activity => !activity.locked && activityApplies(activity));
+}
+
+function initActivityState() {
+  const allSelectable = (trip.activities || []).filter(activity => !activity.locked);
+  const requested = p.get('activities');
+  if (requested == null) {
+    activityState = new Set(allSelectable.filter(activity => activity.defaultSelected).map(activity => activity.id));
+    return;
+  }
+  if (requested === 'none') {
+    activityState = new Set();
+    return;
+  }
+  const allowed = new Set(allSelectable.map(activity => activity.id));
+  activityState = new Set(requested.split(',').map(x => x.trim()).filter(id => allowed.has(id)));
+}
+
+function activityPriceEUR(activity, forBudget = budget) {
+  const mapped = activity.priceByBudgetEUR?.[forBudget.id];
+  if (mapped != null && Number.isFinite(Number(mapped))) return Number(mapped);
+  return Number(activity.priceEUR) || 0;
+}
+
+function selectedActivityTotal(forBudget = budget) {
+  return selectableActivities().reduce((sum, activity) => sum + (activityState.has(activity.id) ? activityPriceEUR(activity, forBudget) : 0), 0);
+}
+
+function budgetRowsFor(forBudget = budget) {
+  return (forBudget.breakdown || []).map(row => row.activityBaseline
+    ? {...row, label:'Activités à la carte sélectionnées', amount:selectedActivityTotal(forBudget)}
+    : row
+  );
+}
+
+function projectedBudgetTotal(forBudget = budget) {
+  return budgetRowsFor(forBudget).reduce((sum,row)=>sum+(Number(row.amount)||0),0);
+}
 
 const SCORE_LABELS = [
   ['wildlife','Faune'],['relaxation','Détente'],['culture','Culture'],['beach','Plage'],['logistics','Logistique']
@@ -29,7 +85,12 @@ function safeUrl(value='') {
 }
 
 function canonicalizeUrl() {
-  history.replaceState(null, '', buildTripUrl(trip.id, variant.id, budget.id));
+  const base = new URL(buildTripUrl(trip.id, variant.id, budget.id), location.href);
+  if ((trip.activities || []).some(activity => !activity.locked)) {
+    const selected = [...activityState].sort();
+    base.searchParams.set('activities', selected.length ? selected.join(',') : 'none');
+  }
+  history.replaceState(null, '', `./trip.html?${base.searchParams.toString()}`);
 }
 
 function populateSelectors() {
@@ -49,7 +110,7 @@ function renderHero() {
   $('#tripSubtitle').textContent = variant.subtitle || trip.meta.subtitle || '';
   $('#heroTags').innerHTML = [trip.meta.travelers,trip.meta.duration,trip.meta.dates,trip.meta.departure].filter(Boolean).map(x=>`<span class="chip light">${escapeHtml(x)}</span>`).join('');
   const kpis = [
-    ['Budget', formatEUR(budget.total)],
+    ['Budget projeté', formatEUR(projectedBudgetTotal(budget))],
     ['Option', variant.label],
     ['Rythme', variant.rhythm || '—'],
     ['Vérifié', formatDateFR(trip.traceability?.lastChecked)]
@@ -60,6 +121,7 @@ function renderHero() {
 function renderNav() {
   const items = [
     ['overview','Synthèse'],['compareSection','Options'],['mapSection','Carte'],['stepsSection','Étapes'],
+    ...((trip.activities || []).length ? [['activitiesSection','Activités']] : []),
     ['wildlifeSection','Faune'],['foodSection','Cuisine'],['weatherSection','Météo'],
     ['practicalSection','Santé & sécurité'],['rulesSection','Règles'],['budgetSection','Budgets'],
     ['daysSection','Programme'],['sourcesSection','Sources']
@@ -157,7 +219,14 @@ function renderSteps() {
       ['Faune',s.wildlife],['Plage / eau',s.beach],['Culture',s.culture],['Gastronomie',s.food],
       ['Activité',s.activity],['Fréquentation',s.crowding],['Météo',s.weather],['Sécurité',s.safety]
     ].map(([a,b])=>detailBlock(a,b)).join('');
-    return `<article class="step-card ${image?'has-image':''}">${image}<div class="step-copy"><h3>${escapeHtml(s.name)}</h3><p><strong>${escapeHtml(s.nights)}</strong> — ${escapeHtml(s.summary)}</p><p><strong>Transfert :</strong> ${escapeHtml(s.transfer||'—')}<br><strong>Fatigue :</strong> ${escapeHtml(s.fatigue||'—')}</p>${details?`<div class="step-details">${details}</div>`:''}${s.signature?`<div class="signature"><strong>Expérience signature :</strong> ${escapeHtml(s.signature)}</div>`:''}<div class="selected-lodging"><strong>${escapeHtml(budget.label)} :</strong><br>${escapeHtml(lodgingFor(s))}</div><div class="chips">${(s.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div></div></article>`;
+    const stay = s.recommendedStay;
+    const stayBlock = stay ? `<div class="stay-choice">
+      <div><span class="stay-kicker">Option de travail</span><strong>${escapeHtml(stay.name||'Hébergement')}</strong></div>
+      <div class="stay-meta">${stay.priceIDR ? `<span>${escapeHtml(formatIDR(stay.priceIDR))}</span>` : ''}${stay.priceEUR != null ? `<span>≈ ${escapeHtml(formatEURPrecise(stay.priceEUR))}</span>` : ''}<span class="budget-status ${/estim/i.test(stay.status||'')?'estimated':''}">${escapeHtml(stay.status||'à vérifier')}</span></div>
+      ${stay.note?`<p>${escapeHtml(stay.note)}</p>`:''}
+      ${stay.url?`<a class="text-link" href="${safeUrl(stay.url)}" target="_blank" rel="noopener noreferrer">Voir le site / l’offre ↗</a>`:''}
+    </div>` : '';
+    return `<article class="step-card ${image?'has-image':''}">${image}<div class="step-copy"><h3>${escapeHtml(s.name)}</h3><p><strong>${escapeHtml(s.nights)}</strong> — ${escapeHtml(s.summary)}</p><p><strong>Transfert :</strong> ${escapeHtml(s.transfer||'—')}<br><strong>Fatigue :</strong> ${escapeHtml(s.fatigue||'—')}</p>${details?`<div class="step-details">${details}</div>`:''}${s.signature?`<div class="signature"><strong>Expérience signature :</strong> ${escapeHtml(s.signature)}</div>`:''}<div class="selected-lodging"><strong>${escapeHtml(budget.label)} :</strong><br>${escapeHtml(lodgingFor(s))}</div>${stayBlock}<div class="chips">${(s.tags||[]).map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div></div></article>`;
   }).join('');
 }
 
@@ -168,6 +237,84 @@ function normalizeItem(item) {
 
 function renderInfoCards(selector,cards=[]) {
   $(selector).innerHTML = cards.map(card=>`<article class="info-card"><h3>${escapeHtml(card.title)}</h3>${card.note?`<p class="muted">${escapeHtml(card.note)}</p>`:''}<div class="info-rows">${(card.items||[]).map(raw=>{const item=normalizeItem(raw);const warn=item.warn||/à vérifier|variable|moyen|possible|non évalué|à rechercher/i.test(item.value);return `<div class="info-row"><span>${escapeHtml(item.label)}</span><span class="value-pill ${warn?'warn':''}">${escapeHtml(item.value)}</span></div>`}).join('')}</div></article>`).join('');
+}
+
+function renderActivities() {
+  const section = $('#activitiesSection');
+  const activities = (trip.activities || []).filter(activity => activityApplies(activity));
+  if (!activities.length) {
+    section.hidden = true;
+    return;
+  }
+  section.hidden = false;
+  $('#activitiesIntro').textContent = trip.activitiesIntro || 'Active ou désactive les activités à la carte.';
+  const projected = projectedBudgetTotal(budget);
+  const target = Number(trip.activityBudget?.targetEUR) || 0;
+  const margin = target ? target - projected : null;
+  const selectedCount = selectableActivities().filter(activity => activityState.has(activity.id)).length;
+  const marginLabel = margin == null ? '' : margin >= 0
+    ? `<span class="activity-margin ok">Marge cible : ${escapeHtml(formatEUR(margin))}</span>`
+    : `<span class="activity-margin over">Dépassement : ${escapeHtml(formatEUR(Math.abs(margin)))}</span>`;
+  $('#activityBudgetSummary').innerHTML = `<div><span>Budget projeté · ${escapeHtml(budget.label)}</span><strong>${escapeHtml(formatEUR(projected))}</strong></div><div><span>${selectedCount} option${selectedCount>1?'s':''} sélectionnée${selectedCount>1?'s':''}</span>${marginLabel}</div>${trip.activityBudget?.currencyNote?`<small>${escapeHtml(trip.activityBudget.currencyNote)}</small>`:''}`;
+
+  const priorityLabel = {must:'Structurant',recommended:'Recommandé',splurge:'Upgrade intéressant',nice:'Option plaisir',skip:'À couper en premier'};
+  $('#activities').innerHTML = activities.map(activity => {
+    const selected = activity.locked || activityState.has(activity.id);
+    const image = activity.image ? `<img class="activity-image" loading="lazy" src="${safeUrl(activity.image)}" alt="">` : '';
+    const impact = activity.locked
+      ? 'Inclus dans le circuit'
+      : activityPriceEUR(activity,budget) === 0
+        ? 'Sans surcoût'
+        : `${selected ? 'Inclus au budget projeté' : 'Ajouter'} · ${formatEURPrecise(activityPriceEUR(activity,budget))}`;
+    return `<article class="activity-card ${selected?'selected':''} ${activity.locked?'locked':''}">
+      ${image}
+      <div class="activity-copy">
+        <div class="activity-topline"><span>${escapeHtml(activity.date||'')}</span><span>${escapeHtml(activity.location||'')}</span></div>
+        <div class="activity-title-row">
+          <div><span class="activity-priority ${escapeHtml(activity.priority||'nice')}">${escapeHtml(priorityLabel[activity.priority]||activity.recommendation||'Option')}</span><h3>${escapeHtml(activity.title||'Activité')}</h3></div>
+          <label class="activity-toggle">
+            <input type="checkbox" data-activity-toggle="${escapeHtml(activity.id)}" ${selected?'checked':''} ${activity.locked?'disabled':''}>
+            <span>${activity.locked?'Circuit':'Choisir'}</span>
+          </label>
+        </div>
+        <p>${escapeHtml(activity.description||'')}</p>
+        <div class="activity-price"><strong>${escapeHtml(activity.priceLabel||formatEURPrecise(activityPriceEUR(activity,budget)))}</strong><span>${escapeHtml(impact)}</span></div>
+        <div class="activity-footer">
+          <span>${escapeHtml(activity.recommendation||'')}</span>
+          ${activity.url?`<a href="${safeUrl(activity.url)}" target="_blank" rel="noopener noreferrer">Source / réserver ↗</a>`:''}
+        </div>
+        ${activity.note?`<small class="activity-note">${escapeHtml(activity.note)}</small>`:''}
+      </div>
+    </article>`;
+  }).join('');
+
+  document.querySelectorAll('[data-activity-toggle]').forEach(input => input.addEventListener('change', () => {
+    if (input.disabled) return;
+    if (input.checked) activityState.add(input.dataset.activityToggle);
+    else activityState.delete(input.dataset.activityToggle);
+    canonicalizeUrl();
+    renderHero();
+    renderActivities();
+    renderBudgets();
+  }));
+
+  $('#activitiesReset').onclick = () => {
+    (trip.activities || []).filter(activity => !activity.locked).forEach(activity => {
+      if (activity.defaultSelected) activityState.add(activity.id);
+      else activityState.delete(activity.id);
+    });
+    canonicalizeUrl();
+    renderHero();
+    renderActivities();
+    renderBudgets();
+  };
+  $('#activitiesClear').onclick = () => {
+    selectableActivities().forEach(activity => activityState.delete(activity.id));
+    canonicalizeUrl();
+    renderHero();
+    renderActivities();
+    renderBudgets();
+  };
 }
 
 function renderNatureFoodWeather() {
@@ -199,12 +346,13 @@ function renderPractical() {
 
 function renderBudgets() {
   $('#budgetIntro').textContent = trip.budgetIntro || '';
-  $('#budgetCards').innerHTML = trip.budgets.map(b=>`<article class="budget-card ${b.id===budget.id?'active':''}">${b.recommended?'<span class="badge">Recommandé</span>':''}<h3>${escapeHtml(b.label)}</h3><div class="price">${formatEUR(b.total)}</div><ul>${(b.items||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><button class="button ${b.id===budget.id?'secondary':''}" data-budget="${escapeHtml(b.id)}">${b.id===budget.id?'Sélectionné':'Choisir'}</button></article>`).join('');
+  $('#budgetCards').innerHTML = trip.budgets.map(b=>`<article class="budget-card ${b.id===budget.id?'active':''}">${b.recommended?'<span class="badge">Recommandé</span>':''}<h3>${escapeHtml(b.label)}</h3><div class="price">${formatEUR(projectedBudgetTotal(b))}</div><ul>${(b.items||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><button class="button ${b.id===budget.id?'secondary':''}" data-budget="${escapeHtml(b.id)}">${b.id===budget.id?'Sélectionné':'Choisir'}</button></article>`).join('');
   document.querySelectorAll('[data-budget]').forEach(btn=>btn.onclick=()=>{budget=trip.budgets.find(b=>b.id===btn.dataset.budget);$('#budgetSelector').value=budget.id;canonicalizeUrl();render();});
-  const rows = budget.breakdown || [];
+  const rows = budgetRowsFor(budget);
   const sum = rows.reduce((acc,r)=>acc+(Number(r.amount)||0),0);
-  const delta = (Number(budget.total)||0)-sum;
-  $('#budgetBreakdown').innerHTML = `<table class="budget-table"><thead><tr><th>Poste</th><th>Statut</th><th>Montant</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${escapeHtml(r.label)}</td><td><span class="budget-status ${/estim/i.test(r.status||'')?'estimated':''}">${escapeHtml(r.status||'estimé')}</span></td><td>${formatEUR(r.amount)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total</td><td>${formatEUR(budget.total)}</td></tr></tfoot></table><div class="budget-reconcile">Somme des postes : ${formatEUR(sum)}${Math.abs(delta)>1?` · écart à expliquer : ${formatEUR(delta)}`:' · cohérent avec le total affiché'}.</div>`;
+  const baseline = Number(budget.total)||0;
+  const delta = sum-baseline;
+  $('#budgetBreakdown').innerHTML = `<table class="budget-table"><thead><tr><th>Poste</th><th>Statut</th><th>Montant</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${escapeHtml(r.label)}</td><td><span class="budget-status ${/estim/i.test(r.status||'')?'estimated':''}">${escapeHtml(r.status||'estimé')}</span></td><td>${formatEUR(r.amount)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">Total projeté</td><td>${formatEUR(sum)}</td></tr></tfoot></table><div class="budget-reconcile">Base recommandée : ${formatEUR(baseline)}${Math.abs(delta)>=1?` · effet des choix : ${delta>0?'+':''}${formatEUR(delta)}`:' · sélection recommandée active'}.</div>`;
 }
 
 function renderDays() {
@@ -220,7 +368,7 @@ function renderSources() {
 
 function render() {
   renderHero(); renderNav(); renderOverview(); renderVariantCompare(); renderMap(); renderSteps();
-  renderNatureFoodWeather(); renderPractical(); renderBudgets(); renderDays(); renderSources();
+  renderActivities(); renderNatureFoodWeather(); renderPractical(); renderBudgets(); renderDays(); renderSources();
 }
 
 function toast(text){const node=$('#toast');node.textContent=text;node.classList.add('show');setTimeout(()=>node.classList.remove('show'),1800)}
@@ -233,6 +381,7 @@ $('#shareBtn').onclick = async () => {
   }
 };
 
+initActivityState();
 canonicalizeUrl();
 populateSelectors();
 render();
