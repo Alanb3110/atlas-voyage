@@ -383,6 +383,54 @@ test('sélecteurs desktop et paramètres canoniques', async ({ browser }) => {
   await context.close();
 });
 
+
+test('lifecycle: une destination exploratoire sans dossier détaillé reste rendable sans faux CTA', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+
+  await page.route('**/data/catalog.json', async route => {
+    const response = await route.fetch();
+    const catalog = await response.json();
+    const target = catalog.trips.find(item => item.id === 'australia-queensland-nov-2026');
+    delete target.dataFile;
+    delete target.defaultVariant;
+    delete target.defaultBudget;
+    delete target.variantCount;
+    await route.fulfill({ response, json: catalog });
+  });
+
+  await page.goto('http://127.0.0.1:4173/index.html', { waitUntil: 'domcontentloaded' });
+  const card = page.locator('.trip-card').filter({ hasText: 'Australie — Queensland tropical' });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText('Dossier détaillé à construire');
+  await expect(card.locator('a[href*="trip=australia-queensland-nov-2026"]')).toHaveCount(0);
+  await expect(card.locator('.chip').filter({ hasText: 'option' })).toHaveCount(0);
+
+  await context.close();
+});
+
+test('lifecycle: une URL directe vers une destination sans dossier détaillé retourne au comparateur', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+
+  await page.route('**/data/catalog.json', async route => {
+    const response = await route.fetch();
+    const catalog = await response.json();
+    const target = catalog.trips.find(item => item.id === 'south-africa-nov-2026');
+    delete target.dataFile;
+    delete target.defaultVariant;
+    delete target.defaultBudget;
+    delete target.variantCount;
+    await route.fulfill({ response, json: catalog });
+  });
+
+  await page.goto('http://127.0.0.1:4173/trip.html?trip=south-africa-nov-2026', { waitUntil: 'domcontentloaded' });
+  await page.waitForURL('**/index.html#destinationCompareSection');
+  expect(new URL(page.url()).hash).toBe('#destinationCompareSection');
+
+  await context.close();
+});
+
 test('Partager transmet exactement l’URL canonique', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
