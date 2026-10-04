@@ -1,4 +1,5 @@
-import { params, escapeHtml, formatDateFR } from './store.js';
+import { loadCatalog, params, escapeHtml, formatDateFR } from './store.js';
+import { requiresBookingReadiness } from './lifecycle-contract.js';
 
 const section = document.querySelector('#bookingSection');
 if (!section) throw new Error('bookingSection absent du DOM');
@@ -27,6 +28,13 @@ const READINESS = {
 };
 
 async function init() {
+  const catalog = await loadCatalog();
+  const entry = catalog.trips.find(item => item.id === tripId);
+  if (!entry || !requiresBookingReadiness(entry.status)) {
+    section.hidden = true;
+    return;
+  }
+
   const response = await fetch(`./data/booking-status/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
