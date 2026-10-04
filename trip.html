@@ -37,108 +37,120 @@
   </header>
 
   <main class="shell trip-shell">
-    <section id="hero" class="trip-hero">
+    <section id="hero" class="trip-hero" aria-labelledby="tripTitle">
       <div class="hero-overlay"></div>
       <div class="trip-hero-copy">
-        <p id="heroEyebrow" class="eyebrow light"></p>
         <h1 id="tripTitle"></h1>
-        <p id="tripSubtitle" class="lede light"></p>
-        <div id="heroTags" class="chips"></div>
+        <div id="heroTags" class="chips" aria-label="Dates et durée"></div>
       </div>
-      <aside class="hero-panel"><div id="kpis" class="kpi-grid"></div></aside>
+      <aside class="hero-panel" aria-label="Sélection actuelle"><div id="kpis" class="kpi-grid"></div></aside>
     </section>
 
-    <nav id="sectionNav" class="section-nav" aria-label="Sections"></nav>
+    <nav id="tripTabs" class="trip-tabs" role="tablist" aria-label="Sections du voyage" aria-orientation="horizontal">
+      <button id="tab-circuit" class="trip-tab" type="button" role="tab" aria-selected="true" aria-controls="panel-circuit" tabindex="0" data-tab="circuit">Circuit</button>
+      <button id="tab-choice" class="trip-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-choice" tabindex="-1" data-tab="choice">Choix</button>
+      <button id="tab-budget" class="trip-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-budget" tabindex="-1" data-tab="budget">Budget</button>
+      <button id="tab-practical" class="trip-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-practical" tabindex="-1" data-tab="practical">Pratique</button>
+    </nav>
 
-    <section id="overview" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Synthèse</p><h2>Pourquoi cette option ?</h2></div><p id="overviewIntro" class="muted"></p></div>
-      <div id="summaryCards" class="summary-grid"></div>
-    </section>
+    <div id="panel-circuit" class="trip-tabpanel" role="tabpanel" aria-labelledby="tab-circuit" data-tab-panel="circuit" tabindex="0">
+      <section id="mapSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Carte interactive</p><h2>Le circuit</h2></div><p id="mapNote" class="muted"></p></div>
+        <div class="map-layout"><aside id="stops" class="stops"></aside><div class="map-stack"><div id="map" class="map"></div><div id="mapLegend" class="map-legend"></div></div></div>
+      </section>
 
-    <section id="compareSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Arbitrage</p><h2>Comparer les options</h2></div><p class="muted">Même destination, rythme et priorités différents. Les scores servent à comparer les variantes entre elles, pas les destinations.</p></div>
-      <div id="variantCompare" class="variant-grid"></div>
-    </section>
+      <section id="stepsSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Étapes</p><h2>Les temps forts</h2></div><p class="muted">L’hébergement affiché suit le budget sélectionné.</p></div>
+        <div id="steps" class="steps-grid"></div>
+      </section>
 
-    <section id="airportSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Porte-à-porte</p><h2>Quel aéroport depuis Reims ?</h2></div><p id="airportIntro" class="muted"></p></div>
-      <div id="airportWeights" class="airport-controls" aria-label="Pondérations du comparateur aéroports"></div>
-      <div id="airportRecommendation"></div>
-      <div id="airportCompare" class="airport-grid"></div>
-      <div id="airportCoverage" class="airport-coverage"></div>
-      <p id="airportTrace" class="airport-trace"></p>
-    </section>
+      <section id="daysSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Programme</p><h2>Jour par jour</h2></div><p id="daysIntro" class="muted"></p></div>
+        <div id="days" class="days-grid"></div>
+      </section>
+    </div>
 
-    <section id="mapSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Carte interactive</p><h2>Le circuit</h2></div><p id="mapNote" class="muted"></p></div>
-      <div class="map-layout"><aside id="stops" class="stops"></aside><div class="map-stack"><div id="map" class="map"></div><div id="mapLegend" class="map-legend"></div></div></div>
-    </section>
+    <div id="panel-choice" class="trip-tabpanel" role="tabpanel" aria-labelledby="tab-choice" data-tab-panel="choice" tabindex="0" hidden>
+      <section id="compareSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Arbitrage</p><h2>Comparer les options</h2></div><p class="muted">Même destination, rythme et priorités différents. Les scores servent à comparer les variantes entre elles, pas les destinations.</p></div>
+        <div class="decision-context">
+          <p id="variantSubtitle" class="decision-subtitle"></p>
+          <p id="overviewIntro" class="muted"></p>
+          <div id="decisionMeta" class="chips decision-meta"></div>
+          <div id="summaryCards" class="summary-grid"></div>
+        </div>
+        <div id="variantCompare" class="variant-grid"></div>
+      </section>
 
-    <section id="stepsSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Étapes</p><h2>Les temps forts</h2></div><p class="muted">L’hébergement affiché suit le budget sélectionné.</p></div>
-      <div id="steps" class="steps-grid"></div>
-    </section>
+      <section id="activitiesSection" class="panel-section" hidden>
+        <div class="section-head">
+          <div><p class="eyebrow">À la carte</p><h2>Choisir les activités</h2></div>
+          <p id="activitiesIntro" class="muted"></p>
+        </div>
+        <div id="activityBudgetSummary" class="activity-budget-summary" aria-live="polite"></div>
+        <div class="activity-actions">
+          <button id="activitiesReset" class="button secondary" type="button">Sélection recommandée</button>
+          <button id="activitiesClear" class="button secondary" type="button">Retirer les options</button>
+        </div>
+        <div id="activities" class="activity-grid"></div>
+      </section>
 
-    <section id="activitiesSection" class="panel-section" hidden>
-      <div class="section-head">
-        <div><p class="eyebrow">À la carte</p><h2>Choisir les activités</h2></div>
-        <p id="activitiesIntro" class="muted"></p>
-      </div>
-      <div id="activityBudgetSummary" class="activity-budget-summary" aria-live="polite"></div>
-      <div class="activity-actions">
-        <button id="activitiesReset" class="button secondary" type="button">Sélection recommandée</button>
-        <button id="activitiesClear" class="button secondary" type="button">Retirer les options</button>
-      </div>
-      <div id="activities" class="activity-grid"></div>
-    </section>
+      <section id="airportSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Porte-à-porte</p><h2>Quel aéroport depuis Reims ?</h2></div><p id="airportIntro" class="muted"></p></div>
+        <div id="airportWeights" class="airport-controls" aria-label="Pondérations du comparateur aéroports"></div>
+        <div id="airportRecommendation"></div>
+        <div id="airportCompare" class="airport-grid"></div>
+        <div id="airportCoverage" class="airport-coverage"></div>
+        <p id="airportTrace" class="airport-trace"></p>
+      </section>
+    </div>
 
-    <section id="wildlifeSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Nature</p><h2>Faune et milieux</h2></div><p class="muted">Les probabilités d’observation sont indicatives : aucune observation d’animal sauvage n’est garantie.</p></div>
-      <div id="wildlifeCards" class="info-grid"></div>
-    </section>
+    <div id="panel-budget" class="trip-tabpanel" role="tabpanel" aria-labelledby="tab-budget" data-tab-panel="budget" tabindex="0" hidden>
+      <section id="budgetSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Budget</p><h2>Trois niveaux de prestation</h2></div><p id="budgetIntro" class="muted"></p></div>
+        <div id="budgetCards" class="budget-grid"></div>
+        <div id="budgetBreakdown" class="budget-breakdown"></div>
+      </section>
 
-    <section id="foodSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Cuisine</p><h2>À manger sur place</h2></div><p id="foodIntro" class="muted"></p></div>
-      <div id="foodCards" class="info-grid"></div>
-    </section>
+      <section id="bookingSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Préparation</p><h2>Recherche et réservation</h2></div><p id="bookingIntro" class="muted"></p></div>
+        <div id="bookingSummary"></div>
+        <div id="bookingGroups" class="booking-groups"></div>
+        <p id="bookingTrace" class="booking-trace"></p>
+      </section>
+    </div>
 
-    <section id="weatherSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Saison</p><h2>Météo attendue</h2></div><p id="weatherIntro" class="muted"></p></div>
-      <div id="weatherCards" class="info-grid"></div>
-    </section>
+    <div id="panel-practical" class="trip-tabpanel" role="tabpanel" aria-labelledby="tab-practical" data-tab-panel="practical" tabindex="0" hidden>
+      <section id="wildlifeSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Nature</p><h2>Faune et milieux</h2></div><p class="muted">Les probabilités d’observation sont indicatives : aucune observation d’animal sauvage n’est garantie.</p></div>
+        <div id="wildlifeCards" class="info-grid"></div>
+      </section>
 
-    <section id="practicalSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Pratique</p><h2>Santé et sécurité</h2></div><p id="practicalIntro" class="muted"></p></div>
-      <div id="practicalCards" class="info-grid"></div>
-    </section>
+      <section id="weatherSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Saison</p><h2>Météo attendue</h2></div><p id="weatherIntro" class="muted"></p></div>
+        <div id="weatherCards" class="info-grid"></div>
+      </section>
 
-    <section id="rulesSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Règles locales</p><h2>Interdictions, réglementation et usages</h2></div><p class="muted">Le statut distingue une règle juridique, une réglementation locale, un usage culturel ou un point restant à vérifier.</p></div>
-      <div id="rules" class="rules-grid"></div>
-    </section>
+      <section id="foodSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Cuisine</p><h2>À manger sur place</h2></div><p id="foodIntro" class="muted"></p></div>
+        <div id="foodCards" class="info-grid"></div>
+      </section>
 
-    <section id="budgetSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Budget</p><h2>Trois niveaux de prestation</h2></div><p id="budgetIntro" class="muted"></p></div>
-      <div id="budgetCards" class="budget-grid"></div>
-      <div id="budgetBreakdown" class="budget-breakdown"></div>
-    </section>
+      <section id="practicalSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Pratique</p><h2>Santé et sécurité</h2></div><p id="practicalIntro" class="muted"></p></div>
+        <div id="practicalCards" class="info-grid"></div>
+      </section>
 
-    <section id="bookingSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Préparation</p><h2>Recherche et réservation</h2></div><p id="bookingIntro" class="muted"></p></div>
-      <div id="bookingSummary"></div>
-      <div id="bookingGroups" class="booking-groups"></div>
-      <p id="bookingTrace" class="booking-trace"></p>
-    </section>
+      <section id="rulesSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Règles locales</p><h2>Interdictions, réglementation et usages</h2></div><p class="muted">Le statut distingue une règle juridique, une réglementation locale, un usage culturel ou un point restant à vérifier.</p></div>
+        <div id="rules" class="rules-grid"></div>
+      </section>
 
-    <section id="daysSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Programme</p><h2>Jour par jour</h2></div><p id="daysIntro" class="muted"></p></div>
-      <div id="days" class="days-grid"></div>
-    </section>
-
-    <section id="sourcesSection" class="panel-section">
-      <div class="section-head"><div><p class="eyebrow">Traçabilité</p><h2>Sources et confiance</h2></div><p id="traceability" class="muted"></p></div>
-      <div id="sources" class="sources"></div>
-    </section>
+      <section id="sourcesSection" class="panel-section">
+        <div class="section-head"><div><p class="eyebrow">Traçabilité</p><h2>Sources et confiance</h2></div><p id="traceability" class="muted"></p></div>
+        <div id="sources" class="sources"></div>
+      </section>
+    </div>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
