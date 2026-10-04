@@ -1,1 +1,1651 @@
-{"schemaVersion":2,"id":"komodo-flores-nov-2026","defaultVariant":"balanced","defaultBudget":"comfort","meta":{"title":"Komodo + Flores + Bali","subtitle":"Dragons, mantas, snorkeling, culture balinaise et vraie fin plage.","travelers":"2 adultes","duration":"≈ 18–20 jours","dates":"Début novembre 2026","departure":"Départ réel : Reims","heroImage":"https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1800&q=80"},"traceability":{"researchDate":"2026-09-24","priceDate":"2026-09-24","lastChecked":"2026-09-24","budgetConfidence":"moyenne — phase de comparaison"},"budgetIntro":"Budget recalibré pour viser environ 5 000 € pour deux : hôtels milieu de gamme, vol intérieur standard et sortie/croisière Komodo partagée plutôt que privatisée. Les tarifs long-courrier observés restent des signaux sur dates proches.","variants":[{"id":"balanced","label":"Dragons + mantas + plage","subtitle":"Ubud, Labuan Bajo/Komodo, puis Nusa Lembongan ou Sanur.","rhythm":"Modéré","tradeoff":"Excellent équilibre faune/culture/plage ; quelques segments intérieurs restent fatigants.","scores":{"wildlife":4.8,"relaxation":4.2,"culture":4.5,"beach":4.3,"logistics":3.3},"overviewIntro":"Indonesia Travel cite septembre-novembre comme période privilégiée pour mantas, baleines et dragons.","summary":[{"value":"4.8/5","text":"faune"},{"value":"Sep.–nov.","text":"très bonne fenêtre Komodo"},{"value":"3 bases","text":"circuit lisible"}],"steps":[{"name":"Ubud","nights":"4 nuits","coords":[-8.5069,115.2625],"summary":"Rizières, temples, cuisine et récupération.","transfer":"Vol long-courrier + route","fatigue":"Moyenne","tags":["Culture","Cuisine"],"lodging":{"essential":"Guesthouse","comfort":"Boutique-hôtel piscine","premium":"Resort"}},{"name":"Labuan Bajo / Komodo","nights":"6 nuits","coords":[-8.496,119.8877],"summary":"Dragons de Komodo, mantas, récifs et navigation.","transfer":"Vol intérieur","fatigue":"Moyenne","tags":["Dragons","Mantas","Snorkeling"],"lodging":{"essential":"Hôtel simple + bateau partagé","comfort":"Hôtel vue mer + croisière confort","premium":"Resort + bateau premium"}},{"name":"Nusa Lembongan / Sanur","nights":"7 nuits","coords":[-8.6785,115.4555],"summary":"Fin plage, snorkeling et journées libres.","transfer":"Vol + bateau/route","fatigue":"Faible","tags":["Plage","Repos"],"lodging":{"essential":"Bungalow","comfort":"Petit resort","premium":"Villa/resort premium"}}],"daysIntro":"17 nuits environ.","days":[{"day":"J1–J4","title":"Ubud","detail":"Culture et récupération."},{"day":"J5–J10","title":"Komodo","detail":"Bateau, dragons et snorkeling."},{"day":"J11–J17","title":"Lembongan/Sanur","detail":"Fin détendue."}]}],"budgets":[{"id":"essential","label":"Essentiel","total":4200,"items":["Hôtels simples bien placés","Bateau Komodo partagé","Transferts collectifs/privés courts"],"breakdown":[{"label":"Accès Reims–CDG A/R","status":"estimated","amount":150},{"label":"Vols internationaux","status":"estimated","amount":1450},{"label":"Hébergements","status":"estimated","amount":850},{"label":"Vols intérieurs + transferts","status":"estimated","amount":450},{"label":"Komodo + activités","status":"estimated","amount":500},{"label":"Repas","status":"estimated","amount":400},{"label":"Visa / taxes","status":"estimated","amount":100},{"label":"Marge imprévus","status":"estimated","amount":300}]},{"id":"comfort","label":"Confort recommandé","recommended":true,"total":5000,"items":["Boutique-hôtels milieu de gamme","Bateau Komodo partagé confortable","Transferts privés ciblés"],"breakdown":[{"label":"Accès Reims–CDG A/R","status":"estimated","amount":160},{"label":"Vols internationaux","status":"estimated","amount":1500},{"label":"Hébergements","status":"estimated","amount":1150},{"label":"Vols intérieurs + transferts","status":"estimated","amount":500},{"label":"Komodo + activités","status":"estimated","amount":650},{"label":"Repas","status":"estimated","amount":500},{"label":"Visa / taxes","status":"estimated","amount":100},{"label":"Marge imprévus","status":"estimated","amount":440}]},{"id":"premium","label":"Premium","total":7600,"items":["Resorts premium ciblés","Bateau privé ou cabine supérieure","Villas fin de séjour"],"breakdown":[{"label":"Accès Reims–CDG A/R","status":"estimated","amount":200},{"label":"Vols internationaux","status":"estimated","amount":1800},{"label":"Hébergements","status":"estimated","amount":2500},{"label":"Vols intérieurs + transferts","status":"estimated","amount":700},{"label":"Komodo + activités","status":"estimated","amount":1000},{"label":"Repas","status":"estimated","amount":800},{"label":"Visa / taxes","status":"estimated","amount":100},{"label":"Marge imprévus","status":"estimated","amount":500}]}],"sources":[{"label":"Indonesia Travel — Komodo","url":"https://www.indonesia.travel/gb/en/travel-ideas/marine/unveil-the-lands-of-dragons-firsttimers-guide-to-komodo-national-park","note":"Septembre à novembre indiqué comme prime season pour mantas, whale sharks et dragons.","type":"officiel tourisme","checkedAt":"2026-09-05"},{"label":"Benchmark vols Bali novembre 2026","url":"https://www.ou-et-quand.net/vols/indonesie/bali/mois/novembre/","note":"Paris-Bali observé à partir d’environ 674 € A/R sur certaines dates début novembre.","type":"tarif","checkedAt":"2026-09-05"}]}
+{
+  "schemaVersion": 2,
+  "id": "komodo-flores-nov-2026",
+  "defaultVariant": "flores",
+  "defaultBudget": "comfort",
+  "meta": {
+    "title": "Bali + Komodo + Flores",
+    "subtitle": "Culture balinaise, liveaboard à Komodo, Wae Rebo et fin de séjour très calme à Jimbaran.",
+    "travelers": "2 adultes",
+    "duration": "21 jours porte-à-porte · 19 nuits",
+    "dates": "14 nov. → 4 déc. 2026",
+    "departure": "Reims → Paris-CDG",
+    "heroImage": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1800&q=80"
+  },
+  "overviewIntro": "Circuit de travail désormais daté et chiffré pour viser 5 000 € pour deux. Komodo reste le temps fort faune ; Flores apporte une vraie immersion terrestre à Wae Rebo ; la fin à Sidemen puis Jimbaran ralentit volontairement le rythme.",
+  "summary": [
+    {
+      "value": "19 nuits",
+      "text": "dont 2 à bord à Komodo"
+    },
+    {
+      "value": "≈ 4 825 €",
+      "text": "scénario Confort avec activités conseillées"
+    },
+    {
+      "value": "6 nuits",
+      "text": "fin plage à Jimbaran"
+    }
+  ],
+  "variants": [
+    {
+      "id": "flores",
+      "label": "Avec Wae Rebo",
+      "subtitle": "Ubud → Komodo 3J/2N → Wae Rebo 2J/1N → Sidemen → Jimbaran.",
+      "rhythm": "Modéré, avec 2 jours actifs",
+      "tradeoff": "Le meilleur équilibre : Flores ajoute montagne, culture Manggarai et nuit traditionnelle au prix de deux journées plus fatigantes.",
+      "scores": {
+        "wildlife": 4.9,
+        "relaxation": 4.1,
+        "culture": 4.8,
+        "beach": 4.2,
+        "logistics": 3.3
+      },
+      "overviewIntro": "Je recommande cette variante : la nuit simple à Wae Rebo est une expérience en soi et permet de garder le budget pour un meilleur bateau à Komodo et davantage de confort sur la fin.",
+      "summary": [
+        {
+          "value": "Wae Rebo",
+          "text": "immersion Flores 2J/1N"
+        },
+        {
+          "value": "Komodo 3J/2N",
+          "text": "cabine privée recommandée"
+        },
+        {
+          "value": "3 + 6 nuits",
+          "text": "Sidemen puis Jimbaran pour ralentir"
+        }
+      ],
+      "routes": [
+        {
+          "type": "road",
+          "label": "DPS → Ubud",
+          "real": false,
+          "points": [
+            [
+              -8.7482,
+              115.1672
+            ],
+            [
+              -8.5069,
+              115.2625
+            ]
+          ]
+        },
+        {
+          "type": "air",
+          "label": "Bali → Labuan Bajo",
+          "real": false,
+          "points": [
+            [
+              -8.5069,
+              115.2625
+            ],
+            [
+              -8.7482,
+              115.1672
+            ],
+            [
+              -8.4867,
+              119.889
+            ]
+          ]
+        },
+        {
+          "type": "sea",
+          "label": "Boucle Komodo 3J/2N",
+          "real": false,
+          "points": [
+            [
+              -8.4867,
+              119.889
+            ],
+            [
+              -8.651,
+              119.572
+            ],
+            [
+              -8.6491,
+              119.716
+            ],
+            [
+              -8.4867,
+              119.889
+            ]
+          ]
+        },
+        {
+          "type": "road",
+          "label": "Labuan Bajo ↔ Wae Rebo",
+          "real": false,
+          "points": [
+            [
+              -8.4867,
+              119.889
+            ],
+            [
+              -8.8205,
+              120.2861
+            ]
+          ]
+        },
+        {
+          "type": "air",
+          "label": "Labuan Bajo → Bali",
+          "real": false,
+          "points": [
+            [
+              -8.4867,
+              119.889
+            ],
+            [
+              -8.7482,
+              115.1672
+            ],
+            [
+              -8.4699,
+              115.441
+            ]
+          ]
+        },
+        {
+          "type": "road",
+          "label": "Sidemen → Jimbaran",
+          "real": false,
+          "points": [
+            [
+              -8.4699,
+              115.441
+            ],
+            [
+              -8.7905,
+              115.1605
+            ]
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "Ubud",
+          "nights": "4 nuits · 15–19 nov.",
+          "coords": [
+            -8.5069,
+            115.2625
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rice%20terraces%2C%20Ubud%2C%20Bali.jpg?width=1200",
+          "summary": "Récupération du long-courrier, rizières, temples, macaques et vraie journée libre.",
+          "transfer": "DPS → Ubud : route, temps variable selon trafic",
+          "fatigue": "Faible",
+          "tags": [
+            "Culture",
+            "Rizières",
+            "Spa",
+            "Macaques"
+          ],
+          "wildlife": "Macaques au Monkey Forest",
+          "culture": "Très forte",
+          "food": "Très forte",
+          "activity": "Faible à modérée",
+          "crowding": "Élevée sur les sites connus",
+          "weather": "Averses possibles",
+          "safety": "Circulation routière : chauffeur conseillé",
+          "signature": "Tegallalang + Tirta Empul tôt le matin, puis retour au calme.",
+          "lodging": {
+            "essential": "Green Field / guesthouse équivalente",
+            "comfort": "Green Field Hotel — enveloppe ≈ 260 € / 4 nuits",
+            "premium": "Resort haut de gamme à Ubud — à arbitrer après les vols"
+          },
+          "recommendedStay": {
+            "name": "Green Field Hotel & Restaurant",
+            "url": "https://greenfieldresortubud.com/",
+            "priceEUR": 260,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Enveloppe de travail pour 4 nuits ; tarif exact des dates à confirmer avant réservation."
+          }
+        },
+        {
+          "name": "Labuan Bajo",
+          "nights": "3 nuits au total · 19, 22 et 24 nov.",
+          "coords": [
+            -8.4867,
+            119.889
+          ],
+          "image": "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=1200&q=80",
+          "summary": "Trois nuits tampons séparées autour du bateau et de Wae Rebo afin d’éviter les enchaînements fragiles.",
+          "transfer": "Vol DPS↔LBJ + transferts locaux",
+          "fatigue": "Faible",
+          "tags": [
+            "Transit utile",
+            "Port",
+            "Vue mer"
+          ],
+          "food": "Poissons et fruits de mer",
+          "activity": "Faible",
+          "crowding": "Modérée",
+          "weather": "Chaud, averses possibles",
+          "safety": "Marge avant le bateau volontaire",
+          "signature": "Dormir à Labuan Bajo avant l’embarquement protège le liveaboard d’un retard de vol.",
+          "lodging": {
+            "essential": "Seaesta ou hôtel simple bien placé",
+            "comfort": "Bayview Gardens — enveloppe ≈ 220 € / 3 nuits",
+            "premium": "Hôtel vue mer supérieur, sans surinvestir sur les nuits de transit"
+          },
+          "recommendedStay": {
+            "name": "Bayview Gardens Hotel",
+            "url": "https://www.bayview-gardens.com/",
+            "priceEUR": 220,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Enveloppe pour 3 nuits non consécutives ; comparer avec Seaesta au moment de réserver."
+          }
+        },
+        {
+          "name": "Komodo",
+          "nights": "2 nuits à bord · 20–22 nov.",
+          "coords": [
+            -8.651,
+            119.572
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Komodo%20Dragon%20%281%29.jpg?width=1200",
+          "summary": "Liveaboard partagé : Padar, Komodo/Rinca selon programme, Pink Beach, snorkeling, Manta Point/Taka Makassar et Kalong.",
+          "transfer": "Embarquement depuis Labuan Bajo",
+          "fatigue": "Modérée",
+          "tags": [
+            "Dragons",
+            "Mantas possibles",
+            "Snorkeling",
+            "Phinisi"
+          ],
+          "wildlife": "Très forte, sans garantie d’observation",
+          "beach": "Pink Beach + récifs",
+          "culture": "Faible",
+          "food": "Repas à bord",
+          "activity": "Modérée",
+          "crowding": "Variable selon les spots",
+          "weather": "Dépendant de la mer",
+          "safety": "Qualité du bateau et politique météo prioritaires",
+          "signature": "Le cœur animalier du voyage ; ne pas sacrifier la qualité du bateau pour économiser quelques dizaines d’euros.",
+          "lodging": {
+            "essential": "Kanha Loka — Share Queen ≈ 447 € / 2",
+            "comfort": "Kanha Loka — Superior Queen privée ≈ 596 € / 2",
+            "premium": "Kanha Natha — Private Ocean View ≈ 715 € / 2"
+          },
+          "recommendedStay": {
+            "name": "Kanha Loka — Superior Queen",
+            "url": "https://komodoboat.com/loka-boat-tour/",
+            "priceEUR": 595.77,
+            "priceIDR": 12000000,
+            "status": "observed",
+            "checkedAt": "2026-10-04",
+            "note": "Départ 20–22 novembre publié ; disponibilité à recontrôler au paiement."
+          }
+        },
+        {
+          "name": "Wae Rebo",
+          "nights": "1 nuit · 23–24 nov.",
+          "coords": [
+            -8.8205,
+            120.2861
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rumah%20Adat%20Mbaru%20Niang.jpg?width=1200",
+          "summary": "Route vers Denge, trek, accueil Manggarai et nuit collective dans une Mbaru Niang.",
+          "transfer": "≈ 4–5 h de route puis ≈ 2–3 h de marche selon conditions",
+          "fatigue": "Élevée",
+          "tags": [
+            "Flores",
+            "Trek",
+            "Culture Manggarai",
+            "Nuit simple"
+          ],
+          "culture": "Très forte",
+          "food": "Repas simples inclus",
+          "activity": "Élevée",
+          "crowding": "Variable",
+          "weather": "Centre de Flores plus humide que Labuan Bajo",
+          "safety": "Chaussures, pluie et route à anticiper",
+          "signature": "La nuit rustique est volontaire : l’argent est mieux placé dans Komodo et les hôtels de fin de séjour.",
+          "lodging": {
+            "essential": "Mbaru Niang collective incluse",
+            "comfort": "Mbaru Niang collective incluse",
+            "premium": "Même nuit traditionnelle — le confort fait partie du compromis"
+          },
+          "recommendedStay": {
+            "name": "Open trip Wae Rebo 2J/1N",
+            "url": "https://kapalwisatalabuanbajo.com/tour/open-trip-wae-rebo/",
+            "priceEUR": 173.77,
+            "priceIDR": 3500000,
+            "status": "observed",
+            "checkedAt": "2026-10-04",
+            "note": "Prix publié pour 2 personnes ; transport, guide, porter, nuit, entrées et repas indiqués comme inclus par le prestataire."
+          }
+        },
+        {
+          "name": "Sidemen",
+          "nights": "3 nuits · 25–28 nov.",
+          "coords": [
+            -8.4699,
+            115.441
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/RICE%20TERRACE%20OF%20SIDEMEN%20EAST%20BALI.jpg?width=1200",
+          "summary": "Rizières, piscine, yoga/spa et rythme lent après Flores.",
+          "transfer": "Vol LBJ→DPS puis route vers Sidemen",
+          "fatigue": "Modérée le jour du transfert, faible ensuite",
+          "tags": [
+            "Rizières",
+            "Spa",
+            "Repos",
+            "Cuisine"
+          ],
+          "culture": "Forte",
+          "food": "Forte",
+          "activity": "À la carte",
+          "crowding": "Faible à modérée",
+          "weather": "Averses possibles",
+          "safety": "Faible enjeu hors transport routier",
+          "signature": "C’est ici que je remettrais du confort après la nuit simple de Wae Rebo.",
+          "lodging": {
+            "essential": "Boutique-hôtel local avec piscine",
+            "comfort": "Wapa di Ume Sidemen — enveloppe ≈ 450 € / 3 nuits",
+            "premium": "Wapa di Ume — catégorie supérieure / villa selon promo"
+          },
+          "recommendedStay": {
+            "name": "Wapa di Ume Sidemen",
+            "url": "https://mail.wapadiumesidemen.com/offers/secluded-wapa-package",
+            "priceEUR": 450,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Forfait 2 nuits publié à 6 817 500 IDR net ; enveloppe 3 nuits à confirmer."
+          }
+        },
+        {
+          "name": "Jimbaran",
+          "nights": "6 nuits · 28 nov.–4 déc.",
+          "coords": [
+            -8.7905,
+            115.1605
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Jimbaran%20Beach%2C%20Bali.jpg?width=1200",
+          "summary": "Fin balnéaire longue : plage, piscine, massages, Uluwatu au coucher du soleil et marge météo.",
+          "transfer": "Sidemen → Jimbaran en voiture",
+          "fatigue": "Faible",
+          "tags": [
+            "Plage",
+            "Repos",
+            "Uluwatu",
+            "Fin douce"
+          ],
+          "beach": "Bonne",
+          "culture": "Uluwatu en excursion",
+          "food": "Seafood de Jimbaran",
+          "activity": "Faible",
+          "crowding": "Modérée",
+          "weather": "Averses possibles",
+          "safety": "Courants et baignade à évaluer localement",
+          "signature": "Les deux derniers jours restent volontairement presque vides.",
+          "lodging": {
+            "essential": "Anja Jimbaran ou équivalent",
+            "comfort": "Anja Jimbaran — enveloppe ≈ 300 € / 6 nuits",
+            "premium": "Resort 5★ plage si marge budgétaire après les vols"
+          },
+          "recommendedStay": {
+            "name": "Anja Jimbaran",
+            "url": "https://anjajimbaran.com/",
+            "priceEUR": 300,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Offre 5+ nuits actuellement publiée ; enveloppe conservatrice pour 6 nuits, à valider sur les dates exactes."
+          }
+        }
+      ],
+      "daysIntro": "Dates de travail 14 novembre → 4 décembre 2026. Les activités optionnelles peuvent être activées/désactivées dans le configurateur sans modifier les nuits.",
+      "days": [
+        {
+          "day": "14–15 nov.",
+          "title": "Reims → Bali",
+          "detail": "Reims → CDG, long-courrier, arrivée à Denpasar puis transfert vers Ubud. Aucun programme à l’arrivée."
+        },
+        {
+          "day": "16 nov.",
+          "title": "Ubud doux",
+          "detail": "Monkey Forest le matin si sélectionné, puis centre d’Ubud, piscine ou massage."
+        },
+        {
+          "day": "17 nov.",
+          "title": "Rizières + temple",
+          "detail": "Tegallalang et Tirta Empul avec chauffeur si sélectionnés ; départ tôt."
+        },
+        {
+          "day": "18 nov.",
+          "title": "Journée libre",
+          "detail": "Aucune excursion imposée : spa, petite marche, cafés ou repos."
+        },
+        {
+          "day": "19 nov.",
+          "title": "Ubud → Labuan Bajo",
+          "detail": "Vol intérieur puis nuit tampon avant le liveaboard."
+        },
+        {
+          "day": "20–22 nov.",
+          "title": "Komodo 3J/2N",
+          "detail": "Kelor/Manjarite/Kalong puis Padar, Pink Beach, Komodo, Manta Point/Taka Makassar selon conditions, puis retour Labuan Bajo."
+        },
+        {
+          "day": "22 nov.",
+          "title": "Labuan Bajo",
+          "detail": "Retour vers midi, douche, dîner et récupération."
+        },
+        {
+          "day": "23–24 nov.",
+          "title": "Wae Rebo",
+          "detail": "Route vers Denge, trek et nuit traditionnelle ; retour à Labuan Bajo le lendemain."
+        },
+        {
+          "day": "25 nov.",
+          "title": "Retour Bali → Sidemen",
+          "detail": "Vol LBJ→DPS puis transfert vers Sidemen. Soirée libre."
+        },
+        {
+          "day": "26 nov.",
+          "title": "Sidemen",
+          "detail": "Randonnée rizières légère ou yoga ; journée de récupération."
+        },
+        {
+          "day": "27 nov.",
+          "title": "Sidemen à la carte",
+          "detail": "Cours de cuisine, spa ou journée libre selon les options sélectionnées."
+        },
+        {
+          "day": "28 nov.",
+          "title": "Sidemen → Jimbaran",
+          "detail": "Transfert puis début de la phase balnéaire."
+        },
+        {
+          "day": "29–30 nov.",
+          "title": "Jimbaran libre",
+          "detail": "Plage, piscine, seafood et massages sans programme obligatoire."
+        },
+        {
+          "day": "1 déc.",
+          "title": "Uluwatu",
+          "detail": "Temple + Kecak au coucher du soleil si sélectionnés ; journée libre avant le départ."
+        },
+        {
+          "day": "2–3 déc.",
+          "title": "Marge météo + repos",
+          "detail": "Deux journées volontairement libres. Massage possible ; Uluwatu peut être décalé ici si nécessaire."
+        },
+        {
+          "day": "4 déc.",
+          "title": "Bali → Reims",
+          "detail": "Transfert aéroport puis vol retour."
+        }
+      ],
+      "mapNote": "Les liaisons aériennes, maritimes et routières sont schématiques ; elles servent à comprendre l’ordre des étapes, pas à guider la navigation."
+    },
+    {
+      "id": "relaxed",
+      "label": "Sans Wae Rebo",
+      "subtitle": "Même Komodo, mais Flores terrestre supprimée au profit d’une nuit supplémentaire à Sidemen.",
+      "rhythm": "Doux",
+      "tradeoff": "Moins d’immersion à Flores, mais deux journées de route/trek en moins et une récupération plus facile.",
+      "scores": {
+        "wildlife": 4.8,
+        "relaxation": 4.7,
+        "culture": 4.1,
+        "beach": 4.2,
+        "logistics": 4.1
+      },
+      "overviewIntro": "Variante utile si la fatigue ou la météo rendent Wae Rebo moins séduisant. On garde les 19 nuits et on ajoute une nuit à Sidemen.",
+      "summary": [
+        {
+          "value": "0 trek",
+          "text": "Flores intérieur supprimé"
+        },
+        {
+          "value": "4 nuits",
+          "text": "Sidemen au lieu de 3"
+        },
+        {
+          "value": "Même Komodo",
+          "text": "aucun compromis sur le temps fort faune"
+        }
+      ],
+      "routes": [
+        {
+          "type": "road",
+          "label": "DPS → Ubud",
+          "real": false,
+          "points": [
+            [
+              -8.7482,
+              115.1672
+            ],
+            [
+              -8.5069,
+              115.2625
+            ]
+          ]
+        },
+        {
+          "type": "air",
+          "label": "Bali → Labuan Bajo",
+          "real": false,
+          "points": [
+            [
+              -8.5069,
+              115.2625
+            ],
+            [
+              -8.7482,
+              115.1672
+            ],
+            [
+              -8.4867,
+              119.889
+            ]
+          ]
+        },
+        {
+          "type": "sea",
+          "label": "Boucle Komodo 3J/2N",
+          "real": false,
+          "points": [
+            [
+              -8.4867,
+              119.889
+            ],
+            [
+              -8.651,
+              119.572
+            ],
+            [
+              -8.6491,
+              119.716
+            ],
+            [
+              -8.4867,
+              119.889
+            ]
+          ]
+        },
+        {
+          "type": "air",
+          "label": "Labuan Bajo → Bali",
+          "real": false,
+          "points": [
+            [
+              -8.4867,
+              119.889
+            ],
+            [
+              -8.7482,
+              115.1672
+            ],
+            [
+              -8.4699,
+              115.441
+            ]
+          ]
+        },
+        {
+          "type": "road",
+          "label": "Sidemen → Jimbaran",
+          "real": false,
+          "points": [
+            [
+              -8.4699,
+              115.441
+            ],
+            [
+              -8.7905,
+              115.1605
+            ]
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "name": "Ubud",
+          "nights": "4 nuits · 15–19 nov.",
+          "coords": [
+            -8.5069,
+            115.2625
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rice%20terraces%2C%20Ubud%2C%20Bali.jpg?width=1200",
+          "summary": "Même programme : récupération, culture et activités à la carte.",
+          "transfer": "DPS → Ubud",
+          "fatigue": "Faible",
+          "tags": [
+            "Culture",
+            "Repos"
+          ],
+          "lodging": {
+            "essential": "Green Field / guesthouse équivalente",
+            "comfort": "Green Field Hotel — enveloppe ≈ 260 € / 4 nuits",
+            "premium": "Resort haut de gamme à Ubud — à arbitrer"
+          },
+          "recommendedStay": {
+            "name": "Green Field Hotel & Restaurant",
+            "url": "https://greenfieldresortubud.com/",
+            "priceEUR": 260,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Tarif exact à confirmer."
+          }
+        },
+        {
+          "name": "Labuan Bajo",
+          "nights": "4 nuits au total autour du bateau",
+          "coords": [
+            -8.4867,
+            119.889
+          ],
+          "image": "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=1200&q=80",
+          "summary": "Base simple avant/après Komodo, sans excursion terrestre longue.",
+          "transfer": "Vol DPS↔LBJ",
+          "fatigue": "Faible",
+          "tags": [
+            "Transit",
+            "Port"
+          ],
+          "lodging": {
+            "essential": "Seaesta ou hôtel simple",
+            "comfort": "Bayview Gardens",
+            "premium": "Hôtel vue mer supérieur"
+          },
+          "recommendedStay": {
+            "name": "Bayview Gardens Hotel",
+            "url": "https://www.bayview-gardens.com/",
+            "priceEUR": 290,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Une nuit supplémentaire par rapport à la variante Flores."
+          }
+        },
+        {
+          "name": "Komodo",
+          "nights": "2 nuits à bord · 20–22 nov.",
+          "coords": [
+            -8.651,
+            119.572
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Komodo%20Dragon%20%281%29.jpg?width=1200",
+          "summary": "Même liveaboard 3J/2N, aucune réduction sur le temps fort animalier.",
+          "transfer": "Embarquement Labuan Bajo",
+          "fatigue": "Modérée",
+          "tags": [
+            "Dragons",
+            "Mantas possibles",
+            "Snorkeling"
+          ],
+          "lodging": {
+            "essential": "Kanha Loka — Share Queen",
+            "comfort": "Kanha Loka — Superior Queen privée",
+            "premium": "Kanha Natha — Private Ocean View"
+          },
+          "recommendedStay": {
+            "name": "Kanha Loka — Superior Queen",
+            "url": "https://komodoboat.com/loka-boat-tour/",
+            "priceEUR": 595.77,
+            "priceIDR": 12000000,
+            "status": "observed",
+            "checkedAt": "2026-10-04",
+            "note": "Départ 20–22 novembre publié."
+          }
+        },
+        {
+          "name": "Sidemen",
+          "nights": "4 nuits",
+          "coords": [
+            -8.4699,
+            115.441
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/RICE%20TERRACE%20OF%20SIDEMEN%20EAST%20BALI.jpg?width=1200",
+          "summary": "Une nuit de plus pour spa, rizières et repos.",
+          "transfer": "Vol LBJ→DPS puis route",
+          "fatigue": "Faible après le transfert",
+          "tags": [
+            "Rizières",
+            "Spa",
+            "Repos"
+          ],
+          "lodging": {
+            "essential": "Boutique-hôtel local",
+            "comfort": "Wapa di Ume Sidemen",
+            "premium": "Wapa catégorie supérieure"
+          },
+          "recommendedStay": {
+            "name": "Wapa di Ume Sidemen",
+            "url": "https://mail.wapadiumesidemen.com/offers/secluded-wapa-package",
+            "priceEUR": 600,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Enveloppe 4 nuits à confirmer."
+          }
+        },
+        {
+          "name": "Jimbaran",
+          "nights": "6 nuits · 28 nov.–4 déc.",
+          "coords": [
+            -8.7905,
+            115.1605
+          ],
+          "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Jimbaran%20Beach%2C%20Bali.jpg?width=1200",
+          "summary": "Même longue fin de séjour balnéaire.",
+          "transfer": "Sidemen → Jimbaran",
+          "fatigue": "Faible",
+          "tags": [
+            "Plage",
+            "Repos"
+          ],
+          "lodging": {
+            "essential": "Anja Jimbaran ou équivalent",
+            "comfort": "Anja Jimbaran",
+            "premium": "Resort 5★ plage si marge"
+          },
+          "recommendedStay": {
+            "name": "Anja Jimbaran",
+            "url": "https://anjajimbaran.com/",
+            "priceEUR": 300,
+            "status": "estimated",
+            "checkedAt": "2026-10-04",
+            "note": "Offre 5+ nuits actuellement publiée ; dates exactes à confirmer."
+          }
+        }
+      ],
+      "daysIntro": "Cette variante conserve les mêmes dates et remplace Wae Rebo par du temps fixe à Labuan Bajo/Sidemen.",
+      "days": [
+        {
+          "day": "14–19 nov.",
+          "title": "Voyage + Ubud",
+          "detail": "Même début de circuit et mêmes activités optionnelles."
+        },
+        {
+          "day": "19–23 nov.",
+          "title": "Labuan Bajo + Komodo",
+          "detail": "Nuit tampon, liveaboard 3J/2N, puis récupération."
+        },
+        {
+          "day": "23–28 nov.",
+          "title": "Retour Bali + Sidemen",
+          "detail": "Pas de Wae Rebo : retour plus tôt à Bali et quatre nuits à Sidemen."
+        },
+        {
+          "day": "28 nov.–4 déc.",
+          "title": "Jimbaran",
+          "detail": "Six nuits de plage, Uluwatu optionnel et marge météo."
+        }
+      ],
+      "mapNote": "Variante sans Wae Rebo ; tracés schématiques."
+    }
+  ],
+  "activitiesIntro": "Active ou désactive les activités à la carte. Le budget projeté se recalcule immédiatement. Les blocs qui structurent le nombre de nuits sont affichés mais verrouillés : pour supprimer Wae Rebo, utilise la variante « Sans Wae Rebo ».",
+  "activities": [
+    {
+      "id": "komodo-liveaboard",
+      "type": "structural",
+      "locked": true,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "20–22 nov.",
+      "location": "Komodo",
+      "title": "Liveaboard Komodo 3J/2N — Loka Superior",
+      "description": "Padar, Pink Beach, dragons, snorkeling, Kalong et sites marins selon météo et itinéraire réel. Cabine privée Superior Queen recommandée.",
+      "priceIDR": 12000000,
+      "priceEUR": 595.77,
+      "priceLabel": "12,0 M IDR · ≈ 596 € / 2",
+      "status": "observed",
+      "recommendation": "À sanctuariser",
+      "priority": "must",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Komodo%20Dragon%20%281%29.jpg?width=1000",
+      "url": "https://komodoboat.com/loka-boat-tour/",
+      "checkedAt": "2026-10-04",
+      "note": "Départ 20–22 novembre affiché. Faune sauvage : aucune observation garantie."
+    },
+    {
+      "id": "wae-rebo",
+      "type": "structural",
+      "locked": true,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores"
+      ],
+      "date": "23–24 nov.",
+      "location": "Flores",
+      "title": "Wae Rebo 2J/1N",
+      "description": "Longue route, trek, accueil Manggarai et nuit collective dans une Mbaru Niang. Le confort simple est volontaire et cohérent avec le voyage.",
+      "priceIDR": 3500000,
+      "priceEUR": 173.77,
+      "priceLabel": "3,5 M IDR · ≈ 174 € / 2",
+      "status": "observed",
+      "recommendation": "Vaut vraiment le détour",
+      "priority": "must",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rumah%20Adat%20Mbaru%20Niang.jpg?width=1000",
+      "url": "https://kapalwisatalabuanbajo.com/tour/open-trip-wae-rebo/",
+      "checkedAt": "2026-10-04",
+      "note": "Prix publié pour 2 personnes ; inclusions à reconfirmer au paiement."
+    },
+    {
+      "id": "monkey-forest",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "16 nov.",
+      "location": "Ubud",
+      "title": "Sacred Monkey Forest",
+      "description": "Forêt sanctuaire, temples et macaques à Ubud. Facile à intégrer sans transformer la journée en excursion.",
+      "priceIDR": 260000,
+      "priceEUR": 12.91,
+      "priceLabel": "260 k IDR · ≈ 13 € / 2",
+      "status": "observed",
+      "recommendation": "Très bon rapport plaisir/prix",
+      "priority": "recommended",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Macaca%20fascicularis%2C%20Ubud%20Monkey%20Forest%2C%20Bali%2C%2020220822%201053%200056.jpg?width=1000",
+      "url": "https://monkeyforestubud.com/visit/",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "ubud-rice-temple",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "17 nov.",
+      "location": "Ubud",
+      "title": "Tegallalang + Tirta Empul avec chauffeur",
+      "description": "Départ tôt, rizières puis temple de Tirta Empul. Le chauffeur privé évite de louer un scooter et permet de rentrer dès que la journée suffit.",
+      "priceIDR": 900000,
+      "priceEUR": 44.68,
+      "priceLabel": "≈ 900 k IDR · ≈ 45 € / 2",
+      "status": "estimated",
+      "recommendation": "À garder",
+      "priority": "recommended",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rice%20terraces%2C%20Ubud%2C%20Bali.jpg?width=1000",
+      "url": "https://www.ohana-agency.com/blog/tegalalang-rice-terrace",
+      "checkedAt": "2026-10-04",
+      "note": "Entrées documentées ; chauffeur conservé comme enveloppe estimative."
+    },
+    {
+      "id": "komodo-ocean-view-upgrade",
+      "type": "upgrade",
+      "locked": false,
+      "defaultSelected": false,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "20–22 nov.",
+      "location": "Komodo",
+      "title": "Upgrade Natha — cabine privée Ocean View",
+      "description": "Remplace la cabine Loka Superior par une cabine vue mer sur un bateau plus petit. C’est le premier upgrade que je financerais si le long-courrier sort sous budget.",
+      "priceIDR": 2400000,
+      "priceEUR": 119.15,
+      "priceLabel": "+2,4 M IDR · ≈ +119 € / 2",
+      "status": "observed",
+      "recommendation": "Upgrade qui vaut le coup",
+      "priority": "splurge",
+      "image": "https://images.unsplash.com/photo-1544550285-f813152fb2fd?auto=format&fit=crop&w=1000&q=80",
+      "url": "https://komodoboat.com/schedule-availability/",
+      "checkedAt": "2026-10-04",
+      "note": "Surcoût calculé entre Loka Superior (6,0 M IDR/pax) et Natha Private Ocean View (7,2 M IDR/pax)."
+    },
+    {
+      "id": "sidemen-trek",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "26 nov.",
+      "location": "Sidemen",
+      "title": "Trek rizières programmé au Wapa",
+      "description": "Petite marche dans les rizières, adaptée à la phase de récupération après Flores.",
+      "priceIDR": 0,
+      "priceEUR": 0,
+      "priceLabel": "Inclus selon forfait",
+      "status": "observed",
+      "recommendation": "Oui si inclus",
+      "priority": "recommended",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/RICE%20TERRACE%20OF%20SIDEMEN%20EAST%20BALI.jpg?width=1000",
+      "url": "https://mail.wapadiumesidemen.com/offers/secluded-wapa-package",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "sidemen-cooking",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": false,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "27 nov.",
+      "location": "Sidemen",
+      "title": "Cours de cuisine balinaise",
+      "description": "Marché local, préparation et repas. Expérience agréable mais assez chère pour Bali : à prendre seulement si la cuisine est une priorité.",
+      "priceIDR": 1815000,
+      "priceEUR": 90.11,
+      "priceLabel": "1,815 M IDR · ≈ 90 € / couple",
+      "status": "observed",
+      "recommendation": "Plaisir, pas indispensable",
+      "priority": "nice",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/RICE%20TERRACE%20OF%20SIDEMEN%20EAST%20BALI.jpg?width=1000",
+      "url": "https://mail.wapadiumesidemen.com/experiences/balinese-cooking-class",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "floating-breakfast",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": false,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "27 ou 28 nov.",
+      "location": "Sidemen",
+      "title": "Floating breakfast",
+      "description": "Petit-déjeuner servi dans la piscine. Photogénique, mais faible valeur ajoutée par rapport au prix.",
+      "priceIDR": 726000,
+      "priceEUR": 36.04,
+      "priceLabel": "726 k IDR · ≈ 36 € / couple",
+      "status": "observed",
+      "recommendation": "À couper en premier",
+      "priority": "skip",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/RICE%20TERRACE%20OF%20SIDEMEN%20EAST%20BALI.jpg?width=1000",
+      "url": "https://mail.wapadiumesidemen.com/experiences/floating-breakfast",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "id": "romantic-dinner",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": false,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "27 nov.",
+      "location": "Sidemen",
+      "title": "Dîner romantique du resort",
+      "description": "Dîner privé mis en scène. Très cher par rapport aux restaurants locaux ; l’économie finance presque l’upgrade Ocean View à Komodo.",
+      "priceIDR": 2500000,
+      "priceEUR": 124.12,
+      "priceLabel": "2,5 M IDR ++ · ≥ 124 € / couple",
+      "status": "observed",
+      "recommendation": "Je le couperais",
+      "priority": "skip",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/RICE%20TERRACE%20OF%20SIDEMEN%20EAST%20BALI.jpg?width=1000",
+      "url": "https://mail.wapadiumesidemen.com/experiences/romantic-dinner-under-star",
+      "checkedAt": "2026-10-04",
+      "note": "Prix hors ++ ; coût final supérieur au montant converti."
+    },
+    {
+      "id": "uluwatu-kecak",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "1 déc.",
+      "location": "Uluwatu",
+      "title": "Uluwatu + danse Kecak au coucher du soleil",
+      "description": "Temple en falaise et spectacle de Kecak à 18 h. Très touristique, mais le ratio coût/expérience reste excellent.",
+      "priceIDR": 1070000,
+      "priceEUR": 53.12,
+      "priceLabel": "≈ 1,07 M IDR · ≈ 53 € / 2 avec voiture",
+      "status": "estimated",
+      "recommendation": "Vaut le coup",
+      "priority": "recommended",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Uluwatu%20Temple%2C%20Bali%2C%20Indonesia.jpg?width=1000",
+      "url": "https://uluwatufiredance.com/fr/ticket-prices/",
+      "checkedAt": "2026-10-04",
+      "note": "Billets documentés ; voiture privée conservée comme enveloppe estimative."
+    },
+    {
+      "id": "jimbaran-massage",
+      "type": "optional",
+      "locked": false,
+      "defaultSelected": true,
+      "applicableVariants": [
+        "flores",
+        "relaxed"
+      ],
+      "date": "2 déc.",
+      "location": "Jimbaran",
+      "title": "Massage balinais pour deux",
+      "description": "Une dépense détente cohérente avec la fin de voyage, pour un coût très faible par rapport au budget global.",
+      "priceIDR": 550000,
+      "priceEUR": 27.31,
+      "priceLabel": "550 k IDR · ≈ 27 € / 2",
+      "status": "observed",
+      "recommendation": "Très bon compromis",
+      "priority": "recommended",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Jimbaran%20Beach%2C%20Bali.jpg?width=1000",
+      "url": "https://anjajimbaran.com/offers/",
+      "checkedAt": "2026-10-04"
+    }
+  ],
+  "activityBudget": {
+    "targetEUR": 5000,
+    "currencyNote": "Conversion de travail au 4 octobre 2026 : 1 000 000 IDR ≈ 49,65 €.",
+    "baselineSelectedEUR": 138.02,
+    "note": "Les totaux des trois budgets intègrent par défaut Monkey Forest, la journée Ubud, le trek inclus à Sidemen, Uluwatu/Kecak et un massage à Jimbaran. Les options cochées en plus s’ajoutent automatiquement."
+  },
+  "wildlife": [
+    {
+      "title": "Komodo",
+      "note": "Animaux sauvages : aucune observation n’est garantie.",
+      "items": [
+        [
+          "Dragon de Komodo",
+          "Potentiel très élevé"
+        ],
+        [
+          "Raie manta",
+          "Possible sur les sites marins"
+        ],
+        [
+          "Tortues",
+          "Possible en snorkeling"
+        ],
+        [
+          "Récifs",
+          "Temps fort marin"
+        ]
+      ]
+    },
+    {
+      "title": "Bali",
+      "items": [
+        [
+          "Macaques",
+          "Monkey Forest"
+        ],
+        [
+          "Oiseaux et petite faune",
+          "Variable"
+        ],
+        [
+          "Vie marine",
+          "Secondaire dans ce circuit"
+        ]
+      ]
+    },
+    {
+      "title": "Principe",
+      "items": [
+        [
+          "Interaction",
+          "Ne pas nourrir/toucher"
+        ],
+        [
+          "Mantas/dragons",
+          "Itinéraire dépendant des conditions"
+        ],
+        [
+          "Priorité",
+          "Opérateur sérieux plutôt que prix minimum"
+        ]
+      ]
+    }
+  ],
+  "food": {
+    "intro": "On garde les repas simples pendant les transferts et on réserve les dépenses plaisir aux étapes longues. Le budget repas reste volontairement modéré car les warungs offrent un très bon rapport qualité/prix.",
+    "cards": [
+      {
+        "title": "Ubud / Sidemen",
+        "items": [
+          [
+            "Nasi campur",
+            "À privilégier"
+          ],
+          [
+            "Babi guling",
+            "Spécialité balinaise"
+          ],
+          [
+            "Cours de cuisine",
+            "Optionnel · 90 € / couple"
+          ]
+        ]
+      },
+      {
+        "title": "Labuan Bajo / Jimbaran",
+        "items": [
+          [
+            "Poissons grillés",
+            "Très pertinent"
+          ],
+          [
+            "Seafood",
+            "Comparer prix/poids avant commande"
+          ],
+          [
+            "À bord",
+            "Repas inclus selon le bateau"
+          ]
+        ]
+      },
+      {
+        "title": "Hygiène",
+        "items": [
+          [
+            "Eau",
+            "Bouteille ou filtrée"
+          ],
+          [
+            "Glace",
+            "Établissement fiable"
+          ],
+          [
+            "Cru / fruits",
+            "Prudence selon préparation"
+          ]
+        ]
+      }
+    ]
+  },
+  "weather": {
+    "intro": "Mi-novembre se situe au début de la saison humide. Le circuit garde des jours tampons et place la partie maritime tôt ; une vérification BMKG et maritime devra être refaite juste avant Komodo.",
+    "cards": [
+      {
+        "title": "Bali",
+        "items": [
+          [
+            "Températures",
+            "Chaudes toute l’année"
+          ],
+          [
+            "Pluie",
+            "Averses possibles en novembre"
+          ],
+          [
+            "Conséquence",
+            "Prévoir activités déplaçables"
+          ]
+        ]
+      },
+      {
+        "title": "Komodo",
+        "items": [
+          [
+            "Navigation",
+            "Dépendante mer/vent"
+          ],
+          [
+            "Snorkeling",
+            "Conditions variables"
+          ],
+          [
+            "Marge",
+            "Nuit à Labuan Bajo avant embarquement"
+          ]
+        ]
+      },
+      {
+        "title": "Flores intérieur",
+        "items": [
+          [
+            "Wae Rebo",
+            "Plus humide que Labuan Bajo"
+          ],
+          [
+            "Trek",
+            "Poncho + chaussures adhérentes"
+          ],
+          [
+            "Alternative",
+            "Variante sans Wae Rebo disponible"
+          ]
+        ]
+      }
+    ]
+  },
+  "practical": {
+    "intro": "Les formalités, la couverture de carte et les conditions maritimes restent à revérifier avant paiement non remboursable.",
+    "healthSafety": [
+      {
+        "title": "Transport",
+        "items": [
+          [
+            "Route",
+            "Chauffeur plutôt que scooter"
+          ],
+          [
+            "Bateau",
+            "Vérifier équipements et politique météo"
+          ],
+          [
+            "Vol intérieur",
+            "Nuit tampon avant Komodo"
+          ]
+        ]
+      },
+      {
+        "title": "Santé",
+        "items": [
+          [
+            "Moustiques",
+            "Répulsif et protection"
+          ],
+          [
+            "Hydratation",
+            "Chaleur + trek"
+          ],
+          [
+            "Consultation voyage",
+            "À discuter selon zones exactes de Flores"
+          ]
+        ]
+      },
+      {
+        "title": "Assurance",
+        "items": [
+          [
+            "BoursoBank noire",
+            "Garanties exactes à contrôler"
+          ],
+          [
+            "Évacuation / mer",
+            "Point critique"
+          ],
+          [
+            "Assurance séparée",
+            "Non ajoutée par défaut"
+          ]
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "label": "Passeport / entrée",
+        "value": "Passeport et conditions d’entrée à revérifier sur France Diplomatie et l’immigration indonésienne avant réservation.",
+        "level": "check"
+      },
+      {
+        "label": "Bali tourist levy",
+        "value": "Taxe touristique de Bali à prévoir et à revérifier sur le portail officiel.",
+        "level": "regulation"
+      },
+      {
+        "label": "Faune",
+        "value": "Respecter les consignes des rangers ; aucune interaction volontaire avec les animaux sauvages.",
+        "level": "regulation"
+      },
+      {
+        "label": "Temples",
+        "value": "Tenue et comportement respectueux ; suivre les règles locales d’accès.",
+        "level": "culture"
+      }
+    ]
+  },
+  "budgetIntro": "Budgets pour deux adultes, porte-à-porte depuis Reims. Le Confort recommandé vise à rester sous 5 000 € sans sacrifier Komodo ; assurance séparée non incluse par défaut.",
+  "budgets": [
+    {
+      "id": "essential",
+      "label": "Essentiel",
+      "total": 4100,
+      "recommended": false,
+      "items": [
+        "Hôtels simples mais bien placés",
+        "Cabine Komodo partagée",
+        "Même Wae Rebo et mêmes temps forts"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "amount": 140,
+          "status": "estimé"
+        },
+        {
+          "label": "Vols internationaux",
+          "amount": 1450,
+          "status": "estimé"
+        },
+        {
+          "label": "Vols intérieurs + bagages",
+          "amount": 230,
+          "status": "estimé"
+        },
+        {
+          "label": "Ubud — 4 nuits",
+          "amount": 170,
+          "status": "estimé"
+        },
+        {
+          "label": "Labuan Bajo — nuits tampon",
+          "amount": 180,
+          "status": "estimé"
+        },
+        {
+          "label": "Komodo 3J/2N — cabine partagée",
+          "amount": 447,
+          "status": "observé"
+        },
+        {
+          "label": "Parc / taxes Komodo",
+          "amount": 55,
+          "status": "à revérifier"
+        },
+        {
+          "label": "Bloc Wae Rebo / extension Sidemen",
+          "amount": 174,
+          "status": "observé"
+        },
+        {
+          "label": "Sidemen",
+          "amount": 210,
+          "status": "estimé"
+        },
+        {
+          "label": "Jimbaran — 6 nuits",
+          "amount": 270,
+          "status": "estimé"
+        },
+        {
+          "label": "Transferts locaux",
+          "amount": 130,
+          "status": "estimé"
+        },
+        {
+          "label": "Activités optionnelles par défaut",
+          "amount": 138,
+          "status": "mixte",
+          "activityBaseline": true
+        },
+        {
+          "label": "Repas / boissons",
+          "amount": 320,
+          "status": "estimé"
+        },
+        {
+          "label": "Visa + taxe Bali",
+          "amount": 65,
+          "status": "à revérifier"
+        },
+        {
+          "label": "Marge imprévus",
+          "amount": 121,
+          "status": "estimé"
+        }
+      ]
+    },
+    {
+      "id": "comfort",
+      "label": "Confort recommandé",
+      "total": 4825,
+      "recommended": true,
+      "items": [
+        "Cabine privée Loka Superior",
+        "Wapa di Ume à Sidemen",
+        "Longue fin plage à Anja Jimbaran"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "amount": 140,
+          "status": "estimé"
+        },
+        {
+          "label": "Vols internationaux",
+          "amount": 1500,
+          "status": "estimé"
+        },
+        {
+          "label": "Vols intérieurs + bagages",
+          "amount": 250,
+          "status": "estimé"
+        },
+        {
+          "label": "Ubud — 4 nuits",
+          "amount": 260,
+          "status": "estimé"
+        },
+        {
+          "label": "Labuan Bajo — 3 nuits tampon",
+          "amount": 220,
+          "status": "estimé"
+        },
+        {
+          "label": "Komodo 3J/2N — Loka Superior",
+          "amount": 596,
+          "status": "observé"
+        },
+        {
+          "label": "Parc / taxes Komodo",
+          "amount": 55,
+          "status": "à revérifier"
+        },
+        {
+          "label": "Bloc Wae Rebo / extension Sidemen",
+          "amount": 174,
+          "status": "observé"
+        },
+        {
+          "label": "Sidemen — 3 nuits",
+          "amount": 450,
+          "status": "estimé"
+        },
+        {
+          "label": "Jimbaran — 6 nuits",
+          "amount": 300,
+          "status": "estimé"
+        },
+        {
+          "label": "Transferts locaux",
+          "amount": 150,
+          "status": "estimé"
+        },
+        {
+          "label": "Activités optionnelles par défaut",
+          "amount": 138,
+          "status": "mixte",
+          "activityBaseline": true
+        },
+        {
+          "label": "Repas / boissons",
+          "amount": 350,
+          "status": "estimé"
+        },
+        {
+          "label": "Visa + taxe Bali",
+          "amount": 65,
+          "status": "à revérifier"
+        },
+        {
+          "label": "Marge imprévus",
+          "amount": 177,
+          "status": "estimé"
+        }
+      ]
+    },
+    {
+      "id": "premium",
+      "label": "Premium",
+      "total": 8020,
+      "recommended": false,
+      "items": [
+        "Cabine Komodo Ocean View",
+        "Resorts premium ciblés",
+        "Plus de transferts privés et marge"
+      ],
+      "breakdown": [
+        {
+          "label": "Accès Reims–CDG A/R",
+          "amount": 180,
+          "status": "estimé"
+        },
+        {
+          "label": "Vols internationaux",
+          "amount": 1800,
+          "status": "estimé"
+        },
+        {
+          "label": "Vols intérieurs + bagages",
+          "amount": 350,
+          "status": "estimé"
+        },
+        {
+          "label": "Ubud — resort premium",
+          "amount": 600,
+          "status": "estimé"
+        },
+        {
+          "label": "Labuan Bajo — catégorie supérieure",
+          "amount": 360,
+          "status": "estimé"
+        },
+        {
+          "label": "Komodo 3J/2N — Ocean View",
+          "amount": 715,
+          "status": "observé"
+        },
+        {
+          "label": "Parc / taxes Komodo",
+          "amount": 55,
+          "status": "à revérifier"
+        },
+        {
+          "label": "Bloc Wae Rebo / extension Sidemen",
+          "amount": 200,
+          "status": "estimé"
+        },
+        {
+          "label": "Sidemen — premium",
+          "amount": 950,
+          "status": "estimé"
+        },
+        {
+          "label": "Jimbaran — resort 5★",
+          "amount": 900,
+          "status": "estimé"
+        },
+        {
+          "label": "Transferts privés",
+          "amount": 280,
+          "status": "estimé"
+        },
+        {
+          "label": "Activités optionnelles par défaut",
+          "amount": 138,
+          "status": "mixte",
+          "activityBaseline": true
+        },
+        {
+          "label": "Repas / boissons",
+          "amount": 650,
+          "status": "estimé"
+        },
+        {
+          "label": "Visa + taxe Bali",
+          "amount": 65,
+          "status": "à revérifier"
+        },
+        {
+          "label": "Marge imprévus",
+          "amount": 777,
+          "status": "estimé"
+        }
+      ]
+    }
+  ],
+  "traceability": {
+    "researchDate": "2026-10-04",
+    "priceDate": "2026-10-04",
+    "lastChecked": "2026-10-04",
+    "budgetConfidence": "moyenne — plusieurs prix publiés, vols et hôtels exacts encore à verrouiller",
+    "fx": {
+      "pair": "IDR/EUR",
+      "checkedAt": "2026-10-04",
+      "oneMillionIDRtoEUR": 49.6475
+    }
+  },
+  "sources": [
+    {
+      "label": "KomodoBoat — calendrier et prix 2026",
+      "url": "https://komodoboat.com/schedule-availability/",
+      "note": "Départs novembre et prix Loka/Natha, dont 20–22 novembre.",
+      "type": "prestataire",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "KomodoBoat — Kanha Loka",
+      "url": "https://komodoboat.com/loka-boat-tour/",
+      "note": "Cabines, programme et inclusions.",
+      "type": "prestataire",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "Open trip Wae Rebo 2J/1N",
+      "url": "https://kapalwisatalabuanbajo.com/tour/open-trip-wae-rebo/",
+      "note": "Prix 2 personnes et inclusions publiées.",
+      "type": "prestataire",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "Wapa di Ume Sidemen — Secluded Wapa",
+      "url": "https://mail.wapadiumesidemen.com/offers/secluded-wapa-package",
+      "note": "Forfait, repas/activités inclus selon durée.",
+      "type": "hôtel",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "Wapa — Balinese Cooking Class",
+      "url": "https://mail.wapadiumesidemen.com/experiences/balinese-cooking-class",
+      "note": "1,815 M IDR net / couple.",
+      "type": "activité",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "Anja Jimbaran",
+      "url": "https://anjajimbaran.com/",
+      "note": "Offre séjour 5+ nuits et transfert aéroport.",
+      "type": "hôtel",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "Monkey Forest Ubud — tarifs",
+      "url": "https://monkeyforestubud.com/visit/",
+      "note": "130 k IDR / adulte.",
+      "type": "site officiel",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "Uluwatu Fire Dance — tarifs",
+      "url": "https://uluwatufiredance.com/fr/ticket-prices/",
+      "note": "Tarifs temple/spectacle utilisés avec enveloppe chauffeur.",
+      "type": "activité",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "France Diplomatie — Indonésie",
+      "url": "https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/indonesie/",
+      "note": "Référence sécurité, santé et formalités à revérifier avant départ.",
+      "type": "officiel",
+      "checkedAt": "2026-10-04"
+    },
+    {
+      "label": "BMKG — climat Indonésie",
+      "url": "https://www.bmkg.go.id/iklim",
+      "note": "Référence météo/climat et contrôle à refaire avant les segments maritimes.",
+      "type": "officiel",
+      "checkedAt": "2026-10-04"
+    }
+  ]
+}
