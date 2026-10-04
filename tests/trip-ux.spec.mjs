@@ -177,6 +177,7 @@ test('navigation clavier, focus, dialogue et accordéons — mobile', async ({ b
   await page.keyboard.press('Enter');
   await expect(secondStep).toHaveAttribute('open', '');
 
+  await page.locator('.days-disclosure > summary').click();
   const secondDay = page.locator('.day-card').nth(1);
   await secondDay.locator('summary').focus();
   await page.keyboard.press('Enter');
@@ -188,6 +189,69 @@ test('navigation clavier, focus, dialogue et accordéons — mobile', async ({ b
   await page.keyboard.press('Enter');
   await expect(practical).toHaveAttribute('open', '');
 
+  expect(errors).toEqual([]);
+  await context.close();
+});
+
+
+test('densité verticale mobile — détails repliés et premier contenu utile proche', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  const errors = await openTrip(page);
+
+  const metrics = {};
+  const config = {
+    circuit: {
+      cards: '.step-card,.day-card',
+      useful: '#map',
+      closed: ['.step-accordion[open]', '.days-disclosure[open]', '.day-card[open]']
+    },
+    choice: {
+      cards: '.summary-card,.variant-card,.activity-card,.airport-access-card',
+      useful: '.decision-context',
+      closed: ['.activity-card[open]', '.airport-details[open]']
+    },
+    budget: {
+      cards: '.budget-card,.booking-progress-card,.booking-group',
+      useful: '#budgetSummary',
+      closed: ['.budget-detail[open]', '.budget-drivers-disclosure[open]', '.booking-group-disclosure[open]']
+    },
+    practical: {
+      cards: '.practical-accordion',
+      useful: '.practical-accordion',
+      closed: ['.practical-accordion[open]']
+    }
+  };
+
+  for (const [tab, spec] of Object.entries(config)) {
+    await page.locator(`#tab-${tab}`).click();
+    await page.waitForTimeout(80);
+    const measured = await page.evaluate(({ tab, cards, useful }) => {
+      const panel = document.querySelector(`#panel-${tab}`);
+      const target = panel?.querySelector(useful);
+      const visibleCards = [...(panel?.querySelectorAll(cards) || [])].filter(node => node.getClientRects().length > 0);
+      const openedDetails = [...(panel?.querySelectorAll('details[open]') || [])].filter(node => node.getClientRects().length > 0);
+      return {
+        visibleCards: visibleCards.length,
+        openSections: openedDetails.length,
+        firstUsefulOffset: panel && target
+          ? Math.round(target.getBoundingClientRect().top - panel.getBoundingClientRect().top)
+          : null
+      };
+    }, { tab, cards: spec.cards, useful: spec.useful });
+    metrics[tab] = measured;
+
+    expect(measured.visibleCards).toBeGreaterThan(0);
+    expect(measured.openSections).toBeLessThanOrEqual(1);
+    expect(measured.firstUsefulOffset).not.toBeNull();
+    expect(measured.firstUsefulOffset).toBeLessThanOrEqual(320);
+
+    for (const selector of spec.closed) {
+      await expect(page.locator(`#panel-${tab} ${selector}`)).toHaveCount(0);
+    }
+  }
+
+  console.log('MOBILE_DENSITY_METRICS ' + JSON.stringify(metrics));
   expect(errors).toEqual([]);
   await context.close();
 });
