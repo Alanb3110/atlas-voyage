@@ -30,23 +30,28 @@ if (!tripId) {
 }
 
 async function init() {
-  const [accessResponse, groundCostResponse, tripResponse] = await Promise.all([
+  const [accessResponse, groundCostResponse, availabilityResponse] = await Promise.all([
     fetch('./data/airport-access/reims-airports.json', { cache: 'no-store' }),
     fetch('./data/airport-access/reims-ground-costs.json', { cache: 'no-store' }),
-    fetch(`./data/airport-access/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' })
+    fetch('./data/airport-access/index.json', { cache: 'no-store' })
   ]);
 
   if (!accessResponse.ok) throw new Error(`Accès Reims HTTP ${accessResponse.status}`);
   if (!groundCostResponse.ok) throw new Error(`Coûts terrestres HTTP ${groundCostResponse.status}`);
+  if (!availabilityResponse.ok) throw new Error(`Index aéroports HTTP ${availabilityResponse.status}`);
 
   const accessData = await accessResponse.json();
   const groundCostData = await groundCostResponse.json();
+  const availability = await availabilityResponse.json();
+  const tripHasAirportData = Array.isArray(availability.tripIds) && availability.tripIds.includes(tripId);
   let data;
 
-  if (tripResponse.ok) {
+  if (tripHasAirportData) {
+    const tripResponse = await fetch(`./data/airport-access/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' });
+    if (!tripResponse.ok) throw new Error(`Vols HTTP ${tripResponse.status}`);
     data = await tripResponse.json();
     if (data.tripId !== tripId) throw new Error('tripId incohérent');
-  } else if (tripResponse.status === 404) {
+  } else {
     data = {
       schemaVersion: 1,
       tripId,
@@ -57,8 +62,6 @@ async function init() {
       defaultWeights: DEFAULT_WEIGHTS,
       options: []
     };
-  } else {
-    throw new Error(`Vols HTTP ${tripResponse.status}`);
   }
 
   ensureProgressiveOrder();
