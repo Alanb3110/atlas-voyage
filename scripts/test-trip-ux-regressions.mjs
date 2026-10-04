@@ -16,11 +16,12 @@ function check(condition, label, detail = '') {
   }
 }
 
-const [html, css, styles, js, sw] = await Promise.all([
+const [html, css, styles, js, bookingJs, sw] = await Promise.all([
   readFile(resolve(root, 'trip.html'), 'utf8'),
   readFile(resolve(root, 'assets/css/trip-v2.css'), 'utf8'),
   readFile(resolve(root, 'assets/css/styles.css'), 'utf8'),
   readFile(resolve(root, 'assets/js/trip.js'), 'utf8'),
+  readFile(resolve(root, 'assets/js/booking-readiness.js'), 'utf8'),
   readFile(resolve(root, 'sw.js'), 'utf8')
 ]);
 
@@ -91,6 +92,22 @@ check(css.includes(':focus-visible{') && css.includes('UX audit guardrails: keyb
   'clavier: focus visible explicite sur contrôles principaux');
 check(css.includes('.trip-hero-copy h1{margin-bottom:16px;overflow-wrap:anywhere}'),
   'mobile: titre principal protégé contre le débordement');
+
+check(js.includes("const MOBILE_DENSITY_QUERY = '(max-width: 620px)';") &&
+      js.includes("!compactMobile && i===activeStepIndex?'open':''"),
+  'densité mobile: aucune étape ouverte par défaut à 620 px et moins');
+check(js.includes('class="days-disclosure"') && js.includes('class="day-card"') &&
+      !js.includes("i===0?'open':''"),
+  'densité mobile: programme replié et aucune journée ouverte par défaut');
+check(js.includes('class="budget-drivers-disclosure"') &&
+      js.includes('class="budget-detail"'),
+  'densité mobile: détails budget conservés derrière des disclosures fermés');
+check(bookingJs.includes("window.matchMedia('(max-width: 620px)').matches") &&
+      bookingJs.includes('booking-group-disclosure'),
+  'densité mobile: groupes de réservation repliés');
+check(css.includes('#mapSection .stops{display:none}') &&
+      css.includes('#mapSection .map{height:300px;min-height:300px'),
+  'densité mobile: doublon des étapes retiré au-dessus de la carte et carte compactée');
 
 function parseHex(hex) {
   const value = hex.replace('#', '');
