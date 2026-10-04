@@ -191,7 +191,7 @@ function safeUrl(value='') {
 function canonicalizeUrl() {
   const base = new URL(buildTripUrl(trip.id, variant.id, budget.id), location.href);
   if ((trip.activities || []).some(activity => !activity.locked)) {
-    const selected = [...activityState].sort();
+    const selected = selectableActivities().filter(activity => activityState.has(activity.id)).map(activity => activity.id).sort();
     base.searchParams.set('activities', selected.length ? selected.join(',') : 'none');
   }
   base.searchParams.set('tab', activeTab);
@@ -334,6 +334,7 @@ function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
     requestAnimationFrame(() => requestAnimationFrame(() => {
       if (!map) return;
       map.invalidateSize({pan:false});
+      fitMapToCurrentRoute();
       syncActiveStepVisuals();
     }));
   }
