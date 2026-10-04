@@ -259,13 +259,17 @@ function renderActivities() {
 
   const priorityLabel = {must:'Structurant',recommended:'Recommandé',splurge:'Upgrade intéressant',nice:'Option plaisir',skip:'À couper en premier'};
   $('#activities').innerHTML = activities.map(activity => {
-    const selected = activity.locked || activityState.has(activity.id);
+    const includedByBudget = (activity.includedBudgets || []).includes(budget.id);
+    const selected = activity.locked || includedByBudget || activityState.has(activity.id);
+    const disabled = activity.locked || includedByBudget;
     const image = activity.image ? `<img class="activity-image" loading="lazy" src="${safeUrl(activity.image)}" alt="">` : '';
     const impact = activity.locked
       ? 'Inclus dans le circuit'
-      : activityPriceEUR(activity,budget) === 0
-        ? 'Sans surcoût'
-        : `${selected ? 'Inclus au budget projeté' : 'Ajouter'} · ${formatEURPrecise(activityPriceEUR(activity,budget))}`;
+      : includedByBudget
+        ? 'Déjà inclus dans ce niveau de budget'
+        : activityPriceEUR(activity,budget) === 0
+          ? 'Sans surcoût'
+          : `${selected ? 'Inclus au budget projeté' : 'Ajouter'} · ${formatEURPrecise(activityPriceEUR(activity,budget))}`;
     return `<article class="activity-card ${selected?'selected':''} ${activity.locked?'locked':''}">
       ${image}
       <div class="activity-copy">
@@ -273,8 +277,8 @@ function renderActivities() {
         <div class="activity-title-row">
           <div><span class="activity-priority ${escapeHtml(activity.priority||'nice')}">${escapeHtml(priorityLabel[activity.priority]||activity.recommendation||'Option')}</span><h3>${escapeHtml(activity.title||'Activité')}</h3></div>
           <label class="activity-toggle">
-            <input type="checkbox" data-activity-toggle="${escapeHtml(activity.id)}" ${selected?'checked':''} ${activity.locked?'disabled':''}>
-            <span>${activity.locked?'Circuit':'Choisir'}</span>
+            <input type="checkbox" data-activity-toggle="${escapeHtml(activity.id)}" ${selected?'checked':''} ${disabled?'disabled':''}>
+            <span>${activity.locked?'Circuit':includedByBudget?'Inclus':'Choisir'}</span>
           </label>
         </div>
         <p>${escapeHtml(activity.description||'')}</p>
