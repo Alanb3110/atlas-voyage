@@ -332,6 +332,7 @@ function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
   if (focus) selectedTab?.focus();
   if (activeTab === 'circuit') {
     requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (!map) renderMap();
       if (!map) return;
       map.invalidateSize({pan:false});
       fitMapToCurrentRoute();
@@ -491,6 +492,14 @@ function activateStep(index,{openAccordion=true,centerMap=true,openPopup=true,sc
 }
 
 function renderMap() {
+  if (activeTab !== 'circuit') {
+    if (map) {
+      map.remove();
+      map = null;
+    }
+    mapMarkers = [];
+    return;
+  }
   const steps = variant.steps || [];
   const routes = variant.routes || [];
   activeStepIndex = Math.min(Math.max(activeStepIndex,0),Math.max(steps.length-1,0));
