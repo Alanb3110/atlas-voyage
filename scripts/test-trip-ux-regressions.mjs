@@ -77,6 +77,8 @@ check(css.includes('.trip-tab{min-width:0;min-height:44px') && css.includes('  .
   'tactile: onglets ≥44 px');
 check(css.includes('.trip-appbar-actions .icon-button{min-height:44px'),
   'tactile: Configurer/Partager ≥44 px');
+check(css.includes('.atlas-marker{background:transparent;border:0;width:44px!important;height:44px!important}'),
+  'tactile: marqueurs Leaflet 44 × 44 px');
 check(css.includes('.budget-card-compact .button{align-self:flex-start;min-height:44px'),
   'tactile: choix de budget ≥44 px');
 check(css.includes('.activity-book-link{display:inline-flex;align-items:center;min-height:44px') &&
