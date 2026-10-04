@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { LIFECYCLE, requiresTripData } from '../assets/js/lifecycle-contract.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
@@ -14,7 +15,7 @@ const finiteNumber = v => typeof v === 'number' && Number.isFinite(v);
 const finiteNonNegative = v => finiteNumber(v) && v >= 0;
 const validCoord = c => Array.isArray(c) && c.length === 2 && finiteNumber(c[0]) && finiteNumber(c[1]) && Math.abs(c[0]) <= 90 && Math.abs(c[1]) <= 180;
 const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
-const allowedLifecycle = new Set(['longlist','shortlist','selected','detailed','bookable','booked','archived']);
+const allowedLifecycle = new Set(LIFECYCLE);
 const allowedResearchDepth = new Set(['high','medium','low','legacy']);
 const allowedConfidence = new Set(['A','B','C','D']);
 const allowedGateStates = new Set(['pass','watch','hold','fail']);
@@ -44,48 +45,97 @@ for (const entry of catalog.trips ?? []) {
   if (!allowedLifecycle.has(entry.status)) fail('data/catalog.json', `${entry.id}: statut lifecycle inconnu ${entry.status}`);
   if (entry.researchDepth && !allowedResearchDepth.has(entry.researchDepth)) fail('data/catalog.json', `${entry.id}: researchDepth inconnu ${entry.researchDepth}`);
 
-  let trip;
-  try { trip = await readJson(entry.dataFile); }
-  catch (e) { fail(entry.dataFile, `JSON illisible ou fichier absent: ${e.message}`); continue; }
+  const strictTrip = requiresTripData(entry.status);
+  const hasDataFile = typeof entry.dataFile === 'string' && entry.dataFile.trim().length > 0;
+  const detailMetadata = ['defaultVariant','defaultBudget','variantCount'].filter(key => entry[key] != null);
 
-  const file = entry.dataFile;
-  if (trip.id !== entry.id) fail(file, `trip.id (${trip.id}) différent du catalogue (${entry.id})`);
-  if (!Array.isArray(trip.variants) || !trip.variants.length) fail(file, 'aucune variante');
-  if (!Array.isArray(trip.budgets) || trip.budgets.length !== 3) warn(file, `attendu: 3 budgets, trouvé: ${trip.budgets?.length ?? 0}`);
-  if (!trip.variants?.some(v => v.id === trip.defaultVariant)) fail(file, `defaultVariant inconnu: ${trip.defaultVariant}`);
-  if (!trip.budgets?.some(b => b.id === trip.defaultBudget)) fail(file, `defaultBudget inconnu: ${trip.defaultBudget}`);
-  if (entry.variantCount != null && entry.variantCount !== trip.variants?.length) warn(file, `variantCount catalogue=${entry.variantCount}, données=${trip.variants?.length}`);
+  if (detailMetadata.length && !hasDataFile) fail('data/catalog.json', `${entry.id}: ${detailMetadata.join(', ')} exige dataFile`);
+  if (strictTrip && !hasDataFile) fail('data/catalog.json', `${entry.id}: dataFile obligatoire au statut ${entry.status}`);
 
-  const budgetIds = new Set((trip.budgets ?? []).map(b => b.id));
-  for (const budget of trip.budgets ?? []) {
-    if (!budget.id) fail(file, 'budget sans id');
-    if (!finiteNonNegative(budget.total)) fail(file, `budget ${budget.id}: total non numérique ou négatif`);
-    const rows = budget.breakdown ?? [];
-    if (rows.length) {
-      let sum = 0;
-      for (const [rowIndex, row] of rows.entries()) {
-        if (!finiteNumber(row.amount)) {
-          fail(file, `budget ${budget.id}: poste ${rowIndex + 1} amount invalide`);
+  if (hasDataFile) {
+    let trip;
+    try { trip = await readJson(entry.dataFile); }
+    catch (e) { fail(entry.dataFile, `JSON illisible ou fichier absent: ${e.message}`); }
+
+    if (trip) {
+      const file = entry.dataFile;
+      if (trip.id !== entry.id) fail(file, `trip.id (${trip.id}) différent du catalogue (${entry.id})`);
+      if (strictTrip && trip.schemaVersion !== 2) fail(file, `schemaVersion 2 obligatoire au statut ${entry.status}`);
+
+      const variants = Array.isArray(trip.variants) ? trip.variants : [];
+      const budgets = Array.isArray(trip.budgets) ? trip.budgets : [];
+
+      if (trip.variants != null && !Array.isArray(trip.variants)) fail(file, 'variants doit être un tableau');
+      if (trip.budgets != null && !Array.isArray(trip.budgets)) fail(file, 'budgets doit être un tableau');
+      if (strictTrip && !variants.length) fail(file, 'aucune variante au statut détaillé+');
+      if (strictTrip && budgets.length !== 3) fail(file, `attendu au statut ${entry.status}: 3 budgets, trouvé: ${budgets.length}`);
+      else if (trip.budgets != null && budgets.length !== 3) warn(file, `attendu pour un dossier détaillé: 3 budgets, trouvé: ${budgets.length}`);
+
+      if (strictTrip) {
+        if (!trip.meta || typeof trip.meta !== 'object') fail(file, 'meta obligatoire au statut détaillé+');
+        for (const key of ['title','dates','duration']) if (!trip.meta?.[key]) fail(file, `meta.${key} obligatoire au statut détaillé+`);
+        if (!trip.traceability || typeof trip.traceability !== 'object') fail(file, 'traceability obligatoire au statut détaillé+');
+        for (const key of ['researchDate','priceDate','lastChecked','budgetConfidence']) if (!trip.traceability?.[key]) fail(file, `traceability.${key} obligatoire au statut détaillé+`);
+        if (!Array.isArray(trip.wildlife) || !trip.wildlife.length) fail(file, 'wildlife doit contenir au moins une entrée au statut détaillé+');
+        if (!trip.food || typeof trip.food !== 'object') fail(file, 'food obligatoire au statut détaillé+');
+        if (!trip.weather || typeof trip.weather !== 'object') fail(file, 'weather obligatoire au statut détaillé+');
+        if (!trip.practical || typeof trip.practical !== 'object') fail(file, 'practical obligatoire au statut détaillé+');
+        if (!Array.isArray(trip.sources) || !trip.sources.length) fail(file, 'sources obligatoire au statut détaillé+');
+      }
+
+      if (trip.defaultVariant != null && !variants.some(v => v.id === trip.defaultVariant)) fail(file, `defaultVariant inconnu: ${trip.defaultVariant}`);
+      if (trip.defaultBudget != null && !budgets.some(b => b.id === trip.defaultBudget)) fail(file, `defaultBudget inconnu: ${trip.defaultBudget}`);
+      if (strictTrip && !trip.defaultVariant) fail(file, 'defaultVariant obligatoire au statut détaillé+');
+      if (strictTrip && !trip.defaultBudget) fail(file, 'defaultBudget obligatoire au statut détaillé+');
+      if (strictTrip && entry.defaultVariant !== trip.defaultVariant) fail(file, `defaultVariant catalogue=${entry.defaultVariant}, données=${trip.defaultVariant}`);
+      if (strictTrip && entry.defaultBudget !== trip.defaultBudget) fail(file, `defaultBudget catalogue=${entry.defaultBudget}, données=${trip.defaultBudget}`);
+      if (entry.variantCount != null && entry.variantCount !== variants.length) warn(file, `variantCount catalogue=${entry.variantCount}, données=${variants.length}`);
+
+      const budgetIds = new Set(budgets.map(b => b.id));
+      if (strictTrip) {
+        for (const id of ['essential','comfort','premium']) if (!budgetIds.has(id)) fail(file, `budget contractuel manquant: ${id}`);
+      }
+
+      for (const budget of budgets) {
+        if (!budget.id) fail(file, 'budget sans id');
+        if (!finiteNonNegative(budget.total)) fail(file, `budget ${budget.id}: total non numérique ou négatif`);
+        const rows = budget.breakdown ?? [];
+        if (!Array.isArray(rows)) {
+          fail(file, `budget ${budget.id}: breakdown doit être un tableau`);
           continue;
         }
-        sum += row.amount;
+        if (rows.length) {
+          let sum = 0;
+          for (const [rowIndex, row] of rows.entries()) {
+            if (!finiteNumber(row.amount)) {
+              fail(file, `budget ${budget.id}: poste ${rowIndex + 1} amount invalide`);
+              continue;
+            }
+            sum += row.amount;
+          }
+          if (finiteNumber(budget.total) && Math.abs(sum - budget.total) > 1) fail(file, `budget ${budget.id}: somme des postes ${sum} ≠ total ${budget.total}`);
+        } else if (strictTrip) fail(file, `budget ${budget.id}: breakdown vide au statut détaillé+`);
+        else warn(file, `budget ${budget.id}: breakdown vide`);
       }
-      if (finiteNumber(budget.total) && Math.abs(sum - budget.total) > 1) fail(file, `budget ${budget.id}: somme des postes ${sum} ≠ total ${budget.total}`);
-    } else warn(file, `budget ${budget.id}: breakdown vide`);
-  }
 
-  for (const v of trip.variants ?? []) {
-    if (!v.id) fail(file, 'variante sans id');
-    if (!Array.isArray(v.steps) || !v.steps.length) fail(file, `variante ${v.id}: aucune étape`);
-    for (const [i, step] of (v.steps ?? []).entries()) {
-      if (!validCoord(step.coords)) fail(file, `variante ${v.id}, étape ${i + 1}: coordonnées invalides`);
-      if (!step.name) fail(file, `variante ${v.id}, étape ${i + 1}: nom manquant`);
-      for (const b of budgetIds) if (!step.lodging?.[b]) warn(file, `variante ${v.id}, ${step.name}: hébergement ${b} absent`);
-    }
-    for (const [i, route] of (v.routes ?? []).entries()) {
-      if (!['air','sea','road','rail'].includes(route.type)) warn(file, `variante ${v.id}, route ${i + 1}: type inconnu ${route.type}`);
-      if (!Array.isArray(route.points) || route.points.length < 2 || route.points.some(p => !validCoord(p))) fail(file, `variante ${v.id}, route ${i + 1}: points invalides`);
-      if (route.real == null) warn(file, `variante ${v.id}, route ${i + 1}: préciser real=true/false`);
+      for (const v of variants) {
+        if (!v.id) fail(file, 'variante sans id');
+        const steps = v.steps == null ? [] : v.steps;
+        if (v.steps != null && !Array.isArray(v.steps)) fail(file, `variante ${v.id}: steps doit être un tableau`);
+        if (strictTrip && (!Array.isArray(v.steps) || !v.steps.length)) fail(file, `variante ${v.id}: aucune étape au statut détaillé+`);
+        if (strictTrip && (!Array.isArray(v.days) || !v.days.length)) fail(file, `variante ${v.id}: programme jours absent au statut détaillé+`);
+
+        for (const [i, step] of (Array.isArray(steps) ? steps : []).entries()) {
+          if (!validCoord(step.coords)) fail(file, `variante ${v.id}, étape ${i + 1}: coordonnées invalides`);
+          if (!step.name) fail(file, `variante ${v.id}, étape ${i + 1}: nom manquant`);
+          for (const b of budgetIds) if (!step.lodging?.[b]) warn(file, `variante ${v.id}, ${step.name}: hébergement ${b} absent`);
+        }
+        for (const [i, route] of (v.routes ?? []).entries()) {
+          if (!['air','sea','road','rail'].includes(route.type)) warn(file, `variante ${v.id}, route ${i + 1}: type inconnu ${route.type}`);
+          if (!Array.isArray(route.points) || route.points.length < 2 || route.points.some(p => !validCoord(p))) fail(file, `variante ${v.id}, route ${i + 1}: points invalides`);
+          if (route.real == null) warn(file, `variante ${v.id}, route ${i + 1}: préciser real=true/false`);
+        }
+      }
     }
   }
 
