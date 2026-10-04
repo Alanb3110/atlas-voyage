@@ -912,7 +912,7 @@ function renderBudgets() {
   if (window.matchMedia(MOBILE_DENSITY_QUERY).matches) {
     $('#budgetDrivers').innerHTML = `
       <details class="budget-drivers-disclosure">
-        <summary><span><strong>Ce qui fait varier le budget</strong><small>${drivers.length} poste${drivers.length>1?'s':''} principal${drivers.length>1?'aux':' '}</small></span><span aria-hidden="true">⌄</span></summary>
+        <summary><span><strong>Ce qui fait varier le budget</strong><small>${drivers.length} poste${drivers.length>1?'s':''} principal${drivers.length>1?'aux':''}</small></span><span aria-hidden="true">⌄</span></summary>
         <div class="budget-drivers-body">
           <p class="muted">Calculé automatiquement à partir des écarts entre les trois niveaux et des activités sélectionnées.</p>
           ${driverList}
