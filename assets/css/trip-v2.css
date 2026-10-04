@@ -53,7 +53,6 @@ html{scroll-padding-top:var(--trip-scroll-offset,150px)}
 .trip-appbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
 .desktop-theme-slot{display:flex}
 .config-button{display:none}
-#hero,.trip-tabpanel,.panel-section{scroll-margin-top:var(--trip-scroll-offset,150px)}
 
 .trip-config-dialog{position:fixed;inset:auto 0 0;width:min(100%,560px);max-width:none;max-height:none;margin:0 auto;border:0;padding:0;background:transparent;color:var(--ink);overflow:visible}
 .trip-config-dialog::backdrop{background:rgba(7,25,21,.48);backdrop-filter:blur(3px)}
