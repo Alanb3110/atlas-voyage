@@ -1,10 +1,15 @@
 import { loadCatalog, loadTrip, params, buildTripUrl, formatEUR, formatDateFR, escapeHtml } from './store.js';
+import { tripDetailAvailable } from './lifecycle-contract.js';
 
 const $ = s => document.querySelector(s);
 const p = params();
 const catalog = await loadCatalog();
-let entry = catalog.trips.find(t => t.id === p.get('trip')) || catalog.trips[0];
-if (!entry) throw new Error('Aucun voyage dans le catalogue.');
+const requestedEntry = catalog.trips.find(t => t.id === p.get('trip'));
+if (requestedEntry && !tripDetailAvailable(requestedEntry)) {
+  location.replace('./index.html#destinationCompareSection');
+}
+let entry = tripDetailAvailable(requestedEntry) ? requestedEntry : catalog.trips.find(tripDetailAvailable);
+if (!entry) throw new Error('Aucun dossier détaillé disponible dans le catalogue.');
 let trip = await loadTrip(entry.dataFile);
 let variant = trip.variants.find(v => v.id === p.get('variant')) || trip.variants.find(v => v.id === trip.defaultVariant) || trip.variants[0];
 let budget = trip.budgets.find(b => b.id === p.get('budget')) || trip.budgets.find(b => b.id === trip.defaultBudget) || trip.budgets[0];
@@ -200,7 +205,7 @@ function canonicalizeUrl() {
 }
 
 function populateSelectors() {
-  $('#tripSelector').innerHTML = catalog.trips.map(t => `<option value="${escapeHtml(t.id)}" ${t.id===trip.id?'selected':''}>${escapeHtml(t.title)}</option>`).join('');
+  $('#tripSelector').innerHTML = catalog.trips.filter(tripDetailAvailable).map(t => `<option value="${escapeHtml(t.id)}" ${t.id===trip.id?'selected':''}>${escapeHtml(t.title)}</option>`).join('');
   $('#variantSelector').innerHTML = trip.variants.map(v => `<option value="${escapeHtml(v.id)}" ${v.id===variant.id?'selected':''}>${escapeHtml(v.label)}</option>`).join('');
   $('#budgetSelector').innerHTML = trip.budgets.map(b => `<option value="${escapeHtml(b.id)}" ${b.id===budget.id?'selected':''}>${escapeHtml(b.label)}</option>`).join('');
   $('#tripSelector').onchange = e => {
