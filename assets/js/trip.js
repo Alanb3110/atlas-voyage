@@ -521,11 +521,24 @@ function renderMap() {
   });
   mapMarkers = steps.map((s,i)=>{
     const marker = L.marker(s.coords,{icon:L.divIcon({className:'atlas-marker',html:`<div class="marker-pin"><span>${i+1}</span></div>`,iconSize:[34,34],iconAnchor:[17,32]})})
-      .addTo(map)
       .bindPopup(`<strong>${escapeHtml(s.name)}</strong><br>${escapeHtml(s.nights)}<br>${escapeHtml(s.summary||'')}`);
-    const markerElement = marker.getElement();
-    markerElement?.setAttribute('aria-label', `Ouvrir l’étape ${i+1} : ${s.name}`);
-    marker.on('click', () => activateStep(i,{openAccordion:true,centerMap:true,openPopup:false,scrollAccordion:true}));
+    marker.on('add', () => {
+      const markerElement = marker.getElement();
+      if (!markerElement) return;
+      markerElement.setAttribute('aria-label', `Ouvrir l’étape ${i+1} : ${s.name}`);
+      markerElement.onclick = event => {
+        event.preventDefault();
+        event.stopPropagation();
+        activateStep(i,{openAccordion:true,centerMap:true,openPopup:true,scrollAccordion:true});
+      };
+      markerElement.onkeydown = event => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        event.stopPropagation();
+        activateStep(i,{openAccordion:true,centerMap:true,openPopup:true,scrollAccordion:true});
+      };
+    });
+    marker.addTo(map);
     return marker;
   });
   map.fitBounds(allCoords,{padding:[40,40]});
