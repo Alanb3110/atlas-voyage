@@ -620,6 +620,7 @@ function renderSteps() {
       <div class="step-expanded ${image?'has-image':''}">
         ${image}
         <div class="step-expanded-copy">
+          ${compactMobile && tags.length?`<div class="step-expanded-tags" aria-label="Repères de l’étape">${tags.map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>`:''}
           ${details?`<div class="step-details">${details}</div>`:''}
           ${s.signature?`<div class="signature"><strong>Expérience signature :</strong> ${escapeHtml(s.signature)}</div>`:''}
           <div class="selected-lodging"><span class="stay-kicker">Hébergement · ${escapeHtml(budget.label)}</span><strong>${escapeHtml(lodgingFor(s))}</strong></div>
