@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, webkit]
+        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,15 +25,15 @@ jobs:
         run: |
           npm install --no-save @playwright/test@1.55.0
           npx playwright install --with-deps ${{ matrix.browser }}
-      - name: Run trip UX browser matrix
+      - name: Run Atlas UX browser matrix
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/atlas-http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID"' EXIT
           for attempt in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/trip.html >/dev/null; then
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null && curl -fsS http://127.0.0.1:4173/trip.html >/dev/null; then
               break
             fi
             sleep 1
           done
-          npx playwright test tests/trip-ux.spec.mjs --browser=${{ matrix.browser }} --reporter=line --workers=1
+          npx playwright test tests/trip-ux.spec.mjs tests/home-ux.spec.mjs --browser=${{ matrix.browser }} --reporter=line --workers=1
