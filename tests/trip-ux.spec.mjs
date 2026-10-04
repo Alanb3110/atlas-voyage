@@ -195,15 +195,35 @@ test('Leaflet reste cadré et ouvre la bonne étape après changement de variant
 
   await page.locator('#map').evaluate(node => node.scrollIntoView({ block: 'center' }));
   await page.waitForTimeout(180);
+  const markerRects = await page.locator('.leaflet-marker-icon').evaluateAll(nodes => nodes.map(node => {
+    const rect = node.getBoundingClientRect();
+    return {
+      step: node.dataset.step,
+      left: rect.left,
+      right: rect.right,
+      top: rect.top,
+      bottom: rect.bottom,
+      width: rect.width,
+      height: rect.height
+    };
+  }));
+  for (const rect of markerRects) {
+    expect(rect.width).toBeGreaterThanOrEqual(44);
+    expect(rect.height).toBeGreaterThanOrEqual(44);
+  }
+  for (let i = 0; i < markerRects.length; i += 1) {
+    for (let j = i + 1; j < markerRects.length; j += 1) {
+      const a = markerRects[i];
+      const b = markerRects[j];
+      const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+      const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+      expect(overlapX > 0 && overlapY > 0, `marqueurs ${a.step}/${b.step} se chevauchent`).toBe(false);
+    }
+  }
+
   const marker = page.locator('.leaflet-marker-icon[data-step="1"]');
   await expect(marker).toHaveAttribute('aria-label', /Ouvrir l’étape 2/);
-  const markerBox = await marker.locator('.marker-pin').boundingBox();
-  expect(markerBox).not.toBeNull();
-  const point = { x: markerBox.x + markerBox.width / 2, y: markerBox.y + markerBox.height / 2 };
-  const hitStep = await page.evaluate(({ x, y }) =>
-    document.elementFromPoint(x, y)?.closest('.leaflet-marker-icon')?.dataset.step || null, point);
-  expect(hitStep).toBe('1');
-  await page.mouse.click(point.x, point.y);
+  await marker.locator('.marker-pin').click();
   const target = page.locator('.step-accordion[data-step="1"]');
   await expect(target).toHaveAttribute('open', '');
   await page.waitForTimeout(650);
