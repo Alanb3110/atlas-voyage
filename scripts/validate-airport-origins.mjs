@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -6,6 +6,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const file = 'data/airport-access/reims-airports.json';
 const data = JSON.parse(await readFile(resolve(root, file), 'utf8'));
+const availabilityFile = 'data/airport-access/index.json';
+const availability = JSON.parse(await readFile(resolve(root, availabilityFile), 'utf8'));
 const errors = [];
 const fail = message => errors.push(`${file}: ${message}`);
 const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
@@ -54,9 +56,23 @@ for (const airport of data.airports ?? []) {
 
 for (const code of requiredCodes) if (!seen.has(code)) fail(`${code}: aéroport requis absent`);
 
+const airportDir = resolve(root, 'data/airport-access');
+const availableTripIds = (await readdir(airportDir))
+  .filter(name => name.endsWith('.json'))
+  .filter(name => !['index.json','reims-airports.json','reims-ground-costs.json'].includes(name))
+  .map(name => name.replace(/\.json$/, ''))
+  .sort();
+const indexedTripIds = Array.isArray(availability.tripIds) ? [...availability.tripIds].sort() : [];
+if (availability.schemaVersion !== 1) fail(`${availabilityFile}: schemaVersion 1 attendu`);
+if (!validDate(availability.updatedAt)) fail(`${availabilityFile}: updatedAt doit être YYYY-MM-DD`);
+if (new Set(indexedTripIds).size !== indexedTripIds.length) fail(`${availabilityFile}: tripIds dupliqués`);
+if (JSON.stringify(indexedTripIds) !== JSON.stringify(availableTripIds)) {
+  fail(`${availabilityFile}: index désynchronisé des fichiers de comparateur disponibles`);
+}
+
 if (errors.length) {
   console.error(`\nErreurs accès aéroports (${errors.length})`);
   errors.forEach(error => console.error(`- ${error}`));
   process.exit(1);
 }
-console.log(`\nValidation accès Reims OK: ${seen.size} aéroports.`);
+console.log(`\nValidation accès Reims OK: ${seen.size} aéroports, ${availableTripIds.length} comparateurs indexés.`);
