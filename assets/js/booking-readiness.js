@@ -62,13 +62,15 @@ function render(data) {
     </article>`;
 
   const groups = [...new Set(items.map(item => item.category || 'Autre'))];
-  document.querySelector('#bookingGroups').innerHTML = groups.map(group => `
-    <article class="booking-group">
-      <div class="booking-group-head"><h3>${escapeHtml(group)}</h3><span>${items.filter(i => (i.category || 'Autre') === group).length} élément(s)</span></div>
-      <div class="booking-items">
-        ${items.filter(i => (i.category || 'Autre') === group).map(item => renderItem(item, blockerIds.has(item.id))).join('')}
-      </div>
-    </article>`).join('');
+  const compactMobile = window.matchMedia('(max-width: 620px)').matches;
+  document.querySelector('#bookingGroups').innerHTML = groups.map(group => {
+    const groupItems = items.filter(i => (i.category || 'Autre') === group);
+    const body = `<div class="booking-items">${groupItems.map(item => renderItem(item, blockerIds.has(item.id))).join('')}</div>`;
+    const head = `<span class="booking-group-head"><h3>${escapeHtml(group)}</h3><span>${groupItems.length} élément(s)</span></span>`;
+    return compactMobile
+      ? `<details class="booking-group booking-group-disclosure"><summary>${head}</summary>${body}</details>`
+      : `<article class="booking-group"><div class="booking-group-head"><h3>${escapeHtml(group)}</h3><span>${groupItems.length} élément(s)</span></div>${body}</article>`;
+  }).join('');
 
   const traceDate = data.checkedAt || data.updatedAt;
   document.querySelector('#bookingTrace').textContent = `${data.status === 'demo' ? 'Données de démonstration' : 'État du voyage'} · ${traceDate ? formatDateFR(traceDate) : 'date inconnue'}${data.publicNote ? ` · ${data.publicNote}` : ''}`;
