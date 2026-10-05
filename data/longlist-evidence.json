@@ -396,6 +396,12 @@
               "url": "https://www.diplomatie.gouv.fr/fr/information-par-pays/inde/conseils-aux-voyageurs-sante",
               "type": "official",
               "checkedAt": "2026-09-24"
+            },
+            {
+              "label": "Incredible India — South Goa",
+              "url": "https://www.incredibleindia.gov.in/en/goa/goa/exploring-the-beauty-of-the-pristine-coastline",
+              "type": "official-tourism",
+              "checkedAt": "2026-09-05"
             }
           ]
         },
@@ -1015,6 +1021,12 @@
               "url": "https://experienceoman.om/fr/meteo",
               "type": "official-tourism",
               "checkedAt": "2026-09-06"
+            },
+            {
+              "label": "Experience Oman — Ras Al Jinz Turtle Reserve",
+              "url": "https://experienceoman.om/destinations/al-sharqiyah-south/ras-al-jinz-turtle-reserve",
+              "type": "official-tourism",
+              "checkedAt": "2026-09-05"
             }
           ]
         },
