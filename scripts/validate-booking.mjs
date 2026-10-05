@@ -79,8 +79,8 @@ for (const trip of catalog.trips ?? []) {
     else {
       const refs = new Set(data.references);
       for (const ref of mandatoryReadinessRefs) if (!refs.has(ref)) fail(file, `reference de readiness manquante: ${ref}`);
-      const ownTripRef = trip.dataFile;
-      if (!refs.has(ownTripRef)) fail(file, `reference du voyage manquante: ${ownTripRef}`);
+      const ownTripRef = typeof trip.dataFile === 'string' && trip.dataFile.trim() ? trip.dataFile : null;
+      if (ownTripRef && !refs.has(ownTripRef)) fail(file, `reference du voyage manquante: ${ownTripRef}`);
     }
   }
 }
