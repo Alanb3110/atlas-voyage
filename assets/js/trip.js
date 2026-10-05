@@ -907,7 +907,7 @@ function renderActivities() {
   }));
 
   $('#activitiesReset').onclick = () => {
-    (trip.activities || []).filter(activity => !activity.locked).forEach(activity => {
+    selectableActivities().forEach(activity => {
       if (activity.defaultSelected) activityState.add(activity.id);
       else activityState.delete(activity.id);
     });
