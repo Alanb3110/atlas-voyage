@@ -36,11 +36,10 @@ async function findMultiVariantTrip(request, catalog) {
 }
 
 async function expectCanonicalSelection(page, expected) {
-  const url = new URL(page.url());
-  expect(url.searchParams.get('trip')).toBe(expected.trip);
-  expect(url.searchParams.get('variant')).toBe(expected.variant);
-  expect(url.searchParams.get('budget')).toBe(expected.budget);
-  expect(url.searchParams.get('tab')).toBe(expected.tab);
+  await expect.poll(() => {
+    const search = new URL(page.url()).searchParams;
+    return [search.get('trip'), search.get('variant'), search.get('budget'), search.get('tab')].join('|');
+  }).toBe([expected.trip, expected.variant, expected.budget, expected.tab].join('|'));
   await expect(page.locator('#tripSelector')).toHaveValue(expected.trip);
   await expect(page.locator('#variantSelector')).toHaveValue(expected.variant);
   await expect(page.locator('#budgetSelector')).toHaveValue(expected.budget);
