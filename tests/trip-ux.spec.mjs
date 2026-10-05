@@ -376,9 +376,9 @@ test('sélecteurs desktop et paramètres canoniques', async ({ browser }) => {
 
   expect(new URL(page.url()).searchParams.has('junk')).toBe(false);
   await page.locator('#variantSelector').selectOption('relaxed');
-  expect(new URL(page.url()).searchParams.get('variant')).toBe('relaxed');
+  await expect.poll(() => new URL(page.url()).searchParams.get('variant')).toBe('relaxed');
   await page.locator('#budgetSelector').selectOption('premium');
-  expect(new URL(page.url()).searchParams.get('budget')).toBe('premium');
+  await expect.poll(() => new URL(page.url()).searchParams.get('budget')).toBe('premium');
 
   expect(errors).toEqual([]);
   await context.close();
