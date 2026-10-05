@@ -106,7 +106,7 @@ const cases = [
   },
   {
     label: 'budget détaillé: amount=null est rejeté',
-    file: 'data/trips/south-africa-nov-2026.json',
+    file: 'data/trips/komodo-flores-nov-2026.json',
     validator: 'scripts/validate-data.mjs',
     expected: 'poste 1 amount invalide',
     mutate: data => { data.budgets[0].breakdown[0].amount = null; }
