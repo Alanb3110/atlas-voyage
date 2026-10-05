@@ -1365,9 +1365,9 @@ function practicalUniqueNodes(nodes) {
 }
 
 function render() {
+  renderTabs();
   renderHero(); renderOverview(); renderVariantCompare(); renderMap(); renderSteps();
   renderActivities(); renderNatureFoodWeather(); renderPractical(); renderBudgets(); renderDays(); renderSources(); enhancePracticalAccordions();
-  renderTabs();
 }
 
 function toast(text){const node=$('#toast');node.textContent=text;node.classList.add('show');setTimeout(()=>node.classList.remove('show'),1800)}
