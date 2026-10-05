@@ -1,15 +1,15 @@
-import { loadCatalog, loadTrip, params, buildTripUrl, formatEUR, formatDateFR, escapeHtml } from './store.js';
+import { loadCatalog, loadTrip, buildTripUrl, publishTripState, formatEUR, formatDateFR, escapeHtml } from './store.js';
 
 const $ = s => document.querySelector(s);
-const p = params();
 const catalog = await loadCatalog();
-let entry = catalog.trips.find(t => t.id === p.get('trip')) || catalog.trips[0];
-if (!entry) throw new Error('Aucun voyage dans le catalogue.');
-let trip = await loadTrip(entry.dataFile);
-let variant = trip.variants.find(v => v.id === p.get('variant')) || trip.variants.find(v => v.id === trip.defaultVariant) || trip.variants[0];
-let budget = trip.budgets.find(b => b.id === p.get('budget')) || trip.budgets.find(b => b.id === trip.defaultBudget) || trip.budgets[0];
+if (!catalog.trips.length) throw new Error('Aucun voyage dans le catalogue.');
 const TAB_IDS = ['circuit','choice','budget','practical'];
-let activeTab = TAB_IDS.includes(p.get('tab')) ? p.get('tab') : 'circuit';
+const tripCache = new Map();
+let trip = null;
+let variant = null;
+let budget = null;
+let activeTab = 'circuit';
+let stateTransitionId = 0;
 let map;
 let mapMarkers = [];
 let activeStepIndex = 0;
@@ -43,19 +43,125 @@ function selectableActivities() {
   return (trip.activities || []).filter(activity => !activity.locked && activityApplies(activity));
 }
 
-function initActivityState() {
-  const allSelectable = (trip.activities || []).filter(activity => !activity.locked);
-  const requested = p.get('activities');
+function parseUrlState(url = location.href) {
+  const search = new URL(url, location.href).searchParams;
+  return {
+    tripId: search.get('trip'),
+    variantId: search.get('variant'),
+    budgetId: search.get('budget'),
+    tabId: search.get('tab'),
+    activities: search.get('activities')
+  };
+}
+
+async function loadResolvedTrip(entry) {
+  if (tripCache.has(entry.id)) return tripCache.get(entry.id);
+  const loaded = await loadTrip(entry.dataFile);
+  tripCache.set(entry.id, loaded);
+  return loaded;
+}
+
+function resolveActivityState(nextTrip, nextVariant, requested) {
+  const applies = activity => {
+    const variants = activity.applicableVariants || [];
+    return !variants.length || variants.includes(nextVariant.id);
+  };
+  const selectable = (nextTrip.activities || []).filter(activity => !activity.locked && applies(activity));
   if (requested == null) {
-    activityState = new Set(allSelectable.filter(activity => activity.defaultSelected).map(activity => activity.id));
-    return;
+    return new Set(selectable.filter(activity => activity.defaultSelected).map(activity => activity.id));
   }
-  if (requested === 'none') {
-    activityState = new Set();
-    return;
-  }
-  const allowed = new Set(allSelectable.map(activity => activity.id));
-  activityState = new Set(requested.split(',').map(x => x.trim()).filter(id => allowed.has(id)));
+  if (requested === 'none') return new Set();
+  const allowed = new Set(selectable.map(activity => activity.id));
+  return new Set(requested.split(',').map(value => value.trim()).filter(id => allowed.has(id)));
+}
+
+async function resolveState(rawState) {
+  const nextEntry = catalog.trips.find(item => item.id === rawState.tripId) || catalog.trips[0];
+  const nextTrip = await loadResolvedTrip(nextEntry);
+  const nextVariant = nextTrip.variants.find(item => item.id === rawState.variantId)
+    || nextTrip.variants.find(item => item.id === nextTrip.defaultVariant)
+    || nextTrip.variants[0];
+  const nextBudget = nextTrip.budgets.find(item => item.id === rawState.budgetId)
+    || nextTrip.budgets.find(item => item.id === nextTrip.defaultBudget)
+    || nextTrip.budgets[0];
+  if (!nextVariant || !nextBudget) throw new Error(`État incomplet pour ${nextTrip.id}.`);
+  return {
+    trip: nextTrip,
+    variant: nextVariant,
+    budget: nextBudget,
+    activeTab: TAB_IDS.includes(rawState.tabId) ? rawState.tabId : 'circuit',
+    activityState: resolveActivityState(nextTrip, nextVariant, rawState.activities)
+  };
+}
+
+function commitState(nextState) {
+  const routeChanged = trip?.id !== nextState.trip.id || variant?.id !== nextState.variant.id;
+  const tripChanged = trip?.id !== nextState.trip.id;
+  trip = nextState.trip;
+  variant = nextState.variant;
+  budget = nextState.budget;
+  activeTab = nextState.activeTab;
+  activityState = nextState.activityState;
+  if (routeChanged) activeStepIndex = 0;
+  if (tripChanged) activityOpenState.clear();
+}
+
+function selectedActivitiesParam() {
+  if (!(trip.activities || []).some(activity => !activity.locked)) return null;
+  const selected = selectableActivities()
+    .filter(activity => activityState.has(activity.id))
+    .map(activity => activity.id)
+    .sort();
+  return selected.length ? selected.join(',') : 'none';
+}
+
+function buildCanonicalUrl() {
+  const base = new URL(buildTripUrl(trip.id, variant.id, budget.id), location.href);
+  const activities = selectedActivitiesParam();
+  if (activities != null) base.searchParams.set('activities', activities);
+  base.searchParams.set('tab', activeTab);
+  return `./trip.html?${base.searchParams.toString()}`;
+}
+
+function updateUrl(mode = 'replace') {
+  const method = mode === 'push' ? 'pushState' : 'replaceState';
+  history[method](null, '', buildCanonicalUrl());
+}
+
+function rawStateFromCurrent() {
+  return {
+    tripId: trip.id,
+    variantId: variant.id,
+    budgetId: budget.id,
+    tabId: activeTab,
+    activities: selectedActivitiesParam()
+  };
+}
+
+async function applyResolvedState(rawState, { historyMode = 'replace', renderAfter = true, focusTab = false } = {}) {
+  const transitionId = ++stateTransitionId;
+  const nextState = await resolveState(rawState);
+  if (transitionId !== stateTransitionId) return false;
+  commitState(nextState);
+  updateUrl(historyMode);
+  publishTripState({
+    tripId: trip.id,
+    variantId: variant.id,
+    budgetId: budget.id,
+    tabId: activeTab
+  });
+  syncSelectors();
+  if (renderAfter) render();
+  if (focusTab) document.querySelector(`#tab-${activeTab}`)?.focus();
+  return true;
+}
+
+function changeState(patch, options = {}) {
+  return applyResolvedState({ ...rawStateFromCurrent(), ...patch }, { historyMode: 'push', ...options });
+}
+
+function restoreStateFromUrl(options = {}) {
+  return applyResolvedState(parseUrlState(), { historyMode: 'replace', ...options });
 }
 
 function activityPriceEUR(activity, forBudget = budget) {
@@ -189,27 +295,33 @@ function safeUrl(value='') {
   } catch { return '#'; }
 }
 
-function canonicalizeUrl() {
-  const base = new URL(buildTripUrl(trip.id, variant.id, budget.id), location.href);
-  if ((trip.activities || []).some(activity => !activity.locked)) {
-    const selected = selectableActivities().filter(activity => activityState.has(activity.id)).map(activity => activity.id).sort();
-    base.searchParams.set('activities', selected.length ? selected.join(',') : 'none');
-  }
-  base.searchParams.set('tab', activeTab);
-  history.replaceState(null, '', `./trip.html?${base.searchParams.toString()}`);
+function syncSelectors() {
+  $('#tripSelector').innerHTML = catalog.trips.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.title)}</option>`).join('');
+  $('#variantSelector').innerHTML = trip.variants.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`).join('');
+  $('#budgetSelector').innerHTML = trip.budgets.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`).join('');
+  $('#tripSelector').value = trip.id;
+  $('#variantSelector').value = variant.id;
+  $('#budgetSelector').value = budget.id;
 }
 
-function populateSelectors() {
-  $('#tripSelector').innerHTML = catalog.trips.map(t => `<option value="${escapeHtml(t.id)}" ${t.id===trip.id?'selected':''}>${escapeHtml(t.title)}</option>`).join('');
-  $('#variantSelector').innerHTML = trip.variants.map(v => `<option value="${escapeHtml(v.id)}" ${v.id===variant.id?'selected':''}>${escapeHtml(v.label)}</option>`).join('');
-  $('#budgetSelector').innerHTML = trip.budgets.map(b => `<option value="${escapeHtml(b.id)}" ${b.id===budget.id?'selected':''}>${escapeHtml(b.label)}</option>`).join('');
-  $('#tripSelector').onchange = e => {
-    const next = new URL(buildTripUrl(e.target.value), location.href);
-    next.searchParams.set('tab', activeTab);
-    location.href = `./trip.html?${next.searchParams.toString()}`;
-  };
-  $('#variantSelector').onchange = e => { variant = trip.variants.find(v=>v.id===e.target.value); activeStepIndex = 0; canonicalizeUrl(); render(); };
-  $('#budgetSelector').onchange = e => { budget = trip.budgets.find(b=>b.id===e.target.value); canonicalizeUrl(); render(); };
+function initStateControls() {
+  $('#tripSelector').addEventListener('change', event => {
+    if (event.target.value === trip.id) return;
+    void changeState({
+      tripId: event.target.value,
+      variantId: null,
+      budgetId: null,
+      activities: null
+    });
+  });
+  $('#variantSelector').addEventListener('change', event => {
+    if (event.target.value === variant.id) return;
+    void changeState({ variantId: event.target.value });
+  });
+  $('#budgetSelector').addEventListener('change', event => {
+    if (event.target.value === budget.id) return;
+    void changeState({ budgetId: event.target.value });
+  });
 }
 
 function renderHero() {
@@ -316,8 +428,7 @@ function fitMapToCurrentRoute() {
   if (coords.length) map.fitBounds(coords,{padding:[40,40]});
 }
 
-function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
-  activeTab = TAB_IDS.includes(tab) ? tab : 'circuit';
+function renderActiveTab({focus=false}={}) {
   const tabs = [...document.querySelectorAll('#tripTabs [role="tab"]')];
   let selectedTab = null;
   tabs.forEach(node => {
@@ -329,7 +440,6 @@ function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
   document.querySelectorAll('[data-tab-panel]').forEach(panel => {
     panel.hidden = panel.dataset.tabPanel !== activeTab;
   });
-  if (syncUrl) canonicalizeUrl();
   if (focus) selectedTab?.focus();
   if (activeTab === 'circuit') {
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -345,7 +455,10 @@ function setActiveTab(tab,{syncUrl=false,focus=false}={}) {
 function renderTabs() {
   const tabs = [...document.querySelectorAll('#tripTabs [role="tab"]')];
   tabs.forEach((tab,index) => {
-    tab.onclick = () => setActiveTab(tab.dataset.tab,{syncUrl:true});
+    tab.onclick = () => {
+      if (tab.dataset.tab === activeTab) return;
+      void changeState({ tabId: tab.dataset.tab });
+    };
     tab.onkeydown = event => {
       let nextIndex = null;
       if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
@@ -354,10 +467,15 @@ function renderTabs() {
       else if (event.key === 'End') nextIndex = tabs.length - 1;
       if (nextIndex == null) return;
       event.preventDefault();
-      setActiveTab(tabs[nextIndex].dataset.tab,{syncUrl:true,focus:true});
+      const nextTab = tabs[nextIndex].dataset.tab;
+      if (nextTab === activeTab) {
+        renderActiveTab({focus:true});
+        return;
+      }
+      void changeState({ tabId: nextTab }, { focusTab:true });
     };
   });
-  setActiveTab(activeTab);
+  renderActiveTab();
   syncStickyOffset();
 }
 
@@ -414,13 +532,9 @@ function renderVariantCompare() {
     </article>`;
   }).join('');
   document.querySelectorAll('[data-variant]').forEach(btn=>btn.onclick=()=>{
-    const next = trip.variants.find(v=>v.id===btn.dataset.variant);
-    if (!next || next.id===variant.id) return;
-    variant = next;
-    activeStepIndex = 0;
-    $('#variantSelector').value = variant.id;
-    canonicalizeUrl();
-    render();
+    const nextId = btn.dataset.variant;
+    if (!trip.variants.some(item => item.id === nextId) || nextId === variant.id) return;
+    void changeState({ variantId: nextId });
   });
 }
 
@@ -786,7 +900,7 @@ function renderActivities() {
     if (input.disabled) return;
     if (input.checked) activityState.add(input.dataset.activityToggle);
     else activityState.delete(input.dataset.activityToggle);
-    canonicalizeUrl();
+    updateUrl('replace');
     renderHero();
     renderActivities();
     renderBudgets();
@@ -797,14 +911,14 @@ function renderActivities() {
       if (activity.defaultSelected) activityState.add(activity.id);
       else activityState.delete(activity.id);
     });
-    canonicalizeUrl();
+    updateUrl('replace');
     renderHero();
     renderActivities();
     renderBudgets();
   };
   $('#activitiesClear').onclick = () => {
     selectableActivities().forEach(activity => activityState.delete(activity.id));
-    canonicalizeUrl();
+    updateUrl('replace');
     renderHero();
     renderActivities();
     renderBudgets();
@@ -883,10 +997,9 @@ function renderBudgets() {
   }).join('');
 
   document.querySelectorAll('[data-budget]').forEach(btn=>btn.onclick=()=>{
-    budget=trip.budgets.find(item=>item.id===btn.dataset.budget);
-    $('#budgetSelector').value=budget.id;
-    canonicalizeUrl();
-    render();
+    const nextId = btn.dataset.budget;
+    if (!trip.budgets.some(item => item.id === nextId) || nextId === budget.id) return;
+    void changeState({ budgetId: nextId });
   });
 
   $('#budgetBreakdown').innerHTML = `
@@ -1267,10 +1380,12 @@ $('#shareBtn').onclick = async () => {
   }
 };
 
-initActivityState();
-populateSelectors();
+await restoreStateFromUrl({ renderAfter:false });
+initStateControls();
 initResponsiveHeader();
 initStickyOffset();
-canonicalizeUrl();
 render();
+window.addEventListener('popstate', () => {
+  void restoreStateFromUrl();
+});
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
