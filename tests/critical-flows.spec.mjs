@@ -321,7 +321,7 @@ test('Configurer mobile: sélecteurs utilisables, Escape ferme et restitue le fo
   await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('tripSelector');
 
   await page.locator('#budgetSelector').selectOption(alternateBudget.id);
-  expect(currentParams(page).get('budget')).toBe(alternateBudget.id);
+  await expect.poll(() => currentParams(page).get('budget')).toBe(alternateBudget.id);
 
   await page.keyboard.press('Escape');
   await expect(page.locator('#tripConfigDialog')).not.toHaveAttribute('open', '');
