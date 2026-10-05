@@ -1,10 +1,9 @@
-import { params, escapeHtml, formatEUR, formatDateFR } from './store.js';
+import { subscribeTripState, escapeHtml, formatEUR, formatDateFR } from './store.js';
 
 const $ = selector => document.querySelector(selector);
 const section = $('#airportSection');
 if (!section) throw new Error('airportSection absent du DOM');
 
-const tripId = params().get('trip');
 const DEFAULT_WEIGHTS = { cost: 30, time: 30, flight: 25, fatigue: 15 };
 const RESEARCHED_STATUSES = new Set([
   'confirmed',
@@ -20,16 +19,26 @@ const ui = {
   prioritiesOpen: false
 };
 
-if (!tripId) {
+let activeTripId = null;
+let initRevision = 0;
+
+subscribeTripState(state => {
+  const nextTripId = state?.tripId;
+  if (!nextTripId || nextTripId === activeTripId) return;
+  activeTripId = nextTripId;
+  const revision = ++initRevision;
+  ui.comparisonOpen = false;
+  ui.showAllAirports = false;
+  ui.prioritiesOpen = false;
   section.hidden = true;
-} else {
-  init().catch(error => {
+  init(nextTripId, revision).catch(error => {
+    if (revision !== initRevision) return;
     console.warn('Comparateur aéroports indisponible:', error);
     section.hidden = true;
   });
-}
+});
 
-async function init() {
+async function init(tripId, revision) {
   const [accessResponse, groundCostResponse, availabilityResponse] = await Promise.all([
     fetch('./data/airport-access/reims-airports.json', { cache: 'no-store' }),
     fetch('./data/airport-access/reims-ground-costs.json', { cache: 'no-store' }),
@@ -43,6 +52,7 @@ async function init() {
   const accessData = await accessResponse.json();
   const groundCostData = await groundCostResponse.json();
   const availability = await availabilityResponse.json();
+  if (revision !== initRevision) return;
   const tripHasAirportData = Array.isArray(availability.tripIds) && availability.tripIds.includes(tripId);
   let data;
 
@@ -50,6 +60,7 @@ async function init() {
     const tripResponse = await fetch(`./data/airport-access/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' });
     if (!tripResponse.ok) throw new Error(`Vols HTTP ${tripResponse.status}`);
     data = await tripResponse.json();
+    if (revision !== initRevision) return;
     if (data.tripId !== tripId) throw new Error('tripId incohérent');
   } else {
     data = {
@@ -64,6 +75,8 @@ async function init() {
     };
   }
 
+  if (revision !== initRevision) return;
+  section.hidden = false;
   ensureProgressiveOrder();
   const storedWeights = loadWeights(tripId);
   const weights = normalizeWeights(storedWeights || data.defaultWeights || DEFAULT_WEIGHTS);
@@ -426,12 +439,12 @@ function renderPriorityControls(data, accessData, groundCostData, groundByCode, 
       const output = document.getElementById(`airportWeightValue-${key}`);
       if (output) output.textContent = `${Math.round(value)}%`;
     });
-    saveWeights(tripId, raw);
+    saveWeights(data.tripId, raw);
     rerenderComparableDecision(data, accessData, groundCostData, groundByCode, flightsByCode, comparability, normalized);
   }));
 
   $('#airportWeightsReset')?.addEventListener('click', () => {
-    clearWeights(tripId);
+    clearWeights(data.tripId);
     const defaults = normalizeWeights(data.defaultWeights || DEFAULT_WEIGHTS);
     document.querySelectorAll('[data-airport-weight]').forEach(slider => {
       const key = slider.dataset.airportWeight;
