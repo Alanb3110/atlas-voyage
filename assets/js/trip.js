@@ -467,12 +467,14 @@ function renderTabs() {
       else if (event.key === 'End') nextIndex = tabs.length - 1;
       if (nextIndex == null) return;
       event.preventDefault();
-      const nextTab = tabs[nextIndex].dataset.tab;
+      const nextTabNode = tabs[nextIndex];
+      const nextTab = nextTabNode.dataset.tab;
       if (nextTab === activeTab) {
-        renderActiveTab({focus:true});
+        nextTabNode.focus();
         return;
       }
-      void changeState({ tabId: nextTab }, { focusTab:true });
+      nextTabNode.focus();
+      void changeState({ tabId: nextTab });
     };
   });
   renderActiveTab();
