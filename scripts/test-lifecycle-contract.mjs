@@ -40,24 +40,36 @@ async function mutateJson(sandboxRoot, file, mutate) {
   await writeFile(path, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 }
 
-async function expectAccepts(sandboxRoot, { label, validator, mutations }) {
+async function expectAccepts(sandboxRoot, { label, validator, mutations = [], removeFiles = [] }) {
   const backups = new Map();
+
+  async function remember(path) {
+    if (backups.has(path)) return;
+    try { backups.set(path, await readFile(path, 'utf8')); }
+    catch { backups.set(path, null); }
+  }
+
   try {
     for (const { file, mutate } of mutations) {
       const path = resolve(sandboxRoot, file);
-      backups.set(path, await readFile(path, 'utf8'));
+      await remember(path);
       await mutateJson(sandboxRoot, file, mutate);
+    }
+    for (const file of removeFiles) {
+      const path = resolve(sandboxRoot, file);
+      await remember(path);
+      await rm(path, { force: true });
     }
     const result = runValidator(sandboxRoot, validator);
     const output = `${result.stdout || ''}\n${result.stderr || ''}`;
     if (result.error) fail(label, `validator non exécutable: ${result.error.message}`, output);
     else if (result.status !== 0) fail(label, 'mutation valide rejetée', output);
-    else {
-      passed += 1;
-      console.log(`✓ ${label}`);
-    }
+    else { passed += 1; console.log(`✓ ${label}`); }
   } finally {
-    for (const [path, content] of backups) await writeFile(path, content, 'utf8');
+    for (const [path, content] of backups) {
+      if (content == null) await rm(path, { force: true });
+      else await writeFile(path, content, 'utf8');
+    }
   }
 }
 
@@ -119,6 +131,7 @@ try {
   await cp(resolve(root, 'assets/js/lifecycle-contract.js'), resolve(sandboxRoot, 'assets/js/lifecycle-contract.js'), { recursive: true });
   await cp(resolve(root, 'scripts/validate-lifecycle.mjs'), resolve(sandboxRoot, 'scripts/validate-lifecycle.mjs'), { recursive: true });
   await cp(resolve(root, 'scripts/validate-data.mjs'), resolve(sandboxRoot, 'scripts/validate-data.mjs'), { recursive: true });
+  await cp(resolve(root, 'scripts/validate-booking.mjs'), resolve(sandboxRoot, 'scripts/validate-booking.mjs'), { recursive: true });
 
   await expectAccepts(sandboxRoot, {
     label: 'longlist: aucun faux dossier détaillé requis',
@@ -132,7 +145,8 @@ try {
         delete trip.defaultBudget;
         delete trip.variantCount;
       }
-    }]
+    }],
+    removeFiles: ['data/trips/australia-queensland-nov-2026.json']
   });
 
   await expectAccepts(sandboxRoot, {
@@ -147,7 +161,40 @@ try {
         delete trip.defaultBudget;
         delete trip.variantCount;
       }
-    }]
+    }],
+    removeFiles: ['data/trips/australia-queensland-nov-2026.json']
+  });
+
+  await expectAccepts(sandboxRoot, {
+    label: 'shortlist: aucun faux dossier détaillé requis',
+    validator: 'scripts/validate-lifecycle.mjs',
+    mutations: [{
+      file: 'data/catalog.json',
+      mutate: data => {
+        const trip = data.trips.find(item => item.id === 'seychelles-nov-2026');
+        delete trip.dataFile;
+        delete trip.defaultVariant;
+        delete trip.defaultBudget;
+        delete trip.variantCount;
+      }
+    }],
+    removeFiles: ['data/trips/seychelles-nov-2026.json']
+  });
+
+  await expectAccepts(sandboxRoot, {
+    label: 'validate-booking: shortlist sans dataFile reste valide',
+    validator: 'scripts/validate-booking.mjs',
+    mutations: [{
+      file: 'data/catalog.json',
+      mutate: data => {
+        const trip = data.trips.find(item => item.id === 'seychelles-nov-2026');
+        delete trip.dataFile;
+        delete trip.defaultVariant;
+        delete trip.defaultBudget;
+        delete trip.variantCount;
+      }
+    }],
+    removeFiles: ['data/trips/seychelles-nov-2026.json']
   });
 
   await expectAccepts(sandboxRoot, {

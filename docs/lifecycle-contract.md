@@ -191,50 +191,41 @@ Règles :
 - le bloc readiness n'est rendu que pour les stades qui l'exigent ;
 - les sections internes du voyage continuent d'utiliser des valeurs absentes/vides de façon défensive sans créer de contenu fictif.
 
-## Migration prévue — PR suivante
+## Migration des stubs pré-`detailed`
 
-Cette PR **ne supprime pas massivement les stubs**. La PR suivante pourra le faire sans casser le contrat.
+Le nettoyage des anciens dossiers artificiellement détaillés a été appliqué aux destinations actives qui restent en `longlist` ou `shortlist`.
 
-### 1. Candidats actifs dont le `dataFile` n'est plus requis par leur lifecycle
+Ces destinations ne déclarent plus `dataFile`, `variantCount`, `defaultVariant` ni `defaultBudget` et leurs anciens fichiers `data/trips/*.json` ont été supprimés :
 
-Shortlist :
+- `south-africa-nov-2026` ;
+- `seychelles-nov-2026` ;
+- `thailand-khao-sok-andaman-nov-2026` ;
+- `sri-lanka-yala-south-nov-2026` ;
+- `india-tiger-goa-nov-2026` ;
+- `raja-ampat-nov-2026` ;
+- `galapagos-nov-2026` ;
+- `australia-queensland-nov-2026` ;
+- `oman-nov-2026` ;
+- `costa-rica-nov-2026` ;
+- `madagascar-nov-2026` ;
+- `philippines-palawan-bohol-nov-2026` ;
+- `namibia-botswana-nov-2026` ;
 
-- `data/trips/south-africa-nov-2026.json` ;
-- `data/trips/seychelles-nov-2026.json`.
+Les informations réellement utiles au stade de décision restent portées par `destination-comparison.json`, `longlist-evidence.json` et, pour les shortlist, par les jeux marché/gateway/porte-à-porte et le readiness. Les estimations de budget et de temps restent explicitement marquées comme telles. Aucun détail absent n'a été remplacé par une valeur inventée.
 
-Longlist :
+Deux sources officielles uniques qui restaient uniquement dans les anciens stubs ont été conservées dans le registre de preuves : la saison de South Goa pour l'Inde et Ras Al Jinz pour la faune à Oman. Les anciens signaux tarifaires non exacts ou dépassés n'ont pas été promus en données de référence.
 
-- `data/trips/thailand-khao-sok-andaman-nov-2026.json` ;
-- `data/trips/sri-lanka-yala-south-nov-2026.json` ;
-- `data/trips/india-tiger-goa-nov-2026.json` ;
-- `data/trips/raja-ampat-nov-2026.json` ;
-- `data/trips/galapagos-nov-2026.json` ;
-- `data/trips/australia-queensland-nov-2026.json` ;
-- `data/trips/oman-nov-2026.json` ;
-- `data/trips/costa-rica-nov-2026.json` ;
-- `data/trips/madagascar-nov-2026.json` ;
-- `data/trips/philippines-palawan-bohol-nov-2026.json` ;
-- `data/trips/namibia-botswana-nov-2026.json`.
+### Dossier détaillé conservé
 
-Pour chacun :
+- `data/trips/komodo-flores-nov-2026.json` : statut `detailed`, donc payload détaillé requis et conservé sans modification de fond.
 
-1. inventorier les informations uniques présentes uniquement dans le stub ;
-2. migrer les éléments utiles vers comparison/evidence/market/gateway/door-to-door selon leur nature ;
-3. retirer du catalogue `dataFile`, `variantCount`, `defaultVariant`, `defaultBudget` si le dossier n'est pas réellement détaillé ;
-4. supprimer ensuite le fichier stub devenu redondant ;
-5. vérifier que le catalogue et le comparateur restent complets sans `trip.html`.
-
-### 2. Dossier détaillé à conserver
-
-- `data/trips/komodo-flores-nov-2026.json` : statut `detailed`, donc payload détaillé requis.
-
-### 3. Archives
+### Archives
 
 - `bali-komodo-demo` ;
 - `costa-rica-demo`.
 
-Les archives peuvent conserver leurs anciens fichiers pour démonstration ou être déplacées dans une future zone d'archives. Elles ne doivent pas servir de modèle obligatoire aux destinations actives.
+Les archives restent disponibles pour compatibilité/démonstration et ne servent pas de modèle obligatoire aux destinations actives.
 
-### 4. Champ legacy du comparateur
+### Champ legacy du comparateur
 
 Supprimer `destinations[].stage` lors du passage du comparateur à un nouveau schemaVersion. Tant qu'il existe, il reste toléré et non autoritaire.

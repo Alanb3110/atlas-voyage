@@ -12,8 +12,7 @@
   "references": [
     "data/shortlist-market-scan.json",
     "data/shortlist-gateway-geometry.json",
-    "data/shortlist-door-to-door.json",
-    "data/trips/south-africa-nov-2026.json"
+    "data/shortlist-door-to-door.json"
   ],
   "items": [
     {"id":"destination-choice","category":"Décision","label":"Choisir la destination finale et figer la fenêtre 05–24/11","status":"research","blocking":true},

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-10-04",
+  "updatedAt": "2026-10-05",
   "lifecycle": [
     "longlist",
     "shortlist",
@@ -23,11 +23,7 @@
         "Tortues",
         "Plage",
         "Gastronomie"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/south-africa-nov-2026.json"
+      ]
     },
     {
       "id": "komodo-flores-nov-2026",
@@ -60,11 +56,7 @@
         "Jungle",
         "Snorkeling",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/thailand-khao-sok-andaman-nov-2026.json"
+      ]
     },
     {
       "id": "sri-lanka-yala-south-nov-2026",
@@ -78,11 +70,7 @@
         "Safari",
         "Culture",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/sri-lanka-yala-south-nov-2026.json"
+      ]
     },
     {
       "id": "india-tiger-goa-nov-2026",
@@ -96,11 +84,7 @@
         "Culture",
         "Cuisine",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/india-tiger-goa-nov-2026.json"
+      ]
     },
     {
       "id": "raja-ampat-nov-2026",
@@ -114,11 +98,7 @@
         "Récifs",
         "Oiseaux",
         "Repos"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/raja-ampat-nov-2026.json"
+      ]
     },
     {
       "id": "seychelles-nov-2026",
@@ -132,11 +112,7 @@
         "Snorkeling",
         "Plage",
         "Repos"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/seychelles-nov-2026.json"
+      ]
     },
     {
       "id": "galapagos-nov-2026",
@@ -150,11 +126,7 @@
         "Manchots",
         "Tortues",
         "Snorkeling"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/galapagos-nov-2026.json"
+      ]
     },
     {
       "id": "australia-queensland-nov-2026",
@@ -168,11 +140,7 @@
         "Récifs",
         "Rainforest",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/australia-queensland-nov-2026.json"
+      ]
     },
     {
       "id": "oman-nov-2026",
@@ -186,11 +154,7 @@
         "Dauphins",
         "Désert",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/oman-nov-2026.json"
+      ]
     },
     {
       "id": "costa-rica-nov-2026",
@@ -204,11 +168,7 @@
         "Tapirs",
         "Aras",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/costa-rica-nov-2026.json"
+      ]
     },
     {
       "id": "madagascar-nov-2026",
@@ -222,11 +182,7 @@
         "Requin-baleine",
         "Snorkeling",
         "Repos"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/madagascar-nov-2026.json"
+      ]
     },
     {
       "id": "philippines-palawan-bohol-nov-2026",
@@ -240,11 +196,7 @@
         "Tortues",
         "Lagons",
         "Plage"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/philippines-palawan-bohol-nov-2026.json"
+      ]
     },
     {
       "id": "namibia-botswana-nov-2026",
@@ -258,11 +210,7 @@
         "Éléphants",
         "Okavango",
         "Lodges"
-      ],
-      "variantCount": 1,
-      "defaultVariant": "balanced",
-      "defaultBudget": "comfort",
-      "dataFile": "data/trips/namibia-botswana-nov-2026.json"
+      ]
     },
     {
       "id": "bali-komodo-demo",
