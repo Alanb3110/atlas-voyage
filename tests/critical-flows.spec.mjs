@@ -20,6 +20,13 @@ function currentParams(page) {
   return new URL(page.url()).searchParams;
 }
 
+function permutations(items) {
+  if (items.length <= 1) return [items];
+  return items.flatMap((item, index) =>
+    permutations([...items.slice(0, index), ...items.slice(index + 1)])
+      .map(rest => [item, ...rest]));
+}
+
 async function findMultiVariantTrip(request, catalog) {
   for (const entry of catalog.trips) {
     const data = await getTripData(request, entry);
@@ -133,11 +140,42 @@ test('URL: ordre libre, paramètres absents/inconnus et combinaisons impossibles
   }
 });
 
+test('URL: les 24 ordres de Voyage / Variante / Budget / onglet résolvent le même état', async ({ page, request }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const catalog = await getJson(request, 'data/catalog.json');
+  const multi = await findMultiVariantTrip(request, catalog);
+  const alternateVariant = multi.data.variants.find(item => item.id !== multi.data.defaultVariant) || multi.data.variants[0];
+  const alternateBudget = multi.data.budgets.find(item => item.id !== multi.data.defaultBudget) || multi.data.budgets[0];
+  const expected = {
+    trip: multi.entry.id,
+    variant: alternateVariant.id,
+    budget: alternateBudget.id,
+    tab: 'budget'
+  };
+  const entries = [
+    ['trip', expected.trip],
+    ['variant', expected.variant],
+    ['budget', expected.budget],
+    ['tab', expected.tab]
+  ];
+
+  const orders = permutations(entries);
+  expect(orders).toHaveLength(24);
+
+  for (const order of orders) {
+    const search = new URLSearchParams(order);
+    await page.goto(`${ROOT}trip.html?${search.toString()}`, { waitUntil: 'domcontentloaded' });
+    await waitForTrip(page);
+    await expectCanonicalSelection(page, expected);
+  }
+});
+
 test('sélecteurs Voyage / Variante / Budget: état conservé au reload puis restauré par Back/Forward', async ({ page, request }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   const catalog = await getJson(request, 'data/catalog.json');
   const multi = await findMultiVariantTrip(request, catalog);
-  const targetEntry = catalog.trips.find(entry => entry.id !== multi.entry.id) || catalog.trips[0];
+  const targetEntry = catalog.trips.find(entry => entry.id === 'south-africa-nov-2026');
+  expect(targetEntry, 'Le voyage Afrique du Sud est requis pour vérifier les modules annexes').toBeTruthy();
   const targetTrip = await getTripData(request, targetEntry);
   const alternateVariant = multi.data.variants.find(item => item.id !== multi.data.defaultVariant) || multi.data.variants[0];
   const alternateBudget = multi.data.budgets.find(item => item.id !== multi.data.defaultBudget) || multi.data.budgets[0];
@@ -159,9 +197,13 @@ test('sélecteurs Voyage / Variante / Budget: état conservé au reload puis res
   await waitForTrip(page);
   await expectCanonicalSelection(page, selectedState);
 
+  const airportReload = page.waitForResponse(response =>
+    response.url().endsWith('/data/airport-access/south-africa-nov-2026.json') && response.ok());
+  const bookingReload = page.waitForResponse(response =>
+    response.url().endsWith('/data/booking-status/south-africa-nov-2026.json') && response.ok());
   await page.locator('#tripSelector').selectOption(targetEntry.id);
-  await expect.poll(() => currentParams(page).get('trip')).toBe(targetEntry.id);
-  await waitForTrip(page);
+  await Promise.all([airportReload, bookingReload]);
+
   const targetState = {
     trip: targetEntry.id,
     variant: targetTrip.defaultVariant,
@@ -170,13 +212,95 @@ test('sélecteurs Voyage / Variante / Budget: état conservé au reload puis res
   };
   await expectCanonicalSelection(page, targetState);
 
-  await page.goBack({ waitUntil: 'domcontentloaded' });
-  await waitForTrip(page);
+  await page.goBack();
   await expectCanonicalSelection(page, selectedState);
 
-  await page.goForward({ waitUntil: 'domcontentloaded' });
-  await waitForTrip(page);
+  await page.goForward();
   await expectCanonicalSelection(page, targetState);
+});
+
+test('historique interne: chaque interaction est restaurée pas à pas par Back puis Forward', async ({ page, request }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const catalog = await getJson(request, 'data/catalog.json');
+  const multi = await findMultiVariantTrip(request, catalog);
+  const targetEntry = catalog.trips.find(entry => entry.id === 'south-africa-nov-2026');
+  expect(targetEntry).toBeTruthy();
+  const targetTrip = await getTripData(request, targetEntry);
+  const alternateVariant = multi.data.variants.find(item => item.id !== multi.data.defaultVariant) || multi.data.variants[0];
+  const alternateBudget = multi.data.budgets.find(item => item.id !== multi.data.defaultBudget) || multi.data.budgets[0];
+
+  const states = [
+    { trip: multi.entry.id, variant: multi.data.defaultVariant, budget: multi.data.defaultBudget, tab: 'circuit' },
+    { trip: multi.entry.id, variant: alternateVariant.id, budget: multi.data.defaultBudget, tab: 'circuit' },
+    { trip: multi.entry.id, variant: alternateVariant.id, budget: alternateBudget.id, tab: 'circuit' },
+    { trip: multi.entry.id, variant: alternateVariant.id, budget: alternateBudget.id, tab: 'choice' },
+    { trip: targetEntry.id, variant: targetTrip.defaultVariant, budget: targetTrip.defaultBudget, tab: 'choice' }
+  ];
+
+  await page.goto(`${ROOT}trip.html?trip=${encodeURIComponent(multi.entry.id)}`, { waitUntil: 'domcontentloaded' });
+  await waitForTrip(page);
+  await expectCanonicalSelection(page, states[0]);
+
+  await page.locator('#variantSelector').selectOption(alternateVariant.id);
+  await expectCanonicalSelection(page, states[1]);
+
+  await page.locator('#budgetSelector').selectOption(alternateBudget.id);
+  await expectCanonicalSelection(page, states[2]);
+
+  await page.locator('#tab-choice').click();
+  await expectCanonicalSelection(page, states[3]);
+
+  await page.locator('#tripSelector').selectOption(targetEntry.id);
+  await expectCanonicalSelection(page, states[4]);
+
+  for (let index = states.length - 2; index >= 0; index -= 1) {
+    await page.goBack();
+    await expectCanonicalSelection(page, states[index]);
+  }
+
+  for (let index = 1; index < states.length; index += 1) {
+    await page.goForward();
+    await expectCanonicalSelection(page, states[index]);
+  }
+});
+
+test('Partager: l’URL canonique après interactions reconstruit exactement le même état', async ({ browser, request }) => {
+  const catalog = await getJson(request, 'data/catalog.json');
+  const multi = await findMultiVariantTrip(request, catalog);
+  const alternateVariant = multi.data.variants.find(item => item.id !== multi.data.defaultVariant) || multi.data.variants[0];
+  const alternateBudget = multi.data.budgets.find(item => item.id !== multi.data.defaultBudget) || multi.data.budgets[0];
+  const expected = {
+    trip: multi.entry.id,
+    variant: alternateVariant.id,
+    budget: alternateBudget.id,
+    tab: 'budget'
+  };
+
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'share', {
+      configurable: true,
+      value: async data => { window.__atlasSharedStateUrl = data.url; }
+    });
+  });
+
+  await page.goto(`${ROOT}trip.html?trip=${encodeURIComponent(multi.entry.id)}`, { waitUntil: 'domcontentloaded' });
+  await waitForTrip(page);
+  await page.locator('#variantSelector').selectOption(alternateVariant.id);
+  await page.locator('#budgetSelector').selectOption(alternateBudget.id);
+  await page.locator('#tab-budget').click();
+  await expectCanonicalSelection(page, expected);
+
+  await page.locator('#shareBtn').click();
+  const sharedUrl = await page.evaluate(() => window.__atlasSharedStateUrl);
+  expect(sharedUrl).toBe(page.url());
+
+  const sharedPage = await context.newPage();
+  await sharedPage.goto(sharedUrl, { waitUntil: 'domcontentloaded' });
+  await waitForTrip(sharedPage);
+  await expectCanonicalSelection(sharedPage, expected);
+  await context.close();
 });
 
 test('Configurer mobile: sélecteurs utilisables, Escape ferme et restitue le focus', async ({ browser, request }) => {
