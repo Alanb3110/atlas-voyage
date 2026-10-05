@@ -7,6 +7,22 @@ export async function fetchJson(path) {
 export const loadCatalog = () => fetchJson('./data/catalog.json');
 export const loadTrip = (path) => fetchJson(path.startsWith('.') ? path : `./${path}`);
 
+let publishedTripState = null;
+const tripStateListeners = new Set();
+
+export function publishTripState(state) {
+  publishedTripState = Object.freeze({ ...state });
+  tripStateListeners.forEach(listener => listener(publishedTripState));
+}
+
+export function subscribeTripState(listener) {
+  tripStateListeners.add(listener);
+  if (publishedTripState) queueMicrotask(() => {
+    if (tripStateListeners.has(listener)) listener(publishedTripState);
+  });
+  return () => tripStateListeners.delete(listener);
+}
+
 export function params() { return new URLSearchParams(location.search); }
 export function buildTripUrl(trip, variant = '', budget = '') {
   const p = new URLSearchParams();

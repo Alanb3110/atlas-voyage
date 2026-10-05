@@ -1,13 +1,22 @@
-import { params, escapeHtml, formatDateFR } from './store.js';
+import { subscribeTripState, escapeHtml, formatDateFR } from './store.js';
 
 const section = document.querySelector('#bookingSection');
 if (!section) throw new Error('bookingSection absent du DOM');
 
-const tripId = params().get('trip');
-if (!tripId) section.hidden = true;
-else init().catch(error => {
-  console.warn('Suivi réservation indisponible:', error);
+let activeTripId = null;
+let initRevision = 0;
+
+subscribeTripState(state => {
+  const nextTripId = state?.tripId;
+  if (!nextTripId || nextTripId === activeTripId) return;
+  activeTripId = nextTripId;
+  const revision = ++initRevision;
   section.hidden = true;
+  init(nextTripId, revision).catch(error => {
+    if (revision !== initRevision) return;
+    console.warn('Suivi réservation indisponible:', error);
+    section.hidden = true;
+  });
 });
 
 const STATUS = {
@@ -26,11 +35,13 @@ const READINESS = {
   booked: 'Réservé'
 };
 
-async function init() {
+async function init(tripId, revision) {
   const response = await fetch(`./data/booking-status/${encodeURIComponent(tripId)}.json`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data = await response.json();
+  if (revision !== initRevision) return;
   if (data.tripId !== tripId) throw new Error('tripId incohérent');
+  section.hidden = false;
   render(data);
 }
 

@@ -16,11 +16,13 @@ function check(condition, label, detail = '') {
   }
 }
 
-const [html, css, styles, js, bookingJs, sw] = await Promise.all([
+const [html, css, styles, js, storeJs, airportJs, bookingJs, sw] = await Promise.all([
   readFile(resolve(root, 'trip.html'), 'utf8'),
   readFile(resolve(root, 'assets/css/trip-v2.css'), 'utf8'),
   readFile(resolve(root, 'assets/css/styles.css'), 'utf8'),
   readFile(resolve(root, 'assets/js/trip.js'), 'utf8'),
+  readFile(resolve(root, 'assets/js/store.js'), 'utf8'),
+  readFile(resolve(root, 'assets/js/airport-access.js'), 'utf8'),
   readFile(resolve(root, 'assets/js/booking-readiness.js'), 'utf8'),
   readFile(resolve(root, 'sw.js'), 'utf8')
 ]);
@@ -43,12 +45,12 @@ check(css.includes('scroll-margin-top:var(--trip-scroll-offset,150px)'),
 check(js.includes("document.documentElement.style.setProperty('--trip-scroll-offset', `${appbarHeight + tabsHeight + 12}px`)"),
   'sticky: offset calculé à partir des hauteurs réelles');
 
-const setTabStart = js.indexOf('function setActiveTab(');
-const setTabEnd = js.indexOf('function renderTabs()', setTabStart);
-const setTab = js.slice(setTabStart, setTabEnd);
-check(setTab.includes('map.invalidateSize({pan:false});'),
+const renderActiveTabStart = js.indexOf('function renderActiveTab(');
+const renderActiveTabEnd = js.indexOf('function renderTabs()', renderActiveTabStart);
+const renderActiveTab = js.slice(renderActiveTabStart, renderActiveTabEnd);
+check(renderActiveTab.includes('map.invalidateSize({pan:false});'),
   'Leaflet: invalidateSize après réaffichage du Circuit');
-check(setTab.includes('fitMapToCurrentRoute();'),
+check(renderActiveTab.includes('fitMapToCurrentRoute();'),
   'Leaflet: recadrage après rendu dans un onglet précédemment masqué');
 const renderMapStart = js.indexOf('function renderMap()');
 const renderMapEnd = js.indexOf('function detailBlock(', renderMapStart);
@@ -56,15 +58,45 @@ const renderMap = js.slice(renderMapStart, renderMapEnd);
 check(renderMap.includes("if (activeTab !== 'circuit')") && renderMap.includes('map.remove();') && renderMap.includes('map = null;'),
   'Leaflet: aucun rendu de carte dans un panneau Circuit masqué');
 
-const canonicalStart = js.indexOf('function canonicalizeUrl()');
-const canonicalEnd = js.indexOf('function populateSelectors()', canonicalStart);
+const parseStart = js.indexOf('function parseUrlState(');
+const parseEnd = js.indexOf('async function loadResolvedTrip(', parseStart);
+const parseBlock = js.slice(parseStart, parseEnd);
+check(['trip','variant','budget','tab'].every(key => parseBlock.includes(`search.get('${key}')`)),
+  'état: parsing URL isolé pour Voyage / Variante / Budget / onglet');
+
+const resolveStart = js.indexOf('async function resolveState(');
+const resolveEnd = js.indexOf('function commitState(', resolveStart);
+const resolveBlock = js.slice(resolveStart, resolveEnd);
+check(resolveBlock.includes("catalog.trips.find(item => item.id === rawState.tripId) || catalog.trips[0]") &&
+      resolveBlock.includes('nextTrip.defaultVariant') && resolveBlock.includes('nextTrip.defaultBudget') &&
+      resolveBlock.includes("TAB_IDS.includes(rawState.tabId) ? rawState.tabId : 'circuit'"),
+  'état: résolution/validation centralise les fallbacks');
+
+const canonicalStart = js.indexOf('function buildCanonicalUrl()');
+const canonicalEnd = js.indexOf('function rawStateFromCurrent()', canonicalStart);
 const canonical = js.slice(canonicalStart, canonicalEnd);
-check(canonical.includes('new URL(buildTripUrl(trip.id, variant.id, budget.id), location.href)'),
+check(canonical.includes('new URL(buildTripUrl(trip.id, variant.id, budget.id), location.href)') &&
+      canonical.includes("base.searchParams.set('tab', activeTab)"),
   'URL: reconstruction canonique sans paramètres étrangers');
-check(canonical.includes('selectableActivities().filter(activity => activityState.has(activity.id))'),
+check(js.includes('selectableActivities()') && js.includes('activityState.has(activity.id)'),
   'URL: activités sérialisées uniquement si applicables à la variante');
-check(canonical.includes("history.replaceState(null, '', `./trip.html?${base.searchParams.toString()}`)"),
-  'URL: état partageable synchronisé sans navigation');
+check(canonical.includes("mode === 'push' ? 'pushState' : 'replaceState'"),
+  'URL: pushState pour interactions et replaceState pour normalisation');
+
+check(js.includes("historyMode: 'push'") &&
+      js.includes("window.addEventListener('popstate'") &&
+      js.includes('void restoreStateFromUrl();'),
+  'historique: interactions empilées et Back/Forward restaurés depuis l’URL');
+check(js.includes("$('#tripSelector').value = trip.id") &&
+      js.includes("$('#variantSelector').value = variant.id") &&
+      js.includes("$('#budgetSelector').value = budget.id"),
+  'DOM: sélecteurs projetés depuis l’état canonique');
+check(storeJs.includes('export function publishTripState(state)') &&
+      storeJs.includes('export function subscribeTripState(listener)'),
+  'état: identité canonique publiée aux modules annexes');
+check(airportJs.includes('subscribeTripState(state =>') && !airportJs.includes("params().get('trip')") &&
+      bookingJs.includes('subscribeTripState(state =>') && !bookingJs.includes("params().get('trip')"),
+  'modules annexes: Voyage dérivé de l’état canonique, pas relu depuis le DOM/URL');
 
 const occurrences = (haystack, needle) => haystack.split(needle).length - 1;
 check(occurrences(css, '.activity-filter{min-height:44px') >= 2,
